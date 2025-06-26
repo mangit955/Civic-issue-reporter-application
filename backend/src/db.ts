@@ -10,9 +10,6 @@ const UserSchema = new Schema({
   username: { type: String, unique: true },
   password: String,
   email: String,
-  phoneNumber: String,
-  fullName: String,
-  address: String,
 });
 
 export const UserModel = model("User", UserSchema);
@@ -21,8 +18,8 @@ const AdminSchema = new Schema({
   username: { type: String, unique: true },
   password: String,
   email: String,
-  fullName: String,
-  phoneNumber: String,
+  fullname: String,
+  phonenumber: String,
   department: String,
   position: String,
 });
@@ -35,6 +32,9 @@ const IssueSchema = new Schema({
   location: { type: String, unique: true },
   status: Boolean,
   type: String,
+  phonenumber: String,
+  fullname: String,
+  address: String,
 });
 
 export const IssueModel = model("Issue", IssueSchema);

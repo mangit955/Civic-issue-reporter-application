@@ -1,10 +1,62 @@
 import express from "express";
+import { UserModel } from "./db";
+import jwt from "jsonwebtoken";
+import { JWT_PASSWORD } from "./config";
+
 const app = express();
 
-// user api's
-app.post("/api/v1/signup/user", (req, res) => {});
+// user api's =>
 
-app.post("/api/v1/signin/user", (req, res) => {});
+app.post("/api/v1/signup/user", async (req, res) => {
+  //add zod validation, password hashing
+
+  const username = req.body.username;
+  const password = req.body.password;
+  const email = req.body.email;
+
+  try {
+    await UserModel.create({
+      username,
+      password,
+      email,
+    });
+    console.log("User created!");
+
+    res.status(200).json({
+      message: "User Signed up!",
+    });
+  } catch (e) {
+    res.status(411).json({
+      message: "User already exists",
+    });
+  }
+});
+
+app.post("/api/v1/signin/user", async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  const existingUser = await UserModel.findOne({
+    username,
+    password,
+  });
+
+  if (existingUser) {
+    const token = jwt.sign(
+      {
+        id: existingUser._id,
+      },
+      JWT_PASSWORD
+    );
+    res.json({
+      token,
+    });
+  } else {
+    res.status(411).json({
+      message: "Incorrect Credentials!",
+    });
+  }
+});
 
 app.post("/api/v1/issue/user", (req, res) => {});
 
