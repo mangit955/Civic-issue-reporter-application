@@ -1,9 +1,11 @@
+import "dotenv/config";
 import express from "express";
 import { UserModel } from "./db";
 import jwt from "jsonwebtoken";
-import { JWT_PASSWORD } from "./config";
+import { JWT_PASSWORD } from "./config"; // Consider loading JWT_PASSWORD from environment variables for production.
 
 const app = express();
+app.use(express.json());
 
 // user api's =>
 
@@ -58,7 +60,7 @@ app.post("/api/v1/signin/user", async (req, res) => {
   }
 });
 
-app.post("/api/v1/issue/user", (req, res) => {});
+app.post("/api/v1/create/issue/user", (req, res) => {});
 
 app.get("/api/v1/issue/user", (req, res) => {});
 
@@ -71,4 +73,4 @@ app.post("/api/v1/signin/admin", (req, res) => {});
 
 app.get("/api/v1/issue/admin", (req, res) => {});
 
-app.delete("/api/v1/issue/user", (req, res) => {});
+app.listen(3000);

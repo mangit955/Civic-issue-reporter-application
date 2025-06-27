@@ -1,6 +1,7 @@
 import mongoose, { model, Schema } from "mongoose";
 
 const DATABASE_URL = process.env.DATABASE_URL || "";
+console.log("Attempting to connect to DB with URL:", DATABASE_URL);
 mongoose
   .connect(DATABASE_URL)
   .then(() => console.log("Connected to DB!"))
@@ -29,7 +30,7 @@ export const AdminModel = model("Admin", AdminSchema);
 const IssueSchema = new Schema({
   title: String,
   description: String,
-  location: { type: String, unique: true },
+  location: String,
   status: Boolean,
   type: String,
   phonenumber: String,
