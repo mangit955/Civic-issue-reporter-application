@@ -16,7 +16,7 @@ const UserSchema = new Schema({
 export const UserModel = model("User", UserSchema);
 
 const AdminSchema = new Schema({
-  username: { type: String, unique: true },
+  username: { type: String, unique: true, require },
   password: String,
   email: String,
   fullname: String,
