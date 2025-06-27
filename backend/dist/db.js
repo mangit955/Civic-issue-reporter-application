@@ -58,6 +58,7 @@ const AdminSchema = new mongoose_1.Schema({
 });
 exports.AdminModel = (0, mongoose_1.model)("Admin", AdminSchema);
 const IssueSchema = new mongoose_1.Schema({
+    userId: { type: mongoose_1.default.Types.ObjectId, ref: "User", required: true },
     title: String,
     description: String,
     location: String,

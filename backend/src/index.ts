@@ -1,11 +1,15 @@
 import "dotenv/config";
-import express from "express";
-import { UserModel } from "./db";
+import express, { Request, Response } from "express";
+import { IssueModel, UserModel } from "./db";
 import jwt from "jsonwebtoken";
 import { JWT_PASSWORD } from "./config"; // Consider loading JWT_PASSWORD from environment variables for production.
+import { userMiddleware } from "./middleware";
 
 const app = express();
 app.use(express.json());
+interface AuthRequest extends Request {
+  userId?: String;
+}
 
 // user api's =>
 
@@ -60,11 +64,67 @@ app.post("/api/v1/signin/user", async (req, res) => {
   }
 });
 
-app.post("/api/v1/create/issue/user", (req, res) => {});
+app.post(
+  "/api/v1/create/issue/user",
+  userMiddleware,
+  async (req: AuthRequest, res: Response) => {
+    const type = req.body.type;
+    const title = req.body.title || "Untitled";
+    const description = req.body.description;
+    const location = req.body.location;
+    const status = req.body.status;
+    const phonenumber = req.body.phonenumber;
+    const fullname = req.body.fullname;
+    const address = req.body.address;
 
-app.get("/api/v1/issue/user", (req, res) => {});
+    await IssueModel.create({
+      userId: req.userId,
+      title,
+      description,
+      location,
+      status,
+      type,
+      phonenumber,
+      fullname,
+      address,
+    });
 
-app.delete("/api/v1/issue/user", (req, res) => {});
+    res.json({
+      message: "Content added!",
+    });
+  }
+);
+
+app.get("/api/v1/issue/user", userMiddleware, async (req, res) => {
+  //@ts-ignore
+  const userId = req.userId;
+  const issue = await IssueModel.find({
+    userId: userId,
+  }).populate("userId", "username");
+
+  res.json({
+    issue,
+  });
+});
+
+app.delete("/api/v1/issue/user", userMiddleware, async (req, res) => {
+  const authReq = req as AuthRequest;
+  const issueId = req.body.issueId;
+  const result = await IssueModel.deleteOne({
+    _id: issueId,
+    userId: authReq.userId,
+  });
+
+  if (result.deletedCount === 0) {
+    res.status(404).json({
+      message: " Content not found !",
+    });
+  } else {
+    res.json({
+      message: "Deleted Successfully !",
+    });
+  }
+});
 
 //admin api's
 app.post("/api/v1/signup/admin", (req, res) => {});
@@ -74,3 +134,12 @@ app.post("/api/v1/signin/admin", (req, res) => {});
 app.get("/api/v1/issue/admin", (req, res) => {});
 
 app.listen(3000);
+
+//     "title": "testing",
+//     "description":" harzardious",
+//     "location": "Atlanta",
+//     "status": "false",
+//     "type":"damaged road",
+//     "phonenumber": "1232343452",
+//     "fullname": "Jhon doe",
+//     "address": "near aditi's house"

@@ -17,6 +17,7 @@ const express_1 = __importDefault(require("express"));
 const db_1 = require("./db");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("./config"); // Consider loading JWT_PASSWORD from environment variables for production.
+const middleware_1 = require("./middleware");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 // user api's =>
@@ -63,11 +64,68 @@ app.post("/api/v1/signin/user", (req, res) => __awaiter(void 0, void 0, void 0, 
         });
     }
 }));
-app.post("/api/v1/issue/user", (req, res) => { });
-app.get("/api/v1/issue/user", (req, res) => { });
-app.delete("/api/v1/issue/user", (req, res) => { });
+app.post("/api/v1/create/issue/user", middleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const type = req.body.type;
+    const title = req.body.title || "Untitled";
+    const description = req.body.description;
+    const location = req.body.location;
+    const status = req.body.status;
+    const phonenumber = req.body.phonenumber;
+    const fullname = req.body.fullname;
+    const address = req.body.address;
+    yield db_1.IssueModel.create({
+        userId: req.userId,
+        title,
+        description,
+        location,
+        status,
+        type,
+        phonenumber,
+        fullname,
+        address,
+    });
+    res.json({
+        message: "Content added!",
+    });
+}));
+app.get("/api/v1/issue/user", middleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //@ts-ignore
+    const userId = req.userId;
+    const issue = yield db_1.IssueModel.find({
+        userId: userId,
+    }).populate("userId", "username");
+    res.json({
+        issue,
+    });
+}));
+app.delete("/api/v1/issue/user", middleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const authReq = req;
+    const issueId = req.body.issueId;
+    const result = yield db_1.IssueModel.deleteOne({
+        _id: issueId,
+        userId: authReq.userId,
+    });
+    if (result.deletedCount === 0) {
+        res.status(404).json({
+            message: " Content not found !",
+        });
+    }
+    else {
+        res.json({
+            message: "Deleted Successfully !",
+        });
+    }
+}));
 //admin api's
 app.post("/api/v1/signup/admin", (req, res) => { });
 app.post("/api/v1/signin/admin", (req, res) => { });
 app.get("/api/v1/issue/admin", (req, res) => { });
 app.listen(3000);
+//     "title": "testing",
+//     "description":" harzardious",
+//     "location": "Atlanta",
+//     "status": "false",
+//     "type":"damaged road",
+//     "phonenumber": "1232343452",
+//     "fullname": "Jhon doe",
+//     "address": "near aditi's house"

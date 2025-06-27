@@ -28,6 +28,7 @@ const AdminSchema = new Schema({
 export const AdminModel = model("Admin", AdminSchema);
 
 const IssueSchema = new Schema({
+  userId: { type: mongoose.Types.ObjectId, ref: "User", required: true },
   title: String,
   description: String,
   location: String,
