@@ -127,11 +127,74 @@ app.delete("/api/v1/issue/user", userMiddleware, async (req, res) => {
 });
 
 //admin api's
-app.post("/api/v1/signup/admin", (req, res) => {});
+app.post("/api/v1/signup/admin", async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  const email = req.body.email;
+  const fullname = req.body.fullname;
+  const phonenumber = req.body.phonenumber;
+  const department = req.body.department;
+  const position = req.body.position;
 
-app.post("/api/v1/signin/admin", (req, res) => {});
+  try {
+    await UserModel.create({
+      username,
+      password,
+      email,
+      fullname,
+      phonenumber,
+      department,
+      position,
+    });
+    console.log("User created!");
 
-app.get("/api/v1/issue/admin", (req, res) => {});
+    res.status(200).json({
+      message: "Admin Signed up!",
+    });
+  } catch (e) {
+    res.status(411).json({
+      message: "Admin already exists",
+    });
+  }
+});
+
+app.post("/api/v1/signin/admin", async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  const existingUser = await UserModel.findOne({
+    username,
+    password,
+  });
+
+  if (existingUser) {
+    const token = jwt.sign(
+      {
+        id: existingUser._id,
+      },
+      JWT_PASSWORD
+    );
+    res.json({
+      token,
+    });
+  } else {
+    res.status(411).json({
+      message: "Incorrect Credentials!",
+    });
+  }
+});
+
+app.get("/api/v1/issue/admin", async (req, res) => {
+  //@ts-ignore
+  const userId = req.userId;
+  const issue = await IssueModel.find({
+    userId: userId,
+  }).populate("userId", "username");
+
+  res.json({
+    issue,
+  });
+});
 
 app.listen(3000);
 
