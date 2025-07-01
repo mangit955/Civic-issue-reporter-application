@@ -116,10 +116,88 @@ app.delete("/api/v1/issue/user", middleware_1.userMiddleware, (req, res) => __aw
         });
     }
 }));
-//admin api's
-app.post("/api/v1/signup/admin", (req, res) => { });
-app.post("/api/v1/signin/admin", (req, res) => { });
-app.get("/api/v1/issue/admin", (req, res) => { });
+//admin api's =>
+app.post("/api/v1/signup/admin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const username = req.body.username;
+    const password = req.body.password;
+    const email = req.body.email;
+    const fullname = req.body.fullname;
+    const phonenumber = req.body.phonenumber;
+    const department = req.body.department;
+    const position = req.body.position;
+    try {
+        yield db_1.AdminModel.create({
+            username,
+            password,
+            email,
+            fullname,
+            phonenumber,
+            department,
+            position,
+        });
+        console.log("User created!");
+        res.status(200).json({
+            message: "Admin Signed up!",
+        });
+    }
+    catch (e) {
+        res.status(411).json({
+            message: "Admin already exists",
+        });
+    }
+}));
+app.post("/api/v1/signin/admin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const username = req.body.username;
+    const password = req.body.password;
+    const existingUser = yield db_1.AdminModel.findOne({
+        username,
+        password,
+    });
+    if (existingUser) {
+        const token = jsonwebtoken_1.default.sign({
+            id: existingUser._id,
+        }, config_1.JWT_PASSWORD);
+        res.json({
+            token,
+        });
+    }
+    else {
+        res.status(411).json({
+            message: "Incorrect Credentials!",
+        });
+    }
+}));
+app.get("/api/v1/issue/admin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const issue = yield db_1.IssueModel.find({}).populate("userId", "username");
+        res.json({
+            issue,
+        });
+    }
+    catch (err) {
+        res.status(500).json({
+            message: "Something went wrong",
+        });
+    }
+}));
+app.delete("/api/v1/issue/admin/delete", middleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const authReq = req;
+    const issueId = req.body.issueId;
+    const result = yield db_1.IssueModel.deleteOne({
+        _id: issueId,
+        userId: authReq.userId,
+    });
+    if (result.deletedCount === 0) {
+        res.status(404).json({
+            message: "Issue not found",
+        });
+    }
+    else {
+        res.json({
+            message: " Deleted Sucessfully!",
+        });
+    }
+}));
 app.listen(3000);
 //     "title": "testing",
 //     "description":" harzardious",

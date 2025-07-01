@@ -48,7 +48,7 @@ const UserSchema = new mongoose_1.Schema({
 });
 exports.UserModel = (0, mongoose_1.model)("User", UserSchema);
 const AdminSchema = new mongoose_1.Schema({
-    username: { type: String, unique: true },
+    username: { type: String, unique: true, require },
     password: String,
     email: String,
     fullname: String,

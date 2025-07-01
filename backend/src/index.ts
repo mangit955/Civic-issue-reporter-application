@@ -1,6 +1,6 @@
 import "dotenv/config";
 import express, { Request, Response } from "express";
-import { IssueModel, UserModel } from "./db";
+import { AdminModel, IssueModel, UserModel } from "./db";
 import jwt from "jsonwebtoken";
 import { JWT_PASSWORD } from "./config"; // Consider loading JWT_PASSWORD from environment variables for production.
 import { userMiddleware } from "./middleware";
@@ -126,7 +126,8 @@ app.delete("/api/v1/issue/user", userMiddleware, async (req, res) => {
   }
 });
 
-//admin api's
+//admin api's =>
+
 app.post("/api/v1/signup/admin", async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
@@ -137,7 +138,7 @@ app.post("/api/v1/signup/admin", async (req, res) => {
   const position = req.body.position;
 
   try {
-    await UserModel.create({
+    await AdminModel.create({
       username,
       password,
       email,
@@ -162,7 +163,7 @@ app.post("/api/v1/signin/admin", async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  const existingUser = await UserModel.findOne({
+  const existingUser = await AdminModel.findOne({
     username,
     password,
   });
@@ -185,15 +186,35 @@ app.post("/api/v1/signin/admin", async (req, res) => {
 });
 
 app.get("/api/v1/issue/admin", async (req, res) => {
-  //@ts-ignore
-  const userId = req.userId;
-  const issue = await IssueModel.find({
-    userId: userId,
-  }).populate("userId", "username");
+  try {
+    const issue = await IssueModel.find({}).populate("userId", "username");
+    res.json({
+      issue,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+});
 
-  res.json({
-    issue,
+app.delete("/api/v1/issue/admin/delete", userMiddleware, async (req, res) => {
+  const authReq = req as AuthRequest;
+  const issueId = req.body.issueId;
+  const result = await IssueModel.deleteOne({
+    _id: issueId,
+    userId: authReq.userId,
   });
+
+  if (result.deletedCount === 0) {
+    res.status(404).json({
+      message: "Issue not found",
+    });
+  } else {
+    res.json({
+      message: " Deleted Sucessfully!",
+    });
+  }
 });
 
 app.listen(3000);
