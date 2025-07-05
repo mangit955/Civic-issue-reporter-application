@@ -18,6 +18,7 @@ const db_1 = require("./db");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("./config"); // Consider loading JWT_PASSWORD from environment variables for production.
 const middleware_1 = require("./middleware");
+const middleware_2 = require("./middleware");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 // user api's =>
@@ -64,29 +65,45 @@ app.post("/api/v1/signin/user", (req, res) => __awaiter(void 0, void 0, void 0, 
         });
     }
 }));
-app.post("/api/v1/create/issue/user", middleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const type = req.body.type;
-    const title = req.body.title || "Untitled";
-    const description = req.body.description;
-    const location = req.body.location;
-    const status = req.body.status;
-    const phonenumber = req.body.phonenumber;
-    const fullname = req.body.fullname;
-    const address = req.body.address;
-    yield db_1.IssueModel.create({
-        userId: req.userId,
-        title,
-        description,
-        location,
-        status,
-        type,
-        phonenumber,
-        fullname,
-        address,
-    });
-    res.json({
-        message: "Content added!",
-    });
+app.post("/api/v1/create/issue/user", middleware_1.userMiddleware, middleware_2.upload.array("files", 10), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const files = req.files;
+        const media = files.map((file) => ({
+            url: file.path,
+            type: file.mimetype.startsWith("video") ? "video" : "image",
+            filename: file.originalname,
+        }));
+        const type = req.body.type;
+        const title = req.body.title || "Untitled";
+        const description = req.body.description;
+        const location = req.body.location;
+        const status = req.body.status;
+        const phonenumber = req.body.phonenumber;
+        const fullname = req.body.fullname;
+        const address = req.body.address;
+        yield db_1.IssueModel.create({
+            userId: req.userId,
+            title,
+            description,
+            location,
+            status,
+            type,
+            phonenumber,
+            fullname,
+            address,
+            media,
+        });
+        res.json({
+            message: "Content added!",
+            uploadedMedia: media,
+        });
+    }
+    catch (e) {
+        console.error("Error while creating issue:", e);
+        res.status(500).json({
+            message: "Inernal server error",
+        });
+    }
 }));
 app.get("/api/v1/issue/user", middleware_1.userMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //@ts-ignore

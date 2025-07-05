@@ -37,6 +37,13 @@ const IssueSchema = new Schema({
   phonenumber: String,
   fullname: String,
   address: String,
+  media: [
+    {
+      url: String,
+      type: String,
+      filename: String,
+    },
+  ],
 });
 
 export const IssueModel = model("Issue", IssueSchema);

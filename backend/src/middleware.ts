@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { JWT_PASSWORD } from "./config";
+import multer from "multer";
+import { storage } from "./cloudinary";
 
 export const userMiddleware = (
   req: Request,
@@ -36,3 +38,7 @@ export const userMiddleware = (
     });
   }
 };
+
+// For uploading media files=>
+
+export const upload = multer({ storage });

@@ -10,4 +10,8 @@
 6. npm install -D @types/express
 7. npm install jsonwebtoken@types/jsonwebtoken
 8. npm install jsonwebtoken
-9. npm install zod
+9. npm install zod (//zod validation in pending).
+10. npm install multer (used for uploading media in database).
+11. npm install @types/multer
+12. npm install cloudinary multer-storage-cloudinary multer
+13. npm install --save-dev @types/multer

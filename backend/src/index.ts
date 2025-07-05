@@ -4,6 +4,7 @@ import { AdminModel, IssueModel, UserModel } from "./db";
 import jwt from "jsonwebtoken";
 import { JWT_PASSWORD } from "./config"; // Consider loading JWT_PASSWORD from environment variables for production.
 import { userMiddleware } from "./middleware";
+import { upload } from "./middleware";
 
 const app = express();
 app.use(express.json());
@@ -67,31 +68,49 @@ app.post("/api/v1/signin/user", async (req, res) => {
 app.post(
   "/api/v1/create/issue/user",
   userMiddleware,
+  upload.array("files", 10),
   async (req: AuthRequest, res: Response) => {
-    const type = req.body.type;
-    const title = req.body.title || "Untitled";
-    const description = req.body.description;
-    const location = req.body.location;
-    const status = req.body.status;
-    const phonenumber = req.body.phonenumber;
-    const fullname = req.body.fullname;
-    const address = req.body.address;
+    try {
+      const files = req.files as Express.Multer.File[];
 
-    await IssueModel.create({
-      userId: req.userId,
-      title,
-      description,
-      location,
-      status,
-      type,
-      phonenumber,
-      fullname,
-      address,
-    });
+      const media = files.map((file) => ({
+        url: (file as any).path,
+        type: file.mimetype.startsWith("video") ? "video" : "image",
+        filename: file.originalname,
+      }));
 
-    res.json({
-      message: "Content added!",
-    });
+      const type = req.body.type;
+      const title = req.body.title || "Untitled";
+      const description = req.body.description;
+      const location = req.body.location;
+      const status = req.body.status;
+      const phonenumber = req.body.phonenumber;
+      const fullname = req.body.fullname;
+      const address = req.body.address;
+
+      await IssueModel.create({
+        userId: req.userId,
+        title,
+        description,
+        location,
+        status,
+        type,
+        phonenumber,
+        fullname,
+        address,
+        media,
+      });
+
+      res.json({
+        message: "Content added!",
+        uploadedMedia: media,
+      });
+    } catch (e) {
+      console.error("Error while creating issue:", e);
+      res.status(500).json({
+        message: "Inernal server error",
+      });
+    }
   }
 );
 

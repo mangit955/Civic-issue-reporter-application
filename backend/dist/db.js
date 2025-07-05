@@ -67,6 +67,13 @@ const IssueSchema = new mongoose_1.Schema({
     phonenumber: String,
     fullname: String,
     address: String,
+    media: [
+        {
+            url: String,
+            type: String,
+            filename: String,
+        },
+    ],
 });
 exports.IssueModel = (0, mongoose_1.model)("Issue", IssueSchema);
 const locationSchema = new mongoose_1.Schema({
