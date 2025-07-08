@@ -15,3 +15,7 @@
 11. npm install @types/multer
 12. npm install cloudinary multer-storage-cloudinary multer
 13. npm install --save-dev @types/multer
+14. npm install cors
+15. npm install --save-dev @types/cors
+16. npm install cookie-parser
+17. npm install --save-dev @types/cookie-parser
