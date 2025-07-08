@@ -1,8 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { JWT_PASSWORD } from "./config";
-import multer from "multer";
-import { storage } from "./cloudinary";
 
 export const userMiddleware = (
   req: Request,
@@ -22,10 +19,11 @@ export const userMiddleware = (
   }
 
   const token = authHeader.split(" ")[1];
-  console.log("Extracted token:", token);
-
+  // JWT_PASSWORD is expected to be set in the environment variables
   try {
-    const decoded = jwt.verify(token, JWT_PASSWORD) as { id: string };
+    const decoded = jwt.verify(token, process.env.JWT_PASSWORD!) as {
+      id: string;
+    };
 
     console.log("Decoded JWT:", decoded);
     //@ts-ignore
@@ -38,7 +36,3 @@ export const userMiddleware = (
     });
   }
 };
-
-// For uploading media files=>
-
-export const upload = multer({ storage });

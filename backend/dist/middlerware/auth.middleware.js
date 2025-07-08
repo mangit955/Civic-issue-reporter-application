@@ -3,11 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.upload = exports.userMiddleware = void 0;
+exports.userMiddleware = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const config_1 = require("./config");
-const multer_1 = __importDefault(require("multer"));
-const cloudinary_1 = require("./cloudinary");
 const userMiddleware = (req, res, next) => {
     const authHeader = req.headers["authorization"];
     console.log("Authorization Header:", authHeader);
@@ -19,9 +16,9 @@ const userMiddleware = (req, res, next) => {
         return;
     }
     const token = authHeader.split(" ")[1];
-    console.log("Extracted token:", token);
+    // JWT_PASSWORD is expected to be set in the environment variables
     try {
-        const decoded = jsonwebtoken_1.default.verify(token, config_1.JWT_PASSWORD);
+        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_PASSWORD);
         console.log("Decoded JWT:", decoded);
         //@ts-ignore
         req.userId = decoded.id;
@@ -35,5 +32,3 @@ const userMiddleware = (req, res, next) => {
     }
 };
 exports.userMiddleware = userMiddleware;
-// For uploading media files=>
-exports.upload = (0, multer_1.default)({ storage: cloudinary_1.storage });
