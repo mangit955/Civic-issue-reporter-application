@@ -58,3 +58,11 @@ export const adminSignin = async (req: Request, res: Response) => {
     });
   }
 };
+
+//  "username" : ""
+//  "password ": ""
+//  "email" : ""
+//  "fullname" : ""
+//  "phonenumber" : ""
+//  "department" : ""
+//  "position" : ""

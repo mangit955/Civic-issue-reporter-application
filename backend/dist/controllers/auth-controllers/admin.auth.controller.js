@@ -67,3 +67,10 @@ const adminSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.adminSignin = adminSignin;
+//  "username" : ""
+//  "password ": ""
+//  "email" : ""
+//  "fullname" : ""
+//  "phonenumber" : ""
+//  "department" : ""
+//  "position" : ""
