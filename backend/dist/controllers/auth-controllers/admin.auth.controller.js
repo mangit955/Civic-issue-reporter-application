@@ -33,7 +33,7 @@ const adminSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             department,
             position,
         });
-        console.log("User created!");
+        console.log("Admin created!");
         res.status(200).json({
             message: "Admin Signed up!",
         });

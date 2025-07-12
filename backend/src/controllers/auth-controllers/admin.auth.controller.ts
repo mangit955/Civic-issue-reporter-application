@@ -21,7 +21,7 @@ export const adminSignup = async (req: Request, res: Response) => {
       department,
       position,
     });
-    console.log("User created!");
+    console.log("Admin created!");
 
     res.status(200).json({
       message: "Admin Signed up!",

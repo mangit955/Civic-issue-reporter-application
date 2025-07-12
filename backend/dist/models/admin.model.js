@@ -12,7 +12,7 @@ const AdminSchema = new mongoose_1.Schema({
         ],
         min: [8, "Must be at least 8 Character"],
     },
-    email: { type: String, unique: true, required: true, lowercase: true },
+    email: { type: String, required: true, lowercase: true },
     fullname: { type: String, required: true },
     phonenumber: {
         type: String,

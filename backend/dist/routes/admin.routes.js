@@ -18,7 +18,7 @@ router.post("/signup/admin", admin_auth_controller_1.adminSignup);
 router.post("/signin/admin", admin_auth_controller_1.adminSignin);
 router.get("/issue/admin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const issue = yield issue_model_1.IssueModel.find({}).populate("userId", "username");
+        const issue = yield issue_model_1.IssueModel.find({}).populate("userID", "username");
         res.json({
             issue,
         });
@@ -34,7 +34,7 @@ router.delete("/issue/admin/delete", auth_middleware_1.userMiddleware, (req, res
     const issueId = req.body.issueId;
     const result = yield issue_model_1.IssueModel.deleteOne({
         _id: issueId,
-        userId: authReq.userId,
+        userID: authReq.userId,
     });
     if (result.deletedCount === 0) {
         res.status(404).json({

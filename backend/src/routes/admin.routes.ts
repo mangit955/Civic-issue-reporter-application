@@ -17,7 +17,7 @@ router.post("/signin/admin", adminSignin);
 
 router.get("/issue/admin", async (req, res) => {
   try {
-    const issue = await IssueModel.find({}).populate("userId", "username");
+    const issue = await IssueModel.find({}).populate("userID", "username");
     res.json({
       issue,
     });
@@ -33,7 +33,7 @@ router.delete("/issue/admin/delete", userMiddleware, async (req, res) => {
   const issueId = req.body.issueId;
   const result = await IssueModel.deleteOne({
     _id: issueId,
-    userId: authReq.userId,
+    userID: authReq.userId,
   });
 
   if (result.deletedCount === 0) {
