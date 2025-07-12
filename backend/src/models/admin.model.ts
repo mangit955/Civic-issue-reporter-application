@@ -2,7 +2,7 @@ import { model, Schema } from "mongoose";
 
 const AdminSchema = new Schema(
   {
-    username: { type: String, unique: true, required: true },
+    fullname: { type: String, required: true },
     password: {
       type: String,
       required: [
@@ -12,13 +12,13 @@ const AdminSchema = new Schema(
       min: [8, "Must be at least 8 Character"],
     },
     email: { type: String, required: true, lowercase: true },
-    fullname: { type: String, required: true },
     phonenumber: {
       type: String,
       required: [true, "User phone number required"],
     },
     department: { type: String, required: true },
     position: { type: String, required: true },
+    adminAccessCode: { type: Number, required: true, unique: true },
   },
   { timestamps: true }
 );

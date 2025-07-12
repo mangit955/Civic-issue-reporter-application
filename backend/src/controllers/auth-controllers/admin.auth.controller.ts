@@ -3,7 +3,6 @@ import { AdminModel } from "../../models/admin.model";
 import jwt from "jsonwebtoken";
 
 export const adminSignup = async (req: Request, res: Response) => {
-  const username = req.body.username;
   const password = req.body.password;
   const email = req.body.email;
   const fullname = req.body.fullname;
@@ -13,13 +12,13 @@ export const adminSignup = async (req: Request, res: Response) => {
 
   try {
     await AdminModel.create({
-      username,
       password,
       email,
       fullname,
       phonenumber,
       department,
       position,
+      adminAccessCode: req.body.adminAccessCode, // Assuming this is passed in the request body
     });
     console.log("Admin created!");
 
@@ -34,12 +33,14 @@ export const adminSignup = async (req: Request, res: Response) => {
 };
 
 export const adminSignin = async (req: Request, res: Response) => {
-  const username = req.body.username;
+  const email = req.body.email;
   const password = req.body.password;
+  const adminAccessCode = req.body.adminAccessCode;
 
   const existingUser = await AdminModel.findOne({
-    username,
+    email,
     password,
+    adminAccessCode,
   });
 
   if (existingUser) {

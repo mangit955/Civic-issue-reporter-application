@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createIssue = void 0;
+exports.getIssuesByUser = exports.createIssue = void 0;
 const issue_model_1 = require("../models/issue.model");
 const multimedia_model_1 = require("../models/multimedia.model");
 const createIssue = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -46,3 +46,15 @@ const createIssue = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.createIssue = createIssue;
+// Function to get issues for a user
+const getIssuesByUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //@ts-ignore
+    const userId = req.userId;
+    const issue = yield issue_model_1.IssueModel.find({
+        userId: userId,
+    }).populate("userId", "username");
+    res.json({
+        issue,
+    });
+});
+exports.getIssuesByUser = getIssuesByUser;

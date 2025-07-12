@@ -16,7 +16,6 @@ exports.adminSignin = exports.adminSignup = void 0;
 const admin_model_1 = require("../../models/admin.model");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const adminSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const username = req.body.username;
     const password = req.body.password;
     const email = req.body.email;
     const fullname = req.body.fullname;
@@ -25,13 +24,13 @@ const adminSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     const position = req.body.position;
     try {
         yield admin_model_1.AdminModel.create({
-            username,
             password,
             email,
             fullname,
             phonenumber,
             department,
             position,
+            adminAccessCode: req.body.adminAccessCode, // Assuming this is passed in the request body
         });
         console.log("Admin created!");
         res.status(200).json({
@@ -46,11 +45,13 @@ const adminSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.adminSignup = adminSignup;
 const adminSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const username = req.body.username;
+    const email = req.body.email;
     const password = req.body.password;
+    const adminAccessCode = req.body.adminAccessCode;
     const existingUser = yield admin_model_1.AdminModel.findOne({
-        username,
+        email,
         password,
+        adminAccessCode,
     });
     if (existingUser) {
         const token = jsonwebtoken_1.default.sign({

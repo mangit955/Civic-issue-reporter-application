@@ -52,3 +52,17 @@ export const createIssue = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// Function to get issues for a user
+
+export const getIssuesByUser = async (req: Request, res: Response) => {
+  //@ts-ignore
+  const userId = req.userId;
+  const issue = await IssueModel.find({
+    userId: userId,
+  }).populate("userId", "username");
+
+  res.json({
+    issue,
+  });
+};

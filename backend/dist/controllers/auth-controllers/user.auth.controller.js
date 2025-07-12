@@ -17,13 +17,13 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_model_1 = require("../../models/user.model");
 //User Signup =>
 const userSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const username = req.body.username;
+    const fullname = req.body.fullname;
     const password = req.body.password;
     const email = req.body.email;
     const phonenumber = req.body.phonenumber;
     try {
         yield user_model_1.UserModel.create({
-            username,
+            fullname,
             password,
             email,
             phonenumber,
@@ -42,10 +42,10 @@ const userSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.userSignup = userSignup;
 //User Signin =>
 const userSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const username = req.body.username;
+    const email = req.body.email;
     const password = req.body.password;
     const existingUser = yield user_model_1.UserModel.findOne({
-        username,
+        email,
         password,
     });
     if (existingUser) {

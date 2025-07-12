@@ -4,14 +4,14 @@ import { UserModel } from "../../models/user.model";
 
 //User Signup =>
 export const userSignup = async (req: Request, res: Response) => {
-  const username = req.body.username;
+  const fullname = req.body.fullname;
   const password = req.body.password;
   const email = req.body.email;
   const phonenumber = req.body.phonenumber;
 
   try {
     await UserModel.create({
-      username,
+      fullname,
       password,
       email,
       phonenumber,
@@ -31,11 +31,11 @@ export const userSignup = async (req: Request, res: Response) => {
 //User Signin =>
 
 export const userSignin = async (req: Request, res: Response) => {
-  const username = req.body.username;
+  const email = req.body.email;
   const password = req.body.password;
 
   const existingUser = await UserModel.findOne({
-    username,
+    email,
     password,
   });
 
