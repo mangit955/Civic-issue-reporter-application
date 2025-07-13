@@ -9,5 +9,5 @@ const router = (0, express_1.Router)();
 router.post("/signup/user", user_auth_controller_1.userSignup);
 router.post("/signin/user", user_auth_controller_1.userSignin);
 router.get("/user/issue", auth_middleware_1.userMiddleware, issues_controllers_1.getIssuesByUser);
-router.delete("/issue/user", auth_middleware_1.userMiddleware, user_controller_1.deleteUser);
+router.delete("/issue/user", auth_middleware_1.userMiddleware, user_controller_1.deleteIssue);
 exports.default = router;

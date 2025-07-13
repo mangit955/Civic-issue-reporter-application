@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import { upload } from "../middlerware/upload.middleware";
 import { createIssue } from "../controllers/issues.controllers";
 import { userMiddleware } from "../middlerware/auth.middleware";
@@ -7,7 +7,7 @@ const router = Router();
 router.post(
   "/create/issue/user",
   userMiddleware,
-  (req, res, next) => {
+  (req: Request, res: Response, next: NextFunction) => {
     console.log("Before upload middleware");
     upload.array("files", 10)(req, res, (err) => {
       console.log("Upload middleware callback");

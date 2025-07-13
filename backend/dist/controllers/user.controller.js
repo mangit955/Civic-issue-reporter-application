@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = void 0;
+exports.deleteIssue = void 0;
 const issue_model_1 = require("../models/issue.model");
-const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteIssue = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const authReq = req;
     const issueId = req.body.issueId;
     const result = yield issue_model_1.IssueModel.deleteOne({
@@ -29,4 +29,4 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
     }
 });
-exports.deleteUser = deleteUser;
+exports.deleteIssue = deleteIssue;

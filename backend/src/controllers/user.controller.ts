@@ -5,7 +5,7 @@ interface AuthRequest extends Request {
   userId?: string;
 }
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteIssue = async (req: Request, res: Response) => {
   const authReq = req as AuthRequest;
   const issueId = req.body.issueId;
   const result = await IssueModel.deleteOne({

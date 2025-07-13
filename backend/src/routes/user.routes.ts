@@ -5,12 +5,12 @@ import {
 } from "../controllers/auth-controllers/user.auth.controller";
 import { userMiddleware } from "../middlerware/auth.middleware";
 import { getIssuesByUser } from "../controllers/issues.controllers";
-import { deleteUser } from "../controllers/user.controller";
+import { deleteIssue } from "../controllers/user.controller";
 
 const router = Router();
 
 router.post("/signup/user", userSignup);
 router.post("/signin/user", userSignin);
 router.get("/user/issue", userMiddleware, getIssuesByUser);
-router.delete("/issue/user", userMiddleware, deleteUser);
+router.delete("/issue/user", userMiddleware, deleteIssue);
 export default router;

@@ -15,15 +15,13 @@ const multimedia_model_1 = require("../models/multimedia.model");
 const createIssue = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const files = req.files;
-        const { title = "Untitled", description, location, status, type, phonenumber, fullname, address, } = req.body;
+        const { title = "Untitled", description, location, status, issueType, phonenumber, } = req.body;
         const issue = yield issue_model_1.IssueModel.create({
-            userID: req.userId,
-            issueType: type,
+            userId: req.userId,
+            issueType,
             title,
             description,
             phonenumber,
-            fullname,
-            address,
             location,
             status,
         });
@@ -50,9 +48,10 @@ exports.createIssue = createIssue;
 const getIssuesByUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //@ts-ignore
     const userId = req.userId;
+    console.log("userID in getIssuesByUser:", userId);
     const issue = yield issue_model_1.IssueModel.find({
         userId: userId,
-    }).populate("userId", "username");
+    }).populate("userId", "fullname");
     res.json({
         issue,
     });

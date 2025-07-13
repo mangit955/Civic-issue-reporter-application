@@ -7,11 +7,12 @@ interface AuthRequest extends Request {
 
 export const getAdmin = async (req: Request, res: Response) => {
   try {
-    const issue = await IssueModel.find({}).populate("userID", "username");
+    const issue = await IssueModel.find({}).populate("userID", "fullname");
     res.json({
       issue,
     });
   } catch (err) {
+    console.error("Error fetching issues:", err);
     res.status(500).json({
       message: "Something went wrong",
     });

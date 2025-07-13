@@ -9,16 +9,17 @@ export const adminSignup = async (req: Request, res: Response) => {
   const phonenumber = req.body.phonenumber;
   const department = req.body.department;
   const position = req.body.position;
+  const adminAccessCode = req.body.adminAccessCode;
 
   try {
     await AdminModel.create({
+      fullname,
       password,
       email,
-      fullname,
       phonenumber,
       department,
       position,
-      adminAccessCode: req.body.adminAccessCode, // Assuming this is passed in the request body
+      adminAccessCode,
     });
     console.log("Admin created!");
 
@@ -26,6 +27,7 @@ export const adminSignup = async (req: Request, res: Response) => {
       message: "Admin Signed up!",
     });
   } catch (e) {
+    console.error("Error creating admin:", e);
     res.status(411).json({
       message: "Admin already exists",
     });

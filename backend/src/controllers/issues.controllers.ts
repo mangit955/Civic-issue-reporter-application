@@ -11,20 +11,16 @@ export const createIssue = async (req: Request, res: Response) => {
       description,
       location,
       status,
-      type,
+      issueType,
       phonenumber,
-      fullname,
-      address,
     } = req.body;
 
     const issue = await IssueModel.create({
-      userID: (req as any).userId,
-      issueType: type,
+      userId: (req as any).userId,
+      issueType,
       title,
       description,
       phonenumber,
-      fullname,
-      address,
       location,
       status,
     });
@@ -58,9 +54,10 @@ export const createIssue = async (req: Request, res: Response) => {
 export const getIssuesByUser = async (req: Request, res: Response) => {
   //@ts-ignore
   const userId = req.userId;
+  console.log("userID in getIssuesByUser:", userId);
   const issue = await IssueModel.find({
     userId: userId,
-  }).populate("userId", "username");
+  }).populate("userId", "fullname");
 
   res.json({
     issue,

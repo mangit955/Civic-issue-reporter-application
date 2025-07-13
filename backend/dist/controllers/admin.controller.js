@@ -13,12 +13,13 @@ exports.deleteAdmin = exports.getAdmin = void 0;
 const issue_model_1 = require("../models/issue.model");
 const getAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const issue = yield issue_model_1.IssueModel.find({}).populate("userID", "username");
+        const issue = yield issue_model_1.IssueModel.find({}).populate("userID", "fullname");
         res.json({
             issue,
         });
     }
     catch (err) {
+        console.error("Error fetching issues:", err);
         res.status(500).json({
             message: "Something went wrong",
         });

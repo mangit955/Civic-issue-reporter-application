@@ -2,7 +2,7 @@ import { model, Schema } from "mongoose";
 
 const IssueSchema = new Schema(
   {
-    userID: {
+    userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
