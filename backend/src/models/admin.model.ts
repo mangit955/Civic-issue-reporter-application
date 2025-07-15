@@ -14,7 +14,6 @@ const AdminSchema = new Schema(
       required: [true],
     },
     department: { type: String, required: true },
-    position: { type: String, required: true },
     adminAccessCode: { type: Number, required: true, unique: true },
   },
   { timestamps: true }

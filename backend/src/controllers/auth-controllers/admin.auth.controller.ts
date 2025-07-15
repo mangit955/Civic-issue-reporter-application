@@ -25,7 +25,6 @@ export const adminSignup = async (req: Request, res: Response) => {
     email = z.string().email().trim(),
     phonenumber = z.number().int().positive(),
     department = z.string().trim(),
-    position = z.string().trim(),
     adminAccessCode = z.number().int().positive().min(4, {
       message: "Admin access code must be at least 4 digits",
     }),
@@ -37,7 +36,6 @@ export const adminSignup = async (req: Request, res: Response) => {
     !fullName ||
     !phonenumber ||
     !department ||
-    !position ||
     !adminAccessCode
   ) {
     res.status(400).json({
@@ -52,7 +50,6 @@ export const adminSignup = async (req: Request, res: Response) => {
       email,
       phonenumber,
       department,
-      position,
       adminAccessCode,
     });
     console.log("Admin created!");
