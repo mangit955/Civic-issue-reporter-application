@@ -26,3 +26,18 @@ export const deleteIssue = async (req: Request, res: Response) => {
     });
   }
 };
+
+// Function to get issues for a user
+
+export const getIssuesByUser = async (req: Request, res: Response) => {
+  //@ts-ignore
+  const userId = req.userId;
+  console.log("userId in getIssuesByUser:", userId);
+  const issue = await IssueModel.find({
+    userId: userId,
+  }).populate("userId", "fullName");
+
+  res.json({
+    issue,
+  });
+};

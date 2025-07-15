@@ -7,7 +7,7 @@ interface AuthRequest extends Request {
 
 export const getAdmin = async (req: Request, res: Response) => {
   try {
-    const issue = await IssueModel.find({}).populate("userID", "fullname");
+    const issue = await IssueModel.find({}).populate("userId", "fullName");
     res.json({
       issue,
     });

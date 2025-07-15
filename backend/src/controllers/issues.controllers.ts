@@ -12,7 +12,6 @@ export const createIssue = async (req: Request, res: Response) => {
       location,
       status,
       issueType,
-      phonenumber,
     } = req.body;
 
     const issue = await IssueModel.create({
@@ -20,9 +19,9 @@ export const createIssue = async (req: Request, res: Response) => {
       issueType,
       title,
       description,
-      phonenumber,
       location,
       status,
+      multimediaId: (req as any).multimediaId,
     });
 
     const mediaDocs = await Promise.all(
@@ -47,19 +46,4 @@ export const createIssue = async (req: Request, res: Response) => {
     console.error("Error creating issue:", error);
     res.status(500).json({ message: "Internal server error" });
   }
-};
-
-// Function to get issues for a user
-
-export const getIssuesByUser = async (req: Request, res: Response) => {
-  //@ts-ignore
-  const userId = req.userId;
-  console.log("userID in getIssuesByUser:", userId);
-  const issue = await IssueModel.find({
-    userId: userId,
-  }).populate("userId", "fullname");
-
-  res.json({
-    issue,
-  });
 };

@@ -1,13 +1,34 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { UserModel } from "../../models/user.model";
+import { z } from "zod";
 
 //User Signup =>
 export const userSignup = async (req: Request, res: Response) => {
-  const { fullName, password, email, phonenumber } = req.body;
+  const {
+    fullName = z
+      .string()
+      .min(1, {
+        message: "Full name is required",
+      })
+      .trim(),
+    password = z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" })
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        {
+          message:
+            "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+        }
+      )
+      .trim(),
+    email = z.string().email().trim(),
+    phonenumber = z.number().int().positive(),
+  } = req.body;
 
   if (!fullName || !password || !email || !phonenumber) {
-    return res.status(400).json({
+    res.status(400).json({
       message: "Please fill all the fields",
     });
   }

@@ -5,7 +5,7 @@ import { userMiddleware } from "../middlerware/auth.middleware";
 
 const router = Router();
 router.post(
-  "/create/issue/user",
+  "/user/issue/create",
   userMiddleware,
   (req: Request, res: Response, next: NextFunction) => {
     console.log("Before upload middleware");
