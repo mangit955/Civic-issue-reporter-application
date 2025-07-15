@@ -25,6 +25,7 @@ export const userSignup = async (req: Request, res: Response) => {
       message: "User Signed up!",
     });
   } catch (e) {
+    console.error("Error creating user:", e);
     res.status(411).json({
       message: "User already exists",
     });

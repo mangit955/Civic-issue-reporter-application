@@ -13,11 +13,14 @@ export const deleteIssue = async (req: Request, res: Response) => {
     userId: authReq.userId,
   });
 
-  if (result.deletedCount === 0) {
-    res.status(404).json({
-      message: " Content not found !",
-    });
-  } else {
+  try {
+    if (result.deletedCount === 0) {
+      res.status(404).json({
+        message: " Content not found !",
+      });
+    }
+  } catch (error) {
+    console.error("Error deleting issue:", error);
     res.json({
       message: "Deleted Successfully !",
     });

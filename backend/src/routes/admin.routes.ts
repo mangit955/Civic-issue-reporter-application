@@ -1,4 +1,4 @@
-import { Router, Request } from "express";
+import { Router } from "express";
 import {
   adminSignin,
   adminSignup,

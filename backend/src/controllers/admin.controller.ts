@@ -27,11 +27,14 @@ export const deleteAdmin = async (req: Request, res: Response) => {
     userID: authReq.userId,
   });
 
-  if (result.deletedCount === 0) {
-    res.status(404).json({
-      message: "Issue not found",
-    });
-  } else {
+  try {
+    if (result.deletedCount === 0) {
+      res.status(404).json({
+        message: "Issue not found",
+      });
+    }
+  } catch (error) {
+    console.error("Error deleting issue:", error);
     res.json({
       message: " Deleted Sucessfully!",
     });
