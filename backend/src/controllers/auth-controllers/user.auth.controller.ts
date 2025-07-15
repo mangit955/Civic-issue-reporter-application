@@ -4,14 +4,17 @@ import { UserModel } from "../../models/user.model";
 
 //User Signup =>
 export const userSignup = async (req: Request, res: Response) => {
-  const fullname = req.body.fullname;
-  const password = req.body.password;
-  const email = req.body.email;
-  const phonenumber = req.body.phonenumber;
+  const { fullName, password, email, phonenumber } = req.body;
+
+  if (!fullName || !password || !email || !phonenumber) {
+    return res.status(400).json({
+      message: "Please fill all the fields",
+    });
+  }
 
   try {
     await UserModel.create({
-      fullname,
+      fullName,
       password,
       email,
       phonenumber,
@@ -31,27 +34,29 @@ export const userSignup = async (req: Request, res: Response) => {
 //User Signin =>
 
 export const userSignin = async (req: Request, res: Response) => {
-  const email = req.body.email;
-  const password = req.body.password;
-
+  const { email, password } = req.body;
   const existingUser = await UserModel.findOne({
     email,
     password,
   });
 
-  if (existingUser) {
-    const token = jwt.sign(
-      {
-        id: existingUser._id,
-      },
-      process.env.JWT_PASSWORD!
-    );
-    res.json({
-      token,
-    });
-  } else {
-    res.status(411).json({
-      message: "Incorrect Credentials!",
+  try {
+    if (existingUser) {
+      const token = jwt.sign(
+        {
+          id: existingUser._id,
+        },
+        process.env.JWT_PASSWORD!
+      );
+      res.json({
+        token,
+      });
+      console.log("User signed in!");
+    }
+  } catch (error) {
+    console.error("Error during user signin:", error);
+    res.status(500).json({
+      message: "Internal Server Error",
     });
   }
 };

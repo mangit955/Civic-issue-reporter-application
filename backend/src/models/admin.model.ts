@@ -2,7 +2,7 @@ import { model, Schema } from "mongoose";
 
 const AdminSchema = new Schema(
   {
-    fullname: { type: String, required: true },
+    fullName: { type: String, required: true },
     password: {
       type: String,
       required: [true],

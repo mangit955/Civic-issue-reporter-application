@@ -3,13 +3,29 @@ import { AdminModel } from "../../models/admin.model";
 import jwt from "jsonwebtoken";
 
 export const adminSignup = async (req: Request, res: Response) => {
-  const password = req.body.password;
-  const email = req.body.email;
-  const fullname = req.body.fullname;
-  const phonenumber = req.body.phonenumber;
-  const department = req.body.department;
-  const position = req.body.position;
-  const adminAccessCode = req.body.adminAccessCode;
+  const {
+    fullname,
+    password,
+    email,
+    phonenumber,
+    department,
+    position,
+    adminAccessCode,
+  } = req.body;
+
+  if (
+    !password ||
+    !email ||
+    !fullname ||
+    !phonenumber ||
+    !department ||
+    !position ||
+    !adminAccessCode
+  ) {
+    res.status(400).json({
+      message: "Please fill all the fields",
+    });
+  }
 
   try {
     await AdminModel.create({
@@ -35,9 +51,7 @@ export const adminSignup = async (req: Request, res: Response) => {
 };
 
 export const adminSignin = async (req: Request, res: Response) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  const adminAccessCode = req.body.adminAccessCode;
+  const { email, password, adminAccessCode } = req.body;
 
   const existingUser = await AdminModel.findOne({
     email,
