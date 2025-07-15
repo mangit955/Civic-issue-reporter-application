@@ -3,47 +3,44 @@ import { AdminModel } from "../../models/admin.model";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
 
-export const adminSignup = async (req: Request, res: Response) => {
-  const {
-    fullName = z
-      .string()
-      .min(1, {
-        message: "Full name is required",
-      })
-      .trim(),
-    password = z
-      .string()
-      .min(8, { message: "Password must be at least 8 characters" })
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        {
-          message:
-            "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
-        }
-      )
-      .trim(),
-    email = z.string().email().trim(),
-    phonenumber = z.number().int().positive(),
-    department = z.string().trim(),
-    adminAccessCode = z.number().int().positive().min(4, {
-      message: "Admin access code must be at least 4 digits",
-    }),
-  } = req.body;
+const signupSchema = z.object({
+  fullName: z.string().min(1, { message: "Full name is required" }).trim(),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters" })
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      {
+        message:
+          "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
+      }
+    )
+    .trim(),
+  email: z.string().email({ message: "Invalid email format" }).trim(),
+  phonenumber: z
+    .string()
+    .length(10, { message: "Phone number must be exactly 10 digits" }),
+  department: z.string().trim(),
+  adminAccessCode: z.number().int().positive().min(4, {
+    message: "Admin access code must be at least 4 digits",
+  }),
+});
 
-  if (
-    !password ||
-    !email ||
-    !fullName ||
-    !phonenumber ||
-    !department ||
-    !adminAccessCode
-  ) {
-    res.status(400).json({
-      message: "Please fill all the fields",
-    });
-  }
-
+export const adminSignup = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
+    const parsedData = signupSchema.parse(req.body);
+    const {
+      fullName,
+      password,
+      email,
+      phonenumber,
+      department,
+      adminAccessCode,
+    } = parsedData;
+
     await AdminModel.create({
       fullName,
       password,
@@ -53,15 +50,19 @@ export const adminSignup = async (req: Request, res: Response) => {
       adminAccessCode,
     });
     console.log("Admin created!");
+    res.status(200).json({ message: "Admin Signed up!" });
+  } catch (err: any) {
+    if (err.name === "ZodError") {
+      res.status(400).json({
+        message: "Validation failed",
+        errors: err.errors,
+      });
+    }
 
-    res.status(200).json({
-      message: "Admin Signed up!",
-    });
-  } catch (e) {
-    console.error("Error creating admin:", e);
-    res.status(411).json({
-      message: "Admin already exists",
-    });
+    console.error("Error creating admin:", err);
+    res
+      .status(411)
+      .json({ message: "Admin already exists or another error occurred" });
   }
 };
 

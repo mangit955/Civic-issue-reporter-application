@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteIssue = void 0;
+exports.getIssuesByUser = exports.deleteIssue = void 0;
 const issue_model_1 = require("../models/issue.model");
 const deleteIssue = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const authReq = req;
@@ -18,15 +18,31 @@ const deleteIssue = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         _id: issueId,
         userId: authReq.userId,
     });
-    if (result.deletedCount === 0) {
-        res.status(404).json({
-            message: " Content not found !",
-        });
+    try {
+        if (result.deletedCount === 0) {
+            res.status(404).json({
+                message: " Content not found !",
+            });
+        }
     }
-    else {
+    catch (error) {
+        console.error("Error deleting issue:", error);
         res.json({
             message: "Deleted Successfully !",
         });
     }
 });
 exports.deleteIssue = deleteIssue;
+// Function to get issues for a user
+const getIssuesByUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //@ts-ignore
+    const userId = req.userId;
+    console.log("userId in getIssuesByUser:", userId);
+    const issue = yield issue_model_1.IssueModel.find({
+        userId: userId,
+    }).populate("userId", "fullName");
+    res.json({
+        issue,
+    });
+});
+exports.getIssuesByUser = getIssuesByUser;

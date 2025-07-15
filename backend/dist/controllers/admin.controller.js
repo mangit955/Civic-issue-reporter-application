@@ -13,7 +13,7 @@ exports.deleteAdmin = exports.getAdmin = void 0;
 const issue_model_1 = require("../models/issue.model");
 const getAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const issue = yield issue_model_1.IssueModel.find({}).populate("userID", "fullname");
+        const issue = yield issue_model_1.IssueModel.find({}).populate("userId", "fullName");
         res.json({
             issue,
         });
@@ -33,12 +33,15 @@ const deleteAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         _id: issueId,
         userID: authReq.userId,
     });
-    if (result.deletedCount === 0) {
-        res.status(404).json({
-            message: "Issue not found",
-        });
+    try {
+        if (result.deletedCount === 0) {
+            res.status(404).json({
+                message: "Issue not found",
+            });
+        }
     }
-    else {
+    catch (error) {
+        console.error("Error deleting issue:", error);
         res.json({
             message: " Deleted Sucessfully!",
         });

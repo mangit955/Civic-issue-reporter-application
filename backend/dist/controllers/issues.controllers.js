@@ -9,21 +9,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getIssuesByUser = exports.createIssue = void 0;
+exports.createIssue = void 0;
 const issue_model_1 = require("../models/issue.model");
 const multimedia_model_1 = require("../models/multimedia.model");
 const createIssue = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const files = req.files;
-        const { title = "Untitled", description, location, status, issueType, phonenumber, } = req.body;
+        const { title = "Untitled", description, location, status, issueType, } = req.body;
         const issue = yield issue_model_1.IssueModel.create({
             userId: req.userId,
             issueType,
             title,
             description,
-            phonenumber,
             location,
             status,
+            multimediaId: req.multimediaId,
         });
         const mediaDocs = yield Promise.all(files.map((file) => multimedia_model_1.MultimediaModel.create({
             issueID: issue._id,
@@ -44,16 +44,3 @@ const createIssue = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.createIssue = createIssue;
-// Function to get issues for a user
-const getIssuesByUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //@ts-ignore
-    const userId = req.userId;
-    console.log("userID in getIssuesByUser:", userId);
-    const issue = yield issue_model_1.IssueModel.find({
-        userId: userId,
-    }).populate("userId", "fullname");
-    res.json({
-        issue,
-    });
-});
-exports.getIssuesByUser = getIssuesByUser;

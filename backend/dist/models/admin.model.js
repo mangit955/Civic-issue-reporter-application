@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminModel = void 0;
 const mongoose_1 = require("mongoose");
 const AdminSchema = new mongoose_1.Schema({
-    fullname: { type: String, required: true },
+    fullName: { type: String, required: true },
     password: {
         type: String,
         required: [true],
@@ -15,7 +15,6 @@ const AdminSchema = new mongoose_1.Schema({
         required: [true],
     },
     department: { type: String, required: true },
-    position: { type: String, required: true },
     adminAccessCode: { type: Number, required: true, unique: true },
 }, { timestamps: true });
 exports.AdminModel = (0, mongoose_1.model)("Admin", AdminSchema);
