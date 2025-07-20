@@ -35,9 +35,6 @@ const userSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     try {
         const parsedData = signupSchema.parse(req.body);
         const { fullName, password, email, phonenumber } = parsedData;
-        if (!fullName || !password || !email || !phonenumber) {
-            res.status(400).json({ message: "Please fill all the fields" });
-        }
         yield user_model_1.UserModel.create({
             fullName,
             password,
