@@ -31,9 +31,6 @@ export const userSignup = async (
   try {
     const parsedData = signupSchema.parse(req.body);
     const { fullName, password, email, phonenumber } = parsedData;
-    if (!fullName || !password || !email || !phonenumber) {
-      res.status(400).json({ message: "Please fill all the fields" });
-    }
 
     await UserModel.create({
       fullName,
