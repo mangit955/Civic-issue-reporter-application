@@ -9,23 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAdmin = exports.getAdmin = void 0;
+exports.deleteAdmin = void 0;
 const issue_model_1 = require("../models/issue.model");
-const getAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const issue = yield issue_model_1.IssueModel.find({}).populate("userId", "fullName");
-        res.json({
-            issue,
-        });
-    }
-    catch (err) {
-        console.error("Error fetching issues:", err);
-        res.status(500).json({
-            message: "Something went wrong",
-        });
-    }
-});
-exports.getAdmin = getAdmin;
 const deleteAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const authReq = req;
     const issueId = req.body.issueId;

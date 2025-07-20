@@ -19,3 +19,5 @@
 15. npm install --save-dev @types/cors
 16. npm install cookie-parser
 17. npm install --save-dev @types/cookie-parser
+18. npm install nodemon
+19. npm install bcrypt

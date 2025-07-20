@@ -5,20 +5,6 @@ interface AuthRequest extends Request {
   userId?: string;
 }
 
-export const getAdmin = async (req: Request, res: Response) => {
-  try {
-    const issue = await IssueModel.find({}).populate("userId", "fullName");
-    res.json({
-      issue,
-    });
-  } catch (err) {
-    console.error("Error fetching issues:", err);
-    res.status(500).json({
-      message: "Something went wrong",
-    });
-  }
-};
-
 export const deleteAdmin = async (req: Request, res: Response) => {
   const authReq = req as AuthRequest;
   const issueId = req.body.issueId;

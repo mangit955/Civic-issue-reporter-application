@@ -47,3 +47,17 @@ export const createIssue = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const getIssues = async (req: Request, res: Response) => {
+  try {
+    const issue = await IssueModel.find({}).populate("userId", "fullName");
+    res.json({
+      issue,
+    });
+  } catch (err) {
+    console.error("Error fetching issues:", err);
+    res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+};

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createIssue = void 0;
+exports.getIssues = exports.createIssue = void 0;
 const issue_model_1 = require("../models/issue.model");
 const multimedia_model_1 = require("../models/multimedia.model");
 const createIssue = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -44,3 +44,18 @@ const createIssue = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.createIssue = createIssue;
+const getIssues = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const issue = yield issue_model_1.IssueModel.find({}).populate("userId", "fullName");
+        res.json({
+            issue,
+        });
+    }
+    catch (err) {
+        console.error("Error fetching issues:", err);
+        res.status(500).json({
+            message: "Something went wrong",
+        });
+    }
+});
+exports.getIssues = getIssues;
