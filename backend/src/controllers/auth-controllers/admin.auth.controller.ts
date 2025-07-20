@@ -41,6 +41,17 @@ export const adminSignup = async (
       adminAccessCode,
     } = parsedData;
 
+    if (
+      !fullName ||
+      !password ||
+      !email ||
+      !phonenumber ||
+      !department ||
+      !adminAccessCode
+    ) {
+      res.status(400).json({ message: "Please fill all the fields" });
+    }
+
     await AdminModel.create({
       fullName,
       password,

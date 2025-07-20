@@ -31,6 +31,9 @@ export const userSignup = async (
   try {
     const parsedData = signupSchema.parse(req.body);
     const { fullName, password, email, phonenumber } = parsedData;
+    if (!fullName || !password || !email || !phonenumber) {
+      res.status(400).json({ message: "Please fill all the fields" });
+    }
 
     await UserModel.create({
       fullName,
@@ -74,6 +77,12 @@ export const userSignin = async (req: Request, res: Response) => {
       );
       res.json({
         token,
+        user: {
+          id: existingUser._id,
+          fullName: existingUser.fullName,
+          email: existingUser.email,
+          role: "Citizen",
+        },
       });
       console.log("User signed in!");
     }
