@@ -16,6 +16,7 @@ exports.adminSignin = exports.adminSignup = void 0;
 const admin_model_1 = require("../../models/admin.model");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const zod_1 = require("zod");
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const signupSchema = zod_1.z.object({
     fullName: zod_1.z.string().min(1, { message: "Full name is required" }).trim(),
     password: zod_1.z
@@ -38,9 +39,19 @@ const adminSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         const parsedData = signupSchema.parse(req.body);
         const { fullName, password, email, phonenumber, department, adminAccessCode, } = parsedData;
-        {
+        if (!fullName ||
+            !password ||
+            !email ||
+            !phonenumber ||
+            !department ||
+            !adminAccessCode) {
             res.status(400).json({ message: "Please fill all the fields" });
         }
+        const existingUser = yield admin_model_1.AdminModel.findOne({ email });
+        if (existingUser) {
+            res.status(400).json({ message: " User already exists" });
+        }
+        const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
         yield admin_model_1.AdminModel.create({
             fullName,
             password,
@@ -67,21 +78,35 @@ const adminSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.adminSignup = adminSignup;
 const adminSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password, adminAccessCode } = req.body;
-    const existingUser = yield admin_model_1.AdminModel.findOne({
-        email,
-        password,
-        adminAccessCode,
-    });
     try {
-        if (existingUser) {
-            const token = jsonwebtoken_1.default.sign({
-                id: existingUser._id,
-            }, process.env.JWT_PASSWORD);
-            res.json({
-                token,
-            });
+        const { email, password, adminAccessCode } = req.body;
+        const existingUser = yield admin_model_1.AdminModel.findOne({
+            email,
+            adminAccessCode,
+        });
+        if (!existingUser) {
+            res.status(400).json({ message: "Admin not found!" });
+            return;
         }
+        const isPasswordValid = yield bcryptjs_1.default.compare(password, existingUser.password);
+        if (!isPasswordValid) {
+            res.status(401).json({ message: "Invalid password" });
+            return;
+        }
+        const token = jsonwebtoken_1.default.sign({
+            id: existingUser._id,
+            role: "admin",
+        }, process.env.JWT_PASSWORD, { expiresIn: "1d" });
+        res.json({
+            token,
+            user: {
+                id: existingUser._id,
+                fullName: existingUser.fullName,
+                email: existingUser.email,
+                // adminAccessCode: existingUser.adminAccessCode,
+                role: "admin",
+            },
+        });
     }
     catch (error) {
         console.error("Error during admin signin:", error);
@@ -91,10 +116,3 @@ const adminSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.adminSignin = adminSignin;
-//  "username" : ""
-//  "password ": ""
-//  "email" : ""
-//  "fullname" : ""
-//  "phonenumber" : ""
-//  "department" : ""
-//  "position" : ""

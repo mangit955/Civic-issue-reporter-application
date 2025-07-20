@@ -9,8 +9,42 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getIssuesByUser = exports.deleteIssue = void 0;
+exports.getIssuesByUser = exports.deleteIssue = exports.updateCitizenProfile = exports.getCitizenProfile = void 0;
 const issue_model_1 = require("../models/issue.model");
+const user_model_1 = require("../models/user.model");
+const getCitizenProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const citizen = yield user_model_1.UserModel.findById(id).select("-password");
+        if (!citizen) {
+            res.status(404).json({ message: "Citizen not found" });
+            return;
+        }
+        res.json(citizen);
+    }
+    catch (error) {
+        console.error("Error fetching citizen profile:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+exports.getCitizenProfile = getCitizenProfile;
+const updateCitizenProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const { fullName, email, phonenumber, address } = req.body;
+        const updatedCitizen = yield user_model_1.UserModel.findByIdAndUpdate(id, { fullName, email, phonenumber, address }, { new: true });
+        if (!updatedCitizen) {
+            res.status(404).json({ message: "Citizen not found" });
+            return;
+        }
+        res.json({ message: "Profile updated successfully", user: updatedCitizen });
+    }
+    catch (error) {
+        console.error("Error updating citizen profile:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+exports.updateCitizenProfile = updateCitizenProfile;
 const deleteIssue = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const authReq = req;
     const issueId = req.body.issueId;

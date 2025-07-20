@@ -85,27 +85,51 @@ export const adminSignup = async (
   }
 };
 
-export const adminSignin = async (req: Request, res: Response) => {
-  const { email, password, adminAccessCode } = req.body;
-
-  const existingUser = await AdminModel.findOne({
-    email,
-    password,
-    adminAccessCode,
-  });
-
+export const adminSignin = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    if (existingUser) {
-      const token = jwt.sign(
-        {
-          id: existingUser._id,
-        },
-        process.env.JWT_PASSWORD!
-      );
-      res.json({
-        token,
-      });
+    const { email, password, adminAccessCode } = req.body;
+
+    const existingUser = await AdminModel.findOne({
+      email,
+      adminAccessCode,
+    });
+
+    if (!existingUser) {
+      res.status(400).json({ message: "Admin not found!" });
+      return;
     }
+
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      existingUser.password as string
+    );
+    if (!isPasswordValid) {
+      res.status(401).json({ message: "Invalid password" });
+      return;
+    }
+
+    const token = jwt.sign(
+      {
+        id: existingUser._id,
+        role: "admin",
+      },
+      process.env.JWT_PASSWORD!,
+      { expiresIn: "1d" }
+    );
+
+    res.json({
+      token,
+      user: {
+        id: existingUser._id,
+        fullName: existingUser.fullName,
+        email: existingUser.email,
+        // adminAccessCode: existingUser.adminAccessCode,
+        role: "admin",
+      },
+    });
   } catch (error) {
     console.error("Error during admin signin:", error);
     res.status(500).json({
@@ -113,10 +137,3 @@ export const adminSignin = async (req: Request, res: Response) => {
     });
   }
 };
-//  "username" : ""
-//  "password ": ""
-//  "email" : ""
-//  "fullname" : ""
-//  "phonenumber" : ""
-//  "department" : ""
-//  "position" : ""

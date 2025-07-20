@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { upload } from "../middlerware/upload.middleware";
-import { createIssue } from "../controllers/issues.controllers";
+import { createIssue, getIssues } from "../controllers/issues.controllers";
 import { userMiddleware } from "../middlerware/auth.middleware";
 
 const router = Router();
@@ -26,5 +26,7 @@ router.post(
   },
   createIssue
 );
+
+router.get("/user/all-issues", userMiddleware, getIssues);
 
 export default router;

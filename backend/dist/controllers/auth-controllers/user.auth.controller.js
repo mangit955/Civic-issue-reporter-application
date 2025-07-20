@@ -16,6 +16,7 @@ exports.userSignin = exports.userSignup = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_model_1 = require("../../models/user.model");
 const zod_1 = require("zod");
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 //User Signup =>
 const signupSchema = zod_1.z.object({
     fullName: zod_1.z.string().min(1, { message: "Full name is required" }).trim(),
@@ -35,6 +36,14 @@ const userSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     try {
         const parsedData = signupSchema.parse(req.body);
         const { fullName, password, email, phonenumber } = parsedData;
+        if (!fullName || !password || !email || !phonenumber) {
+            res.status(400).json({ message: "Please fill all the fields" });
+        }
+        const existingUser = yield user_model_1.UserModel.findOne({ email });
+        if (existingUser) {
+            res.status(400).json({ message: " User already exists" });
+        }
+        const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
         yield user_model_1.UserModel.create({
             fullName,
             password,
@@ -76,7 +85,7 @@ const userSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                     id: existingUser._id,
                     fullName: existingUser.fullName,
                     email: existingUser.email,
-                    role: "Citizen",
+                    role: "citizen",
                 },
             });
             console.log("User signed in!");

@@ -22,4 +22,5 @@ router.post("/user/issue/create", auth_middleware_1.userMiddleware, (req, res, n
         next();
     });
 }, issues_controllers_1.createIssue);
+router.get("/user/all-issues", auth_middleware_1.userMiddleware, issues_controllers_1.getIssues);
 exports.default = router;
