@@ -20,4 +20,5 @@
 16. npm install cookie-parser
 17. npm install --save-dev @types/cookie-parser
 18. npm install nodemon
-19. npm install bcrypt
+19. npm install bcryptjs
+20. npm install --save-dev @types/bcryptjs

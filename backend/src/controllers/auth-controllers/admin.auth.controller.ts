@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { AdminModel } from "../../models/admin.model";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
+import bcrypt from "bcryptjs";
 
 const signupSchema = z.object({
   fullName: z.string().min(1, { message: "Full name is required" }).trim(),
@@ -41,9 +42,23 @@ export const adminSignup = async (
       adminAccessCode,
     } = parsedData;
 
-    {
+    if (
+      !fullName ||
+      !password ||
+      !email ||
+      !phonenumber ||
+      !department ||
+      !adminAccessCode
+    ) {
       res.status(400).json({ message: "Please fill all the fields" });
     }
+
+    const existingUser = await AdminModel.findOne({ email });
+    if (existingUser) {
+      res.status(400).json({ message: " User already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     await AdminModel.create({
       fullName,

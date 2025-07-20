@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { UserModel } from "../../models/user.model";
 import { z } from "zod";
+import bcrypt from "bcryptjs";
 
 //User Signup =>
 
@@ -31,6 +32,17 @@ export const userSignup = async (
   try {
     const parsedData = signupSchema.parse(req.body);
     const { fullName, password, email, phonenumber } = parsedData;
+
+    if (!fullName || !password || !email || !phonenumber) {
+      res.status(400).json({ message: "Please fill all the fields" });
+    }
+
+    const existingUser = await UserModel.findOne({ email });
+    if (existingUser) {
+      res.status(400).json({ message: " User already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     await UserModel.create({
       fullName,
@@ -78,7 +90,7 @@ export const userSignin = async (req: Request, res: Response) => {
           id: existingUser._id,
           fullName: existingUser.fullName,
           email: existingUser.email,
-          role: "Citizen",
+          role: "citizen",
         },
       });
       console.log("User signed in!");
