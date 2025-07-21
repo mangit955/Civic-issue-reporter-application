@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAdmin = exports.updateAdminProfile = exports.getAdminProfile = void 0;
+exports.updateIssueStatus = exports.deleteAdmin = exports.updateAdminProfile = exports.getAdminProfile = void 0;
 const admin_model_1 = require("../models/admin.model");
 const issue_model_1 = require("../models/issue.model");
 const getAdminProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -67,3 +67,19 @@ const deleteAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.deleteAdmin = deleteAdmin;
+const updateIssueStatus = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { issueId, status } = req.body;
+        const updatedIssue = yield issue_model_1.IssueModel.findByIdAndUpdate(issueId, { status }, { new: true });
+        if (!updatedIssue) {
+            res.status(404).json({ message: "Issue not found" });
+            return;
+        }
+        res.json({ message: "Issue updated successfully", user: updatedIssue });
+    }
+    catch (error) {
+        console.error("Error updating status:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+exports.updateIssueStatus = updateIssueStatus;

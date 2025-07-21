@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-export const userMiddleware = (
+export const authMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction
@@ -27,7 +27,7 @@ export const userMiddleware = (
 
     console.log("Decoded JWT:", decoded);
     //@ts-ignore
-    req.userId = decoded.id;
+    req.citizenId = decoded.id;
     next();
   } catch (e) {
     console.log("Error verifying JWT:", e);

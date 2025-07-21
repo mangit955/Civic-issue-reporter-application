@@ -46,10 +46,26 @@ const createIssue = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.createIssue = createIssue;
 const getIssues = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const issue = yield issue_model_1.IssueModel.find({}).populate("userId", "fullName");
-        res.json({
-            issue,
-        });
+        const issues = yield issue_model_1.IssueModel.find({})
+            .populate("userId", "fullName")
+            .lean();
+        const issuesWithMedia = yield Promise.all(issues.map((issue) => __awaiter(void 0, void 0, void 0, function* () {
+            var _a;
+            const media = yield multimedia_model_1.MultimediaModel.find({ issueID: issue._id });
+            const populatedIssue = issue;
+            return {
+                _id: issue._id,
+                title: issue.title,
+                description: issue.description,
+                type: issue.issueType,
+                city: issue.location,
+                reportedBy: ((_a = populatedIssue.userId) === null || _a === void 0 ? void 0 : _a.fullName) || "Anonymous",
+                reportedAt: issue.createdAt,
+                image: media.length > 0 ? media[0].url : null,
+                status: issue.status,
+            };
+        })));
+        res.json({ issues: issuesWithMedia });
     }
     catch (err) {
         console.error("Error fetching issues:", err);

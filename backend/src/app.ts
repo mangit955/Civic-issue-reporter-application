@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import adminRoutes from "./routes/admin.routes";
-import userRoutes from "./routes/user.routes";
+import citizenRoutes from "./routes/citizen.routes";
 import issueRoutes from "./routes/issue.routes";
 
 const app = express();
@@ -20,7 +20,7 @@ app.use(cookieParser());
 
 // routes declaration
 
-app.use("/api/v1", userRoutes);
+app.use("/api/v1", citizenRoutes);
 app.use("/api/v1", adminRoutes);
 app.use("/api/v1", issueRoutes);
 

@@ -12,9 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.adminSignin = exports.adminSignup = void 0;
-const admin_model_1 = require("../../models/admin.model");
+exports.citizenSignin = exports.citizenSignup = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const citizen_model_1 = require("../../models/citizen.model");
 const zod_1 = require("zod");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const signupSchema = zod_1.z.object({
@@ -30,38 +30,29 @@ const signupSchema = zod_1.z.object({
     phonenumber: zod_1.z
         .string()
         .length(10, { message: "Phone number must be exactly 10 digits" }),
-    department: zod_1.z.string().trim(),
-    adminAccessCode: zod_1.z.number().int().positive().min(4, {
-        message: "Admin access code must be at least 4 digits",
-    }),
 });
-const adminSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const citizenSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const parsedData = signupSchema.parse(req.body);
-        const { fullName, password, email, phonenumber, department, adminAccessCode, } = parsedData;
-        if (!fullName ||
-            !password ||
-            !email ||
-            !phonenumber ||
-            !department ||
-            !adminAccessCode) {
+        const { fullName, password, email, phonenumber } = parsedData;
+        if (!fullName || !password || !email || !phonenumber) {
             res.status(400).json({ message: "Please fill all the fields" });
+            return;
         }
-        const existingUser = yield admin_model_1.AdminModel.findOne({ email });
-        if (existingUser) {
-            res.status(400).json({ message: " User already exists" });
+        const existingCitizen = yield citizen_model_1.CitizenModel.findOne({ email });
+        if (existingCitizen) {
+            res.status(400).json({ message: " Citizen already exists" });
+            return;
         }
         const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
-        yield admin_model_1.AdminModel.create({
+        citizen_model_1.CitizenModel.create({
             fullName,
-            password,
+            password: hashedPassword,
             email,
             phonenumber,
-            department,
-            adminAccessCode,
         });
-        console.log("Admin created!");
-        res.status(200).json({ message: "Admin Signed up!" });
+        console.log("Citizen created!");
+        res.status(200).json({ message: "Citizen Signed up!" });
     }
     catch (err) {
         if (err.name === "ZodError") {
@@ -70,51 +61,45 @@ const adminSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 errors: err.errors,
             });
         }
-        console.error("Error creating admin:", err);
+        console.error("Error creating CitizenCitizenModel:", err);
         res
             .status(411)
-            .json({ message: "Admin already exists or another error occurred" });
+            .json({ message: "Citizen already exists or another error occurred" });
     }
 });
-exports.adminSignup = adminSignup;
-const adminSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.citizenSignup = citizenSignup;
+const citizenSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { email, password, adminAccessCode } = req.body;
-        const existingUser = yield admin_model_1.AdminModel.findOne({
-            email,
-            adminAccessCode,
-        });
-        if (!existingUser) {
-            res.status(400).json({ message: "Admin not found!" });
+        const { email, password } = req.body;
+        const existingCitizen = yield citizen_model_1.CitizenModel.findOne({ email });
+        if (!existingCitizen) {
+            res.status(400).json({ message: "Invalid email or password" });
             return;
         }
-        const isPasswordValid = yield bcryptjs_1.default.compare(password, existingUser.password);
+        const isPasswordValid = yield bcryptjs_1.default.compare(password, existingCitizen.password);
         if (!isPasswordValid) {
-            res.status(401).json({ message: "Invalid password" });
+            res.status(400).json({ message: "Invalid email or password" });
             return;
         }
         const token = jsonwebtoken_1.default.sign({
-            id: existingUser._id,
-            role: "admin",
-        }, process.env.JWT_PASSWORD, { expiresIn: "1d" });
+            id: existingCitizen._id,
+        }, process.env.JWT_PASSWORD);
         res.json({
             token,
-            user: {
-                id: existingUser._id,
-                fullName: existingUser.fullName,
-                email: existingUser.email,
-                adminAccessCode: existingUser.adminAccessCode,
-                department: existingUser.department,
-                phonenumber: existingUser.phonenumber,
-                role: "admin",
+            CitizenModel: {
+                id: existingCitizen._id,
+                fullName: existingCitizen.fullName,
+                email: existingCitizen.email,
+                role: "citizen",
             },
         });
+        console.log("Citizen signed in!");
     }
     catch (error) {
-        console.error("Error during admin signin:", error);
+        console.error("Error during citizen signin:", error);
         res.status(500).json({
             message: "Internal Server Error",
         });
     }
 });
-exports.adminSignin = adminSignin;
+exports.citizenSignin = citizenSignin;

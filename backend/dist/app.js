@@ -7,7 +7,7 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const admin_routes_1 = __importDefault(require("./routes/admin.routes"));
-const user_routes_1 = __importDefault(require("./routes/user.routes"));
+const citizen_routes_1 = __importDefault(require("./routes/citizen.routes"));
 const issue_routes_1 = __importDefault(require("./routes/issue.routes"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
@@ -19,7 +19,7 @@ app.use(express_1.default.urlencoded());
 app.use(express_1.default.static("public"));
 app.use((0, cookie_parser_1.default)());
 // routes declaration
-app.use("/api/v1", user_routes_1.default);
+app.use("/api/v1", citizen_routes_1.default);
 app.use("/api/v1", admin_routes_1.default);
 app.use("/api/v1", issue_routes_1.default);
 exports.default = app;

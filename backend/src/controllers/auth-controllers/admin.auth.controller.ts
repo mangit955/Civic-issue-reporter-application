@@ -126,7 +126,9 @@ export const adminSignin = async (
         id: existingUser._id,
         fullName: existingUser.fullName,
         email: existingUser.email,
-        // adminAccessCode: existingUser.adminAccessCode,
+        adminAccessCode: existingUser.adminAccessCode,
+        department: existingUser.department,
+        phonenumber: existingUser.phonenumber,
         role: "admin",
       },
     });

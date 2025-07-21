@@ -18,7 +18,7 @@ const IssueStatusHistorySchema = new Schema(
     },
     changedBy: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Citizen",
       required: true,
     },
   },

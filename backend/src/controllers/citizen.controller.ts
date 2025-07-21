@@ -1,9 +1,9 @@
 import { IssueModel } from "../models/issue.model";
 import { Request, Response } from "express";
-import { UserModel } from "../models/user.model";
+import { CitizenModel } from "../models/citizen.model";
 
 interface AuthRequest extends Request {
-  userId?: string;
+  citizenId?: string;
 }
 
 export const getCitizenProfile = async (
@@ -12,7 +12,7 @@ export const getCitizenProfile = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const citizen = await UserModel.findById(id).select("-password");
+    const citizen = await CitizenModel.findById(id).select("-password");
 
     if (!citizen) {
       res.status(404).json({ message: "Citizen not found" });
@@ -34,7 +34,7 @@ export const updateCitizenProfile = async (
     const { id } = req.params;
     const { fullName, email, phonenumber, address } = req.body;
 
-    const updatedCitizen = await UserModel.findByIdAndUpdate(
+    const updatedCitizen = await CitizenModel.findByIdAndUpdate(
       id,
       { fullName, email, phonenumber, address },
       { new: true }
@@ -45,7 +45,10 @@ export const updateCitizenProfile = async (
       return;
     }
 
-    res.json({ message: "Profile updated successfully", user: updatedCitizen });
+    res.json({
+      message: "Profile updated successfully",
+      citizen: updatedCitizen,
+    });
   } catch (error) {
     console.error("Error updating citizen profile:", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -57,7 +60,7 @@ export const deleteIssue = async (req: Request, res: Response) => {
   const issueId = req.body.issueId;
   const result = await IssueModel.deleteOne({
     _id: issueId,
-    userId: authReq.userId,
+    citizenId: authReq.citizenId,
   });
 
   try {
@@ -74,15 +77,13 @@ export const deleteIssue = async (req: Request, res: Response) => {
   }
 };
 
-// Function to get issues for a user
-
-export const getIssuesByUser = async (req: Request, res: Response) => {
+export const getIssuesBycitizen = async (req: Request, res: Response) => {
   //@ts-ignore
-  const userId = req.userId;
-  console.log("userId in getIssuesByUser:", userId);
+  const citizenId = req.citizenId;
+  console.log("citizenId in getIssuesBycitizen:", citizenId);
   const issue = await IssueModel.find({
-    userId: userId,
-  }).populate("userId", "fullName");
+    citizenId: citizenId,
+  }).populate("citizenId", "fullName");
 
   res.json({
     issue,

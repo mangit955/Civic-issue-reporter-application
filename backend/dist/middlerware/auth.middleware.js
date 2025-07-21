@@ -3,9 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userMiddleware = void 0;
+exports.authMiddleware = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const userMiddleware = (req, res, next) => {
+const authMiddleware = (req, res, next) => {
     const authHeader = req.headers["authorization"];
     console.log("Authorization Header:", authHeader);
     if (!authHeader || !authHeader.startsWith("Bearer")) {
@@ -21,7 +21,7 @@ const userMiddleware = (req, res, next) => {
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_PASSWORD);
         console.log("Decoded JWT:", decoded);
         //@ts-ignore
-        req.userId = decoded.id;
+        req.citizenId = decoded.id;
         next();
     }
     catch (e) {
@@ -31,4 +31,4 @@ const userMiddleware = (req, res, next) => {
         });
     }
 };
-exports.userMiddleware = userMiddleware;
+exports.authMiddleware = authMiddleware;

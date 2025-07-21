@@ -4,7 +4,7 @@ const IssueSchema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Citizen",
       required: true,
     },
     issueType: {

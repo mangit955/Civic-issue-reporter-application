@@ -1,12 +1,12 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { upload } from "../middlerware/upload.middleware";
 import { createIssue, getIssues } from "../controllers/issues.controllers";
-import { userMiddleware } from "../middlerware/auth.middleware";
+import { authMiddleware } from "../middlerware/auth.middleware";
 
 const router = Router();
 router.post(
-  "/user/issue/create",
-  userMiddleware,
+  "/citizen/issue/create",
+  authMiddleware,
   (req: Request, res: Response, next: NextFunction) => {
     console.log("Before upload middleware");
     upload.array("files", 10)(req, res, (err) => {
@@ -27,6 +27,6 @@ router.post(
   createIssue
 );
 
-router.get("/user/all-issues", userMiddleware, getIssues);
+router.get("/all-issues", authMiddleware, getIssues);
 
 export default router;

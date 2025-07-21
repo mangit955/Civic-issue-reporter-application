@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { UserModel } from "../../models/user.model";
+import { CitizenModel } from "../../models/citizen.model";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
-
-//User Signup =>
 
 const signupSchema = z.object({
   fullName: z.string().min(1, { message: "Full name is required" }).trim(),
@@ -25,7 +23,7 @@ const signupSchema = z.object({
     .length(10, { message: "Phone number must be exactly 10 digits" }),
 });
 
-export const userSignup = async (
+export const citizenSignup = async (
   req: Request,
   res: Response
 ): Promise<void> => {
@@ -35,23 +33,25 @@ export const userSignup = async (
 
     if (!fullName || !password || !email || !phonenumber) {
       res.status(400).json({ message: "Please fill all the fields" });
+      return;
     }
 
-    const existingUser = await UserModel.findOne({ email });
-    if (existingUser) {
-      res.status(400).json({ message: " User already exists" });
+    const existingCitizen = await CitizenModel.findOne({ email });
+    if (existingCitizen) {
+      res.status(400).json({ message: " Citizen already exists" });
+      return;
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await UserModel.create({
+    CitizenModel.create({
       fullName,
-      password,
+      password: hashedPassword,
       email,
       phonenumber,
     });
-    console.log("User created!");
-    res.status(200).json({ message: "User Signed up!" });
+    console.log("Citizen created!");
+    res.status(200).json({ message: "Citizen Signed up!" });
   } catch (err: any) {
     if (err.name === "ZodError") {
       res.status(400).json({
@@ -60,43 +60,53 @@ export const userSignup = async (
       });
     }
 
-    console.error("Error creating user:", err);
+    console.error("Error creating CitizenCitizenModel:", err);
     res
       .status(411)
-      .json({ message: "User already exists or another error occurred" });
+      .json({ message: "Citizen already exists or another error occurred" });
   }
 };
 
-//User Signin =>
-
-export const userSignin = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  const existingUser = await UserModel.findOne({
-    email,
-    password,
-  });
-
+export const citizenSignin = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    if (existingUser) {
-      const token = jwt.sign(
-        {
-          id: existingUser._id,
-        },
-        process.env.JWT_PASSWORD!
-      );
-      res.json({
-        token,
-        user: {
-          id: existingUser._id,
-          fullName: existingUser.fullName,
-          email: existingUser.email,
-          role: "citizen",
-        },
-      });
-      console.log("User signed in!");
+    const { email, password } = req.body;
+    const existingCitizen = await CitizenModel.findOne({ email });
+
+    if (!existingCitizen) {
+      res.status(400).json({ message: "Invalid email or password" });
+      return;
     }
+
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      existingCitizen.password
+    );
+    if (!isPasswordValid) {
+      res.status(400).json({ message: "Invalid email or password" });
+      return;
+    }
+
+    const token = jwt.sign(
+      {
+        id: existingCitizen._id,
+      },
+      process.env.JWT_PASSWORD!
+    );
+    res.json({
+      token,
+      CitizenModel: {
+        id: existingCitizen._id,
+        fullName: existingCitizen.fullName,
+        email: existingCitizen.email,
+        role: "citizen",
+      },
+    });
+    console.log("Citizen signed in!");
   } catch (error) {
-    console.error("Error during user signin:", error);
+    console.error("Error during citizen signin:", error);
     res.status(500).json({
       message: "Internal Server Error",
     });

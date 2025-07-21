@@ -5,7 +5,7 @@ const mongoose_1 = require("mongoose");
 const IssueSchema = new mongoose_1.Schema({
     userId: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "Citizen",
         required: true,
     },
     issueType: {

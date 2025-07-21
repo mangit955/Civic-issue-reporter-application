@@ -19,7 +19,7 @@ const IssueStatusHistorySchema = new mongoose_1.Schema({
     },
     changedBy: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "Citizen",
         required: true,
     },
 }, { timestamps: true });

@@ -50,10 +50,33 @@ export const createIssue = async (req: Request, res: Response) => {
 
 export const getIssues = async (req: Request, res: Response) => {
   try {
-    const issue = await IssueModel.find({}).populate("userId", "fullName");
-    res.json({
-      issue,
-    });
+    const issues = await IssueModel.find({})
+      .populate("userId", "fullName")
+      .lean();
+
+    type PopulatedIssue = (typeof issues)[number] & {
+      userId?: { fullName?: string };
+    };
+
+    const issuesWithMedia = await Promise.all(
+      issues.map(async (issue) => {
+        const media = await MultimediaModel.find({ issueID: issue._id });
+        const populatedIssue = issue as PopulatedIssue;
+        return {
+          _id: issue._id,
+          title: issue.title,
+          description: issue.description,
+          type: issue.issueType,
+          city: issue.location,
+          reportedBy: populatedIssue.userId?.fullName || "Anonymous",
+          reportedAt: issue.createdAt,
+          image: media.length > 0 ? media[0].url : null,
+          status: issue.status,
+        };
+      })
+    );
+
+    res.json({ issues: issuesWithMedia });
   } catch (err) {
     console.error("Error fetching issues:", err);
     res.status(500).json({

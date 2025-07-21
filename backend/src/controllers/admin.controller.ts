@@ -73,3 +73,28 @@ export const deleteAdmin = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const updateIssueStatus = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { issueId, status } = req.body;
+
+    const updatedIssue = await IssueModel.findByIdAndUpdate(
+      issueId,
+      { status },
+      { new: true }
+    );
+
+    if (!updatedIssue) {
+      res.status(404).json({ message: "Issue not found" });
+      return;
+    }
+
+    res.json({ message: "Issue updated successfully", user: updatedIssue });
+  } catch (error) {
+    console.error("Error updating status:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
