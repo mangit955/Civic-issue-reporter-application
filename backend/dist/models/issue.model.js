@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.IssueModel = void 0;
 const mongoose_1 = require("mongoose");
 const IssueSchema = new mongoose_1.Schema({
-    userId: {
+    citizenId: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: "Citizen",
         required: true,
@@ -23,6 +23,7 @@ const IssueSchema = new mongoose_1.Schema({
     },
     title: {
         type: String,
+        unique: true,
         required: true,
         maxlength: 100,
         minlength: 5,

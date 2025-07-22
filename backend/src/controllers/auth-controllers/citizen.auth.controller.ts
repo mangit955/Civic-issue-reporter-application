@@ -31,11 +31,6 @@ export const citizenSignup = async (
     const parsedData = signupSchema.parse(req.body);
     const { fullName, password, email, phonenumber } = parsedData;
 
-    if (!fullName || !password || !email || !phonenumber) {
-      res.status(400).json({ message: "Please fill all the fields" });
-      return;
-    }
-
     const existingCitizen = await CitizenModel.findOne({ email });
     if (existingCitizen) {
       res.status(400).json({ message: " Citizen already exists" });
@@ -44,23 +39,24 @@ export const citizenSignup = async (
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    CitizenModel.create({
+    await CitizenModel.create({
       fullName,
       password: hashedPassword,
       email,
       phonenumber,
     });
     console.log("Citizen created!");
-    res.status(200).json({ message: "Citizen Signed up!" });
+    res.status(201).json({ message: "Citizen Signed up!" });
   } catch (err: any) {
     if (err.name === "ZodError") {
       res.status(400).json({
         message: "Validation failed",
         errors: err.errors,
       });
+      return;
     }
 
-    console.error("Error creating CitizenCitizenModel:", err);
+    console.error("Error creating CitizenModel:", err);
     res
       .status(411)
       .json({ message: "Citizen already exists or another error occurred" });
@@ -82,7 +78,7 @@ export const citizenSignin = async (
 
     const isPasswordValid = await bcrypt.compare(
       password,
-      existingCitizen.password
+      existingCitizen.password as string
     );
     if (!isPasswordValid) {
       res.status(400).json({ message: "Invalid email or password" });
@@ -93,14 +89,16 @@ export const citizenSignin = async (
       {
         id: existingCitizen._id,
       },
-      process.env.JWT_PASSWORD!
+      process.env.JWT_PASSWORD!,
+      { expiresIn: "1d" }
     );
     res.json({
       token,
-      CitizenModel: {
+      UserModel: {
         id: existingCitizen._id,
         fullName: existingCitizen.fullName,
         email: existingCitizen.email,
+        phonenumber: existingCitizen.phonenumber,
         role: "citizen",
       },
     });

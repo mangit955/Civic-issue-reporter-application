@@ -7,22 +7,22 @@ import { authMiddleware } from "../middlerware/auth.middleware";
 import {
   deleteIssue,
   getCitizenProfile,
-  getIssuesBycitizen,
+  getIssuesByCitizen,
   updateCitizenProfile,
 } from "../controllers/citizen.controller";
 
 const router = Router();
 
-router.post("/signup/citizen", citizenSignup);
+router.post("/citizen/signup", citizenSignup);
 
-router.post("/signin/citizen", citizenSignin);
+router.post("/citizen/signin", citizenSignin);
 
-router.get("/citizen/:id", authMiddleware, getCitizenProfile);
+router.get("/citizen/profile/:id", authMiddleware, getCitizenProfile);
 
 router.put("/citizen/:id", authMiddleware, updateCitizenProfile);
 
-router.get("/citizen/issue", authMiddleware, getIssuesBycitizen);
+router.get("/citizen/issues", authMiddleware, getIssuesByCitizen);
 
-router.delete("/citizen/issue", authMiddleware, deleteIssue);
+router.delete("/citizen/issues/:id", authMiddleware, deleteIssue);
 
 export default router;

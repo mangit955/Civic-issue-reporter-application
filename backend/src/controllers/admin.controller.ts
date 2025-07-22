@@ -3,16 +3,23 @@ import { IssueModel } from "../models/issue.model";
 import { Request, Response } from "express";
 
 interface AuthRequest extends Request {
-  userId?: string;
+  adminId?: string;
 }
 
 export const getAdminProfile = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const admin = await AdminModel.findById(id).select("-password"); // Exclude password
+    const loggedInAdminId = req.adminId;
+
+    if (id !== loggedInAdminId) {
+      res.status(403).json({ message: "Unauthorised access" });
+      return;
+    }
+
+    const admin = await AdminModel.findById(id).select("-password").lean();
 
     if (!admin) {
       res.status(404).json({ message: "Admin not found" });
@@ -27,11 +34,18 @@ export const getAdminProfile = async (
 };
 
 export const updateAdminProfile = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {
     const { id } = req.params;
+    const loggedInAdminId = req.adminId;
+
+    if (id !== loggedInAdminId) {
+      res.status(403).json({ message: "Unauthorised access" });
+      return;
+    }
+
     const { fullName, email, phonenumber, department } = req.body;
 
     const updatedAdmin = await AdminModel.findByIdAndUpdate(
@@ -52,34 +66,25 @@ export const updateAdminProfile = async (
   }
 };
 
-export const deleteAdmin = async (req: Request, res: Response) => {
-  const authReq = req as AuthRequest;
-  const issueId = req.body.issueId;
-  const result = await IssueModel.deleteOne({
-    _id: issueId,
-    userID: authReq.userId,
-  });
-
-  try {
-    if (result.deletedCount === 0) {
-      res.status(404).json({
-        message: "Issue not found",
-      });
-    }
-  } catch (error) {
-    console.error("Error deleting issue:", error);
-    res.json({
-      message: " Deleted Sucessfully!",
-    });
-  }
-};
-
 export const updateIssueStatus = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {
+    const { id } = req.params;
+    const loggedInAdminId = req.adminId;
+
+    if (id !== loggedInAdminId) {
+      res.status(403).json({ message: "Unauthorised access" });
+      return;
+    }
     const { issueId, status } = req.body;
+
+    const validStatuses = ["Reported", "In Progress", "Resolved", "Rejected"];
+    if (!validStatuses.includes(status)) {
+      res.status(400).json({ message: "Invalid status value" });
+      return;
+    }
 
     const updatedIssue = await IssueModel.findByIdAndUpdate(
       issueId,
@@ -97,4 +102,33 @@ export const updateIssueStatus = async (
     console.error("Error updating status:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
+};
+
+export const deleteIssueByAdmin = async (req: AuthRequest, res: Response) => {
+  const authReq = req as AuthRequest;
+  const issueId = req.body.issueId;
+  const result = await IssueModel.deleteOne({
+    _id: issueId,
+    adminId: authReq.adminId,
+  });
+
+  try {
+    const { id } = req.params;
+    const loggedInAdminId = req.adminId;
+
+    if (id !== loggedInAdminId) {
+      res.status(403).json({ message: "Unauthorised access" });
+      return;
+    }
+    if (result.deletedCount === 0) {
+      res.status(404).json({
+        message: "Issue not found",
+      });
+    }
+  } catch (error) {
+    console.error("Error deleting issue:", error);
+  }
+  res.json({
+    message: " Deleted Sucessfully!",
+  });
 };

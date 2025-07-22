@@ -7,12 +7,19 @@ interface AuthRequest extends Request {
 }
 
 export const getCitizenProfile = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const citizen = await CitizenModel.findById(id).select("-password");
+    const loggedInCitizenId = req.citizenId;
+
+    if (id !== loggedInCitizenId) {
+      res.status(403).json({ message: "Unauthorised Citizen access" });
+      return;
+    }
+
+    const citizen = await CitizenModel.findById(id).select("-password").lean();
 
     if (!citizen) {
       res.status(404).json({ message: "Citizen not found" });
@@ -27,12 +34,24 @@ export const getCitizenProfile = async (
 };
 
 export const updateCitizenProfile = async (
-  req: Request,
+  req: AuthRequest,
   res: Response
 ): Promise<void> => {
   try {
     const { id } = req.params;
+    const loggedInCitizenId = req.citizenId;
+
+    if (id !== loggedInCitizenId) {
+      res.status(403).json({ message: "Unauthorised Citizen access" });
+      return;
+    }
+
     const { fullName, email, phonenumber, address } = req.body;
+
+    if (!fullName || !email || !phonenumber || !address) {
+      res.status(400).json({ message: "All fields are required" });
+      return;
+    }
 
     const updatedCitizen = await CitizenModel.findByIdAndUpdate(
       id,
@@ -55,7 +74,28 @@ export const updateCitizenProfile = async (
   }
 };
 
-export const deleteIssue = async (req: Request, res: Response) => {
+export const getIssuesByCitizen = async (req: Request, res: Response) => {
+  const authReq = req as AuthRequest;
+
+  try {
+    const citizenId = authReq.citizenId;
+    if (!citizenId) {
+      res.status(401).json({ message: "Unauthorized" });
+      return;
+    }
+
+    const issues = await IssueModel.find({ citizenId })
+      .populate("citizenId", "fullName")
+      .lean();
+
+    res.json({ issues });
+  } catch (error) {
+    console.error("Error fetching issues:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const deleteIssue = async (req: AuthRequest, res: Response) => {
   const authReq = req as AuthRequest;
   const issueId = req.body.issueId;
   const result = await IssueModel.deleteOne({
@@ -64,28 +104,24 @@ export const deleteIssue = async (req: Request, res: Response) => {
   });
 
   try {
+    const { id } = req.params;
+    const loggedInCitizenId = req.citizenId;
+
+    if (id !== loggedInCitizenId) {
+      res.status(403).json({ message: "Unauthorised Citizen access" });
+      return;
+    }
     if (result.deletedCount === 0) {
       res.status(404).json({
         message: " Content not found !",
       });
+      return;
     }
-  } catch (error) {
-    console.error("Error deleting issue:", error);
     res.json({
       message: "Deleted Successfully !",
     });
+  } catch (error) {
+    console.error("Error deleting issue:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
-};
-
-export const getIssuesBycitizen = async (req: Request, res: Response) => {
-  //@ts-ignore
-  const citizenId = req.citizenId;
-  console.log("citizenId in getIssuesBycitizen:", citizenId);
-  const issue = await IssueModel.find({
-    citizenId: citizenId,
-  }).populate("citizenId", "fullName");
-
-  res.json({
-    issue,
-  });
 };

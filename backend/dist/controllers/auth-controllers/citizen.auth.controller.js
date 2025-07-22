@@ -45,7 +45,7 @@ const citizenSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             return;
         }
         const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
-        citizen_model_1.CitizenModel.create({
+        yield citizen_model_1.CitizenModel.create({
             fullName,
             password: hashedPassword,
             email,
@@ -86,10 +86,11 @@ const citizenSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }, process.env.JWT_PASSWORD);
         res.json({
             token,
-            CitizenModel: {
+            UserModel: {
                 id: existingCitizen._id,
                 fullName: existingCitizen.fullName,
                 email: existingCitizen.email,
+                phonenumber: existingCitizen.phonenumber,
                 role: "citizen",
             },
         });

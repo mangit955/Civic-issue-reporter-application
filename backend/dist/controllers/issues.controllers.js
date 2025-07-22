@@ -17,7 +17,7 @@ const createIssue = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const files = req.files;
         const { title = "Untitled", description, location, status, issueType, } = req.body;
         const issue = yield issue_model_1.IssueModel.create({
-            userId: req.userId,
+            citizenId: req.citizenId,
             issueType,
             title,
             description,

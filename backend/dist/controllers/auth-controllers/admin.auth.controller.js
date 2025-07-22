@@ -54,7 +54,7 @@ const adminSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
         yield admin_model_1.AdminModel.create({
             fullName,
-            password,
+            password: hashedPassword,
             email,
             phonenumber,
             department,

@@ -2,7 +2,7 @@ import { model, Schema } from "mongoose";
 
 const IssueSchema = new Schema(
   {
-    userId: {
+    citizenId: {
       type: Schema.Types.ObjectId,
       ref: "Citizen",
       required: true,
@@ -22,6 +22,7 @@ const IssueSchema = new Schema(
     },
     title: {
       type: String,
+      unique: true,
       required: true,
       maxlength: 100,
       minlength: 5,

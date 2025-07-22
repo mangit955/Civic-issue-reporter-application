@@ -2,9 +2,12 @@ import { Request, Response } from "express";
 import { IssueModel } from "../models/issue.model";
 import { MultimediaModel } from "../models/multimedia.model";
 
-export const createIssue = async (req: Request, res: Response) => {
+export const createIssue = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const files = req.files as Express.Multer.File[];
+    const files = (req.files as Express.Multer.File[]) || [];
 
     const {
       title = "Untitled",
@@ -14,13 +17,26 @@ export const createIssue = async (req: Request, res: Response) => {
       issueType,
     } = req.body;
 
+    if (!title || !description || !location || !status || !issueType) {
+      res.status(400).json({ message: "Please fill all the required fields " });
+      return;
+    }
+
+    const existingIssue = await IssueModel.findOne({ title });
+    if (existingIssue) {
+      res
+        .status(400)
+        .json({ message: " Issue with this title already exists" });
+      return;
+    }
+
     const issue = await IssueModel.create({
-      userId: (req as any).userId,
+      citizenId: (req as any).citizenId,
       issueType,
       title,
       description,
       location,
-      status,
+      status: "Reported",
       multimediaId: (req as any).multimediaId,
     });
 
@@ -29,7 +45,7 @@ export const createIssue = async (req: Request, res: Response) => {
         MultimediaModel.create({
           issueID: issue._id,
           fileType: file.mimetype.startsWith("video") ? "video" : "image",
-          url: (file as any).path,
+          url: file.path,
           filename: file.originalname,
         })
       )
@@ -51,7 +67,7 @@ export const createIssue = async (req: Request, res: Response) => {
 export const getIssues = async (req: Request, res: Response) => {
   try {
     const issues = await IssueModel.find({})
-      .populate("userId", "fullName")
+      .populate("citizenId", "fullName")
       .lean();
 
     type PopulatedIssue = (typeof issues)[number] & {

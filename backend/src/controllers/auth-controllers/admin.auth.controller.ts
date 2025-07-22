@@ -20,7 +20,8 @@ const signupSchema = z.object({
   email: z.string().email({ message: "Invalid email format" }).trim(),
   phonenumber: z
     .string()
-    .length(10, { message: "Phone number must be exactly 10 digits" }),
+    .length(10, { message: "Phone number must be exactly 10 digits" })
+    .trim(),
   department: z.string().trim(),
   adminAccessCode: z.number().int().positive().min(4, {
     message: "Admin access code must be at least 4 digits",
@@ -51,22 +52,23 @@ export const adminSignup = async (
       !adminAccessCode
     ) {
       res.status(400).json({ message: "Please fill all the fields" });
+      return;
     }
 
     const existingUser = await AdminModel.findOne({ email });
     if (existingUser) {
       res.status(400).json({ message: " User already exists" });
+      return;
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await AdminModel.create({
       fullName,
-      password,
+      password: hashedPassword,
       email,
       phonenumber,
       department,
-      adminAccessCode,
     });
     console.log("Admin created!");
     res.status(200).json({ message: "Admin Signed up!" });
@@ -76,6 +78,7 @@ export const adminSignup = async (
         message: "Validation failed",
         errors: err.errors,
       });
+      return;
     }
 
     console.error("Error creating admin:", err);
