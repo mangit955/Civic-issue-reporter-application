@@ -9,15 +9,27 @@ export const createIssue = async (
   try {
     const files = (req.files as Express.Multer.File[]) || [];
 
-    const {
-      title = "Untitled",
-      description,
-      location,
-      status,
-      issueType,
-    } = req.body;
+    const { title = "Untitled", description, location, issueType } = req.body;
+    // location stuff
 
-    if (!title || !description || !location || !status || !issueType) {
+    let parsedLocation = location;
+    if (typeof location === "string") {
+      try {
+        parsedLocation = JSON.parse(location);
+      } catch {
+        res.status(400).json({ message: "Invalid location JSON format" });
+        return;
+      }
+    }
+
+    if (
+      !title ||
+      !description ||
+      !parsedLocation ||
+      !parsedLocation.latitude ||
+      !parsedLocation.longitude ||
+      !issueType
+    ) {
       res.status(400).json({ message: "Please fill all the required fields " });
       return;
     }
@@ -31,11 +43,11 @@ export const createIssue = async (
     }
 
     const issue = await IssueModel.create({
-      citizenId: (req as any).citizenId,
+      citizenId: (req as any).citizenId, // Adapt as per your auth
       issueType,
       title,
       description,
-      location,
+      location: parsedLocation,
       status: "Reported",
       multimediaId: (req as any).multimediaId,
     });

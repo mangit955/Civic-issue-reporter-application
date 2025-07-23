@@ -29,7 +29,8 @@ const signupSchema = zod_1.z.object({
     email: zod_1.z.string().email({ message: "Invalid email format" }).trim(),
     phonenumber: zod_1.z
         .string()
-        .length(10, { message: "Phone number must be exactly 10 digits" }),
+        .length(10, { message: "Phone number must be exactly 10 digits" })
+        .trim(),
     department: zod_1.z.string().trim(),
     adminAccessCode: zod_1.z.number().int().positive().min(4, {
         message: "Admin access code must be at least 4 digits",
@@ -46,10 +47,12 @@ const adminSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             !department ||
             !adminAccessCode) {
             res.status(400).json({ message: "Please fill all the fields" });
+            return;
         }
         const existingUser = yield admin_model_1.AdminModel.findOne({ email });
         if (existingUser) {
             res.status(400).json({ message: " User already exists" });
+            return;
         }
         const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
         yield admin_model_1.AdminModel.create({
@@ -58,7 +61,6 @@ const adminSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             email,
             phonenumber,
             department,
-            adminAccessCode,
         });
         console.log("Admin created!");
         res.status(200).json({ message: "Admin Signed up!" });
@@ -69,6 +71,7 @@ const adminSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 message: "Validation failed",
                 errors: err.errors,
             });
+            return;
         }
         console.error("Error creating admin:", err);
         res

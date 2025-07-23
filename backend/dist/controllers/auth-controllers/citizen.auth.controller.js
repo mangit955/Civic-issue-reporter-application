@@ -35,10 +35,6 @@ const citizenSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const parsedData = signupSchema.parse(req.body);
         const { fullName, password, email, phonenumber } = parsedData;
-        if (!fullName || !password || !email || !phonenumber) {
-            res.status(400).json({ message: "Please fill all the fields" });
-            return;
-        }
         const existingCitizen = yield citizen_model_1.CitizenModel.findOne({ email });
         if (existingCitizen) {
             res.status(400).json({ message: " Citizen already exists" });
@@ -52,7 +48,7 @@ const citizenSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             phonenumber,
         });
         console.log("Citizen created!");
-        res.status(200).json({ message: "Citizen Signed up!" });
+        res.status(201).json({ message: "Citizen Signed up!" });
     }
     catch (err) {
         if (err.name === "ZodError") {
@@ -60,8 +56,9 @@ const citizenSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 message: "Validation failed",
                 errors: err.errors,
             });
+            return;
         }
-        console.error("Error creating CitizenCitizenModel:", err);
+        console.error("Error creating CitizenModel:", err);
         res
             .status(411)
             .json({ message: "Citizen already exists or another error occurred" });
@@ -83,10 +80,10 @@ const citizenSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
         const token = jsonwebtoken_1.default.sign({
             id: existingCitizen._id,
-        }, process.env.JWT_PASSWORD);
+        }, process.env.JWT_PASSWORD, { expiresIn: "1d" });
         res.json({
             token,
-            UserModel: {
+            user: {
                 id: existingCitizen._id,
                 fullName: existingCitizen.fullName,
                 email: existingCitizen.email,

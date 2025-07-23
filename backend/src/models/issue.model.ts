@@ -1,6 +1,17 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Document } from "mongoose";
+import { IIssue } from "../utils/issue";
+import { ILocation } from "../utils/location";
 
-const IssueSchema = new Schema(
+const locationSchema = new Schema<ILocation>(
+  {
+    latitude: { type: Number, required: true, min: -90, max: 90 },
+    longitude: { type: Number, required: true, min: -180, max: 180 },
+    address: String,
+  },
+  { _id: false }
+);
+
+const IssueSchema = new Schema<IIssue & Document>(
   {
     citizenId: {
       type: Schema.Types.ObjectId,
@@ -37,8 +48,8 @@ const IssueSchema = new Schema(
       default: "Reported",
     },
     location: {
-      type: String,
-      ref: "Location",
+      type: locationSchema,
+      required: true,
     },
     media: {
       type: Schema.Types.ObjectId,
@@ -48,4 +59,7 @@ const IssueSchema = new Schema(
   { timestamps: true }
 );
 
-export const IssueModel = model("Issue", IssueSchema);
+export const LocationModel = model("Location", locationSchema);
+
+export interface IssueDocument extends IIssue, Document {}
+export const IssueModel = model<IssueDocument>("Issue", IssueSchema);

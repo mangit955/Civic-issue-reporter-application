@@ -11,15 +11,11 @@ export const getCitizenProfile = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { id } = req.params;
     const loggedInCitizenId = req.citizenId;
 
-    if (id !== loggedInCitizenId) {
-      res.status(403).json({ message: "Unauthorised Citizen access" });
-      return;
-    }
-
-    const citizen = await CitizenModel.findById(id).select("-password").lean();
+    const citizen = await CitizenModel.findById(loggedInCitizenId)
+      .select("-password")
+      .lean();
 
     if (!citizen) {
       res.status(404).json({ message: "Citizen not found" });
@@ -46,16 +42,16 @@ export const updateCitizenProfile = async (
       return;
     }
 
-    const { fullName, email, phonenumber, address } = req.body;
+    const { fullName, email, phonenumber } = req.body;
 
-    if (!fullName || !email || !phonenumber || !address) {
+    if (!fullName || !email || !phonenumber) {
       res.status(400).json({ message: "All fields are required" });
       return;
     }
 
     const updatedCitizen = await CitizenModel.findByIdAndUpdate(
       id,
-      { fullName, email, phonenumber, address },
+      { fullName, email, phonenumber },
       { new: true }
     );
 
@@ -86,6 +82,7 @@ export const getIssuesByCitizen = async (req: Request, res: Response) => {
 
     const issues = await IssueModel.find({ citizenId })
       .populate("citizenId", "fullName")
+      .sort({ createdAt: -1 })
       .lean();
 
     res.json({ issues });

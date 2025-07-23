@@ -17,7 +17,7 @@ router.post("/citizen/signup", citizenSignup);
 
 router.post("/citizen/signin", citizenSignin);
 
-router.get("/citizen/profile/:id", authMiddleware, getCitizenProfile);
+router.get("/citizen/profile/", authMiddleware, getCitizenProfile);
 
 router.put("/citizen/:id", authMiddleware, updateCitizenProfile);
 

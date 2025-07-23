@@ -48,6 +48,11 @@ export const updateAdminProfile = async (
 
     const { fullName, email, phonenumber, department } = req.body;
 
+    if (!fullName || !email || !phonenumber || !department) {
+      res.status(400).json({ message: "All fields are required" });
+      return;
+    }
+
     const updatedAdmin = await AdminModel.findByIdAndUpdate(
       id,
       { fullName, email, phonenumber, department },

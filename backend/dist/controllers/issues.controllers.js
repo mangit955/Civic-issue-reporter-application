@@ -14,15 +14,42 @@ const issue_model_1 = require("../models/issue.model");
 const multimedia_model_1 = require("../models/multimedia.model");
 const createIssue = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const files = req.files;
-        const { title = "Untitled", description, location, status, issueType, } = req.body;
+        const files = req.files || [];
+        const { title = "Untitled", description, location, issueType } = req.body;
+        // location stuff
+        let parsedLocation = location;
+        if (typeof location === "string") {
+            try {
+                parsedLocation = JSON.parse(location);
+            }
+            catch (_a) {
+                res.status(400).json({ message: "Invalid location JSON format" });
+                return;
+            }
+        }
+        if (!title ||
+            !description ||
+            !parsedLocation ||
+            !parsedLocation.latitude ||
+            !parsedLocation.longitude ||
+            !issueType) {
+            res.status(400).json({ message: "Please fill all the required fields " });
+            return;
+        }
+        const existingIssue = yield issue_model_1.IssueModel.findOne({ title });
+        if (existingIssue) {
+            res
+                .status(400)
+                .json({ message: " Issue with this title already exists" });
+            return;
+        }
         const issue = yield issue_model_1.IssueModel.create({
-            citizenId: req.citizenId,
+            citizenId: req.citizenId, // Adapt as per your auth
             issueType,
             title,
             description,
-            location,
-            status,
+            location: parsedLocation,
+            status: "Reported",
             multimediaId: req.multimediaId,
         });
         const mediaDocs = yield Promise.all(files.map((file) => multimedia_model_1.MultimediaModel.create({
@@ -47,7 +74,7 @@ exports.createIssue = createIssue;
 const getIssues = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const issues = yield issue_model_1.IssueModel.find({})
-            .populate("userId", "fullName")
+            .populate("citizenId", "fullName")
             .lean();
         const issuesWithMedia = yield Promise.all(issues.map((issue) => __awaiter(void 0, void 0, void 0, function* () {
             var _a;

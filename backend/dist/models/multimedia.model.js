@@ -11,7 +11,7 @@ const MultimediaSchema = new mongoose_1.Schema({
     fileType: {
         type: String,
         enum: ["image", "video"],
-        default: "",
+        required: true,
     },
     url: {
         type: String,

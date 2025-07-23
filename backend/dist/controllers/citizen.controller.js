@@ -9,13 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getIssuesBycitizen = exports.deleteIssue = exports.updateCitizenProfile = exports.getCitizenProfile = void 0;
+exports.deleteIssue = exports.getIssuesByCitizen = exports.updateCitizenProfile = exports.getCitizenProfile = void 0;
 const issue_model_1 = require("../models/issue.model");
 const citizen_model_1 = require("../models/citizen.model");
 const getCitizenProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id } = req.params;
-        const citizen = yield citizen_model_1.CitizenModel.findById(id).select("-password");
+        const loggedInCitizenId = req.citizenId;
+        const citizen = yield citizen_model_1.CitizenModel.findById(loggedInCitizenId)
+            .select("-password")
+            .lean();
         if (!citizen) {
             res.status(404).json({ message: "Citizen not found" });
             return;
@@ -31,8 +33,17 @@ exports.getCitizenProfile = getCitizenProfile;
 const updateCitizenProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { fullName, email, phonenumber, address } = req.body;
-        const updatedCitizen = yield citizen_model_1.CitizenModel.findByIdAndUpdate(id, { fullName, email, phonenumber, address }, { new: true });
+        const loggedInCitizenId = req.citizenId;
+        if (id !== loggedInCitizenId) {
+            res.status(403).json({ message: "Unauthorised Citizen access" });
+            return;
+        }
+        const { fullName, email, phonenumber } = req.body;
+        if (!fullName || !email || !phonenumber) {
+            res.status(400).json({ message: "All fields are required" });
+            return;
+        }
+        const updatedCitizen = yield citizen_model_1.CitizenModel.findByIdAndUpdate(id, { fullName, email, phonenumber }, { new: true });
         if (!updatedCitizen) {
             res.status(404).json({ message: "Citizen not found" });
             return;
@@ -48,6 +59,26 @@ const updateCitizenProfile = (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.updateCitizenProfile = updateCitizenProfile;
+const getIssuesByCitizen = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const authReq = req;
+    try {
+        const citizenId = authReq.citizenId;
+        if (!citizenId) {
+            res.status(401).json({ message: "Unauthorized" });
+            return;
+        }
+        const issues = yield issue_model_1.IssueModel.find({ citizenId })
+            .populate("citizenId", "fullName")
+            .sort({ createdAt: -1 })
+            .lean();
+        res.json({ issues });
+    }
+    catch (error) {
+        console.error("Error fetching issues:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+exports.getIssuesByCitizen = getIssuesByCitizen;
 const deleteIssue = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const authReq = req;
     const issueId = req.body.issueId;
@@ -56,29 +87,25 @@ const deleteIssue = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         citizenId: authReq.citizenId,
     });
     try {
+        const { id } = req.params;
+        const loggedInCitizenId = req.citizenId;
+        if (id !== loggedInCitizenId) {
+            res.status(403).json({ message: "Unauthorised Citizen access" });
+            return;
+        }
         if (result.deletedCount === 0) {
             res.status(404).json({
                 message: " Content not found !",
             });
+            return;
         }
-    }
-    catch (error) {
-        console.error("Error deleting issue:", error);
         res.json({
             message: "Deleted Successfully !",
         });
     }
+    catch (error) {
+        console.error("Error deleting issue:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 });
 exports.deleteIssue = deleteIssue;
-const getIssuesBycitizen = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //@ts-ignore
-    const citizenId = req.citizenId;
-    console.log("citizenId in getIssuesBycitizen:", citizenId);
-    const issue = yield issue_model_1.IssueModel.find({
-        citizenId: citizenId,
-    }).populate("citizenId", "fullName");
-    res.json({
-        issue,
-    });
-});
-exports.getIssuesBycitizen = getIssuesBycitizen;

@@ -94,7 +94,7 @@ export const citizenSignin = async (
     );
     res.json({
       token,
-      UserModel: {
+      user: {
         id: existingCitizen._id,
         fullName: existingCitizen.fullName,
         email: existingCitizen.email,

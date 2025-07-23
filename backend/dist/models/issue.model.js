@@ -1,7 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.IssueModel = void 0;
+exports.IssueModel = exports.LocationModel = void 0;
 const mongoose_1 = require("mongoose");
+const locationSchema = new mongoose_1.Schema({
+    latitude: { type: Number, required: true, min: -90, max: 90 },
+    longitude: { type: Number, required: true, min: -180, max: 180 },
+    address: String,
+}, { _id: false });
 const IssueSchema = new mongoose_1.Schema({
     citizenId: {
         type: mongoose_1.Schema.Types.ObjectId,
@@ -38,12 +43,13 @@ const IssueSchema = new mongoose_1.Schema({
         default: "Reported",
     },
     location: {
-        type: String,
-        ref: "Location",
+        type: locationSchema,
+        required: true,
     },
     media: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: "Multimedia",
     },
 }, { timestamps: true });
+exports.LocationModel = (0, mongoose_1.model)("Location", locationSchema);
 exports.IssueModel = (0, mongoose_1.model)("Issue", IssueSchema);

@@ -5,10 +5,10 @@ const citizen_auth_controller_1 = require("../controllers/auth-controllers/citiz
 const auth_middleware_1 = require("../middlerware/auth.middleware");
 const citizen_controller_1 = require("../controllers/citizen.controller");
 const router = (0, express_1.Router)();
-router.post("/signup/citizen", citizen_auth_controller_1.citizenSignup);
-router.post("/signin/citizen", citizen_auth_controller_1.citizenSignin);
-router.get("/citizen/:id", auth_middleware_1.authMiddleware, citizen_controller_1.getCitizenProfile);
+router.post("/citizen/signup", citizen_auth_controller_1.citizenSignup);
+router.post("/citizen/signin", citizen_auth_controller_1.citizenSignin);
+router.get("/citizen/profile/", auth_middleware_1.authMiddleware, citizen_controller_1.getCitizenProfile);
 router.put("/citizen/:id", auth_middleware_1.authMiddleware, citizen_controller_1.updateCitizenProfile);
-router.get("/citizen/issue", auth_middleware_1.authMiddleware, citizen_controller_1.getIssuesBycitizen);
-router.delete("/citizen/issue", auth_middleware_1.authMiddleware, citizen_controller_1.deleteIssue);
+router.get("/citizen/issues", auth_middleware_1.authMiddleware, citizen_controller_1.getIssuesByCitizen);
+router.delete("/citizen/issues/:id", auth_middleware_1.authMiddleware, citizen_controller_1.deleteIssue);
 exports.default = router;

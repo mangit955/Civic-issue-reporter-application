@@ -10,7 +10,7 @@ const MultimediaSchema = new Schema(
     fileType: {
       type: String,
       enum: ["image", "video"],
-      default: "",
+      required: true,
     },
     url: {
       type: String,
