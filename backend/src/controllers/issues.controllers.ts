@@ -82,21 +82,16 @@ export const getIssues = async (req: Request, res: Response) => {
       .populate("citizenId", "fullName")
       .lean();
 
-    type PopulatedIssue = (typeof issues)[number] & {
-      userId?: { fullName?: string };
-    };
-
     const issuesWithMedia = await Promise.all(
       issues.map(async (issue) => {
         const media = await MultimediaModel.find({ issueID: issue._id });
-        const populatedIssue = issue as PopulatedIssue;
         return {
           _id: issue._id,
           title: issue.title,
           description: issue.description,
           type: issue.issueType,
-          city: issue.location,
-          reportedBy: populatedIssue.userId?.fullName || "Anonymous",
+          location: issue.location, //  send only address
+          reportedBy: (issue.citizenId as any)?.fullName || "Anonymous",
           reportedAt: issue.createdAt,
           image: media.length > 0 ? media[0].url : null,
           status: issue.status,

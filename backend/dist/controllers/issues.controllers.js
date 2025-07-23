@@ -85,7 +85,7 @@ const getIssues = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 title: issue.title,
                 description: issue.description,
                 type: issue.issueType,
-                city: issue.location,
+                location: issue.location.address, //  send only address
                 reportedBy: ((_a = populatedIssue.userId) === null || _a === void 0 ? void 0 : _a.fullName) || "Anonymous",
                 reportedAt: issue.createdAt,
                 image: media.length > 0 ? media[0].url : null,
