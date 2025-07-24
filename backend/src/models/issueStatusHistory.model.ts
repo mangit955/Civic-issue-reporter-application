@@ -12,11 +12,9 @@ const IssueStatusHistorySchema = new Schema(
       enum: ["Reported", "In Progress", "Resolved", "Rejected"],
       required: true,
     },
-    // review
-    
     handledBy: {
       type: Schema.Types.ObjectId,
-      ref: "Citizen",
+      ref: "Admin",
       required: true,
     },
     changedAt: {
