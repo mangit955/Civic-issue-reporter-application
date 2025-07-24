@@ -79,14 +79,13 @@ const getIssues = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const issuesWithMedia = yield Promise.all(issues.map((issue) => __awaiter(void 0, void 0, void 0, function* () {
             var _a;
             const media = yield multimedia_model_1.MultimediaModel.find({ issueID: issue._id });
-            const populatedIssue = issue;
             return {
                 _id: issue._id,
                 title: issue.title,
                 description: issue.description,
                 type: issue.issueType,
-                location: issue.location.address, //  send only address
-                reportedBy: ((_a = populatedIssue.userId) === null || _a === void 0 ? void 0 : _a.fullName) || "Anonymous",
+                location: issue.location, //  send only address
+                reportedBy: ((_a = issue.citizenId) === null || _a === void 0 ? void 0 : _a.fullName) || "Anonymous",
                 reportedAt: issue.createdAt,
                 image: media.length > 0 ? media[0].url : null,
                 status: issue.status,

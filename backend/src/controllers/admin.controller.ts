@@ -1,6 +1,7 @@
 import { AdminModel } from "../models/admin.model";
 import { IssueModel } from "../models/issue.model";
 import { Request, Response } from "express";
+import { IssueStatusHistoryModel } from "../models/issueStatusHistory.model";
 
 interface AuthRequest extends Request {
   adminId?: string;
@@ -106,6 +107,34 @@ export const updateIssueStatus = async (
   } catch (error) {
     console.error("Error updating status:", error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getHandledIssuesByAdmin = async (req: Request, res: Response) => {
+  try {
+    const { adminId } = req.params;
+
+    const historyRecords = await IssueStatusHistoryModel.find({
+      handledBy: adminId,
+      status: { $in: ["In Progress", "Resolved"] }, // handled statuses
+    })
+      .populate("issueID") // get full issue details
+      .sort({ changedAt: -1 })
+      .lean();
+
+      const issues = historyRecords
+      .filter(record => record.issueID) // ensure populated
+      .map(record => ({
+        ...record.issueID,
+        handledBy: record.handledBy,
+        lastStatus: record.status,
+        lastUpdated: record.changedAt,
+      }));
+
+    res.status(200).json({ success: true, issues });
+  } catch (error) {
+    console.error("Error fetching handled issues:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 };
 

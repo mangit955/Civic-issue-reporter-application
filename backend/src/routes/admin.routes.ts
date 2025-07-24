@@ -7,6 +7,7 @@ import { authMiddleware } from "../middlerware/auth.middleware";
 import {
   deleteIssueByAdmin,
   getAdminProfile,
+  getHandledIssuesByAdmin,
   updateAdminProfile,
   updateIssueStatus,
 } from "../controllers/admin.controller";
@@ -21,6 +22,8 @@ router.post("/admin/signin", adminSignin);
 router.get("/admin/profile/:id", authMiddleware, getAdminProfile);
 
 router.get("/admin/issues", authMiddleware, getIssues);
+
+router.get("/admin/:id/handled-issues", authMiddleware, getHandledIssuesByAdmin);
 
 router.put("/admin/:id", authMiddleware, updateAdminProfile);
 
