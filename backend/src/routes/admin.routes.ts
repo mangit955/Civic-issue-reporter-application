@@ -29,6 +29,6 @@ router.put("/admin/:id", authMiddleware, updateAdminProfile);
 
 router.put("/admin/issue/:id/status", authMiddleware, updateIssueStatus);
 
-router.delete("/issue/admin/:id", authMiddleware, deleteIssueByAdmin);
+router.delete("/issue/admin/:issueid", authMiddleware, deleteIssueByAdmin);
 
 export default router;

@@ -32,23 +32,12 @@ const signupSchema = zod_1.z.object({
         .length(10, { message: "Phone number must be exactly 10 digits" })
         .trim(),
     department: zod_1.z.string().trim(),
-    adminAccessCode: zod_1.z.number().int().positive().min(4, {
-        message: "Admin access code must be at least 4 digits",
-    }),
+    adminAccessCode: zod_1.z.number().int().min(1000, { message: "Admin access code must be at least 4 digits" }),
 });
 const adminSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const parsedData = signupSchema.parse(req.body);
         const { fullName, password, email, phonenumber, department, adminAccessCode, } = parsedData;
-        if (!fullName ||
-            !password ||
-            !email ||
-            !phonenumber ||
-            !department ||
-            !adminAccessCode) {
-            res.status(400).json({ message: "Please fill all the fields" });
-            return;
-        }
         const existingUser = yield admin_model_1.AdminModel.findOne({ email });
         if (existingUser) {
             res.status(400).json({ message: " User already exists" });

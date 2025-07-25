@@ -81,18 +81,35 @@ const SignUp = () => {
 
   const handleAdminSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (adminForm.password !== adminForm.confirmPassword) {
-      toast("Password Mismatch",{
-        description: "Passwords do not match. Please try again.",
-      });
+    
+   if(!adminForm.fullName.trim() ||
+   !adminForm.email.trim() ||
+   !adminForm.phonenumber.trim() ||
+   !adminForm.department.trim() ||
+   !adminForm.password ||
+   !adminForm.adminAccessCode.trim()) {
+  toast.error("Please fill all required fields.");
+  return;
+}
+    if(adminForm.password !== adminForm.confirmPassword) {
+  toast.error("Passwords do not match.");
+  return;
+    }
+    if (!/^\d{4,}$/.test(adminForm.adminAccessCode)) {
+      toast.error("Admin access code must be at least 4 digits.");
       return;
     }
+
     if (!adminForm.agreeToTerms) {
     toast("Terms Required",{
         description: "Please agree to the terms and conditions.",
       });
       return;
     }
+    if(adminForm.phonenumber.trim().length !== 10 || !/^\d{10}$/.test(adminForm.phonenumber.trim())) {
+  toast.error("Phone number must be exactly 10 digits.");
+  return;
+}
 
     // Registration logic
     const response = await fetch(`${BACKEND_URL}/api/v1/admin/signup`, {
@@ -106,24 +123,25 @@ const SignUp = () => {
         password: adminForm.password,
         phonenumber: adminForm.phonenumber,
         department: adminForm.department,
-        adminAccessCode: Number(adminForm.adminAccessCode)
+        adminAccessCode: Number(adminForm.adminAccessCode.trim()),
       }),
     });
-    if (response.ok){
-      const result = await response.json();
-      console.log(result);
+    if (response.ok) {
+   await response.json();
+  toast.success("Admin Registration Successful", {
+    description: "Your admin account is pending approval."
+  });
+  navigate("/signin");
+} else {
+  const errorData = await response.json();
+  console.log("Signup error details:", errorData);
+  toast.error(
+    errorData.errors
+      ? errorData.errors.map((e: any) => e.message).join(", ")
+      : errorData.message || "Signup failed"
+  );
+}
 
-      toast("Admin Registration Successful",{
-        description: "Your admin account is pending approval."
-      });
-
-      navigate("/signin");
-    }
-    else {
-      toast("Something went wrong!",{
-        description: "Please try again"
-      });
-    }
   };
 
   return (

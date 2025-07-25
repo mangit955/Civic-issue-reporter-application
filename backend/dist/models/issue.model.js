@@ -50,6 +50,10 @@ const IssueSchema = new mongoose_1.Schema({
         type: mongoose_1.Schema.Types.ObjectId,
         ref: "Multimedia",
     },
+    handledBy: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "Admin",
+    }
 }, { timestamps: true });
 exports.LocationModel = (0, mongoose_1.model)("Location", locationSchema);
 exports.IssueModel = (0, mongoose_1.model)("Issue", IssueSchema);

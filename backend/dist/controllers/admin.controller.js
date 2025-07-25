@@ -92,10 +92,10 @@ const updateIssueStatus = (req, res) => __awaiter(void 0, void 0, void 0, functi
 exports.updateIssueStatus = updateIssueStatus;
 const getHandledIssuesByAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id } = req.params; // use 'id' if route param is ':id'
+        const { id } = req.params;
         console.log("Fetching handled issues for admin:", id);
         const historyRecords = yield issueStatusHistory_model_1.IssueStatusHistoryModel.find({
-            handledBy: id, // use 'id' here
+            handledBy: id,
             status: { $in: ["In Progress", "Resolved"] },
         })
             .populate("issueID")
@@ -117,30 +117,28 @@ const getHandledIssuesByAdmin = (req, res) => __awaiter(void 0, void 0, void 0, 
 });
 exports.getHandledIssuesByAdmin = getHandledIssuesByAdmin;
 const deleteIssueByAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const authReq = req;
-    const issueId = req.body.issueId;
-    const result = yield issue_model_1.IssueModel.deleteOne({
-        _id: issueId,
-        adminId: authReq.adminId,
-    });
     try {
-        const { id } = req.params;
-        const loggedInAdminId = req.adminId;
-        if (id !== loggedInAdminId) {
-            res.status(403).json({ message: "Unauthorised access" });
+        const loggedInAdminId = req.adminId; // from auth middleware
+        const { issueId } = req.params;
+        // Validate issueId format
+        if (!mongoose_1.default.Types.ObjectId.isValid(issueId)) {
+            res.status(400).json({ message: "Invalid issue ID format" });
             return;
         }
+        // Optional: restrict deletion to assigned admin only, uncomment if needed
+        // const result = await IssueModel.deleteOne({ _id: issueId, handledBy: loggedInAdminId });
+        // If allowing any admin to delete:
+        const result = yield issue_model_1.IssueModel.deleteOne({ _id: issueId });
         if (result.deletedCount === 0) {
-            res.status(404).json({
-                message: "Issue not found",
-            });
+            res.status(404).json({ message: "Issue not found or unauthorized" });
+            return;
         }
+        console.log(`Admin ${loggedInAdminId} deleted issue ${issueId}`);
+        res.json({ message: "Deleted Successfully!" });
     }
     catch (error) {
         console.error("Error deleting issue:", error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
-    res.json({
-        message: " Deleted Sucessfully!",
-    });
 });
 exports.deleteIssueByAdmin = deleteIssueByAdmin;

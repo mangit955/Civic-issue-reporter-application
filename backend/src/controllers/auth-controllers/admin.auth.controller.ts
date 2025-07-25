@@ -23,9 +23,7 @@ const signupSchema = z.object({
     .length(10, { message: "Phone number must be exactly 10 digits" })
     .trim(),
   department: z.string().trim(),
-  adminAccessCode: z.number().int().positive().min(4, {
-    message: "Admin access code must be at least 4 digits",
-  }),
+  adminAccessCode: z.number().int().min(1000, { message: "Admin access code must be at least 4 digits" }),
 });
 
 export const adminSignup = async (
@@ -42,18 +40,6 @@ export const adminSignup = async (
       department,
       adminAccessCode,
     } = parsedData;
-
-    if (
-      !fullName ||
-      !password ||
-      !email ||
-      !phonenumber ||
-      !department ||
-      !adminAccessCode
-    ) {
-      res.status(400).json({ message: "Please fill all the fields" });
-      return;
-    }
 
     const existingUser = await AdminModel.findOne({ email });
     if (existingUser) {

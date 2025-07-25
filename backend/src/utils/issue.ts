@@ -17,4 +17,5 @@ export interface IIssue {
   media?: Types.ObjectId[]; // refs to multimedia
   createdAt?: Date;
   updatedAt?: Date;
+  handledBy?: Object | string; 
 }

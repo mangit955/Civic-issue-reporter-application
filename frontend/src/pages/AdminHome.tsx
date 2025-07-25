@@ -117,17 +117,16 @@ const AdminHome = () => {
   const handleDeleteIssue = async (issueId: string) => {
     if (!window.confirm("Are you sure you want to delete this issue?")) return;
     try {
-      const response = await fetch(
-        `${BACKEND_URL}/api/v1/issue/admin/${issueId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-          },
-          body: JSON.stringify({ issueId }),
-        }
-      );
+     const response = await fetch(
+  `${BACKEND_URL}/api/v1/issue/admin/${issueId}`, // issueId in URL
+  {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+    },
+  }
+);
+
 
       const data = await response.json();
       if (response.ok) {

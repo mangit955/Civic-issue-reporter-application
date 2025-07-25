@@ -55,6 +55,10 @@ const IssueSchema = new Schema<IIssue & Document>(
       type: Schema.Types.ObjectId,
       ref: "Multimedia",
     },
+    handledBy: {
+  type: Schema.Types.ObjectId,
+  ref: "Admin",
+}
   },
   { timestamps: true }
 );

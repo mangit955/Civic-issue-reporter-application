@@ -13,5 +13,5 @@ router.get("/admin/issues", auth_middleware_1.authMiddleware, issues_controllers
 router.get("/admin/:id/handled-issues", auth_middleware_1.authMiddleware, admin_controller_1.getHandledIssuesByAdmin);
 router.put("/admin/:id", auth_middleware_1.authMiddleware, admin_controller_1.updateAdminProfile);
 router.put("/admin/issue/:id/status", auth_middleware_1.authMiddleware, admin_controller_1.updateIssueStatus);
-router.delete("/issue/admin/:id", auth_middleware_1.authMiddleware, admin_controller_1.deleteIssueByAdmin);
+router.delete("/issue/admin/:issueid", auth_middleware_1.authMiddleware, admin_controller_1.deleteIssueByAdmin);
 exports.default = router;

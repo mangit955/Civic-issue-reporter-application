@@ -112,22 +112,23 @@ export const updateIssueStatus = async (
 
 export const getHandledIssuesByAdmin = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params; // use 'id' if route param is ':id'
+    const { id } = req.params;
 
     console.log("Fetching handled issues for admin:", id);
 
-    const historyRecords = await IssueStatusHistoryModel.find({
-      handledBy: id, // use 'id' here
-      status: { $in: ["In Progress", "Resolved"] },
-    })
-      .populate("issueID")
-      .sort({ changedAt: -1 })
-      .lean();
+const historyRecords = await IssueStatusHistoryModel.find({
+  handledBy: id,
+  status: { $in: ["In Progress", "Resolved"] },
+})
+.populate("issueID")
+.sort({ changedAt: -1 })
+.lean();
 
-    console.log(`Found ${historyRecords.length} records.`);
-    historyRecords.forEach(r => {
-      console.log(`issueID populated: ${r.issueID ? "yes" : "no"}, status: ${r.status}`);
-    });
+console.log(`Found ${historyRecords.length} records.`);
+
+historyRecords.forEach(r => {
+  console.log(`issueID populated: ${r.issueID ? "yes" : "no"}, status: ${r.status}`);
+});
 
     const issues = historyRecords
       .filter(record => record.issueID)
@@ -145,33 +146,33 @@ export const getHandledIssuesByAdmin = async (req: Request, res: Response) => {
   }
 };
 
-
-
-export const deleteIssueByAdmin = async (req: AuthRequest, res: Response) => {
-  const authReq = req as AuthRequest;
-  const issueId = req.body.issueId;
-  const result = await IssueModel.deleteOne({
-    _id: issueId,
-    adminId: authReq.adminId,
-  });
-
+export const deleteIssueByAdmin = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const loggedInAdminId = req.adminId;
+    const loggedInAdminId = req.adminId; // from auth middleware
+    const { issueId } = req.params;
 
-    if (id !== loggedInAdminId) {
-      res.status(403).json({ message: "Unauthorised access" });
+    // Validate issueId format
+    if (!mongoose.Types.ObjectId.isValid(issueId)) {
+      res.status(400).json({ message: "Invalid issue ID format" });
       return;
     }
+
+    // Optional: restrict deletion to assigned admin only, uncomment if needed
+    // const result = await IssueModel.deleteOne({ _id: issueId, handledBy: loggedInAdminId });
+
+    // If allowing any admin to delete:
+    const result = await IssueModel.deleteOne({ _id: issueId });
+
     if (result.deletedCount === 0) {
-      res.status(404).json({
-        message: "Issue not found",
-      });
+      res.status(404).json({ message: "Issue not found or unauthorized" });
+      return;
     }
+
+    console.log(`Admin ${loggedInAdminId} deleted issue ${issueId}`);
+    res.json({ message: "Deleted Successfully!" });
   } catch (error) {
     console.error("Error deleting issue:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
-  res.json({
-    message: " Deleted Sucessfully!",
-  });
 };
+
