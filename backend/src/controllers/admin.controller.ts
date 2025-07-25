@@ -112,15 +112,22 @@ export const updateIssueStatus = async (
 
 export const getHandledIssuesByAdmin = async (req: Request, res: Response) => {
   try {
-    const { adminId } = req.params;
+    const { id } = req.params; // use 'id' if route param is ':id'
+
+    console.log("Fetching handled issues for admin:", id);
 
     const historyRecords = await IssueStatusHistoryModel.find({
-      handledBy: adminId,
+      handledBy: id, // use 'id' here
       status: { $in: ["In Progress", "Resolved"] },
     })
       .populate("issueID")
       .sort({ changedAt: -1 })
       .lean();
+
+    console.log(`Found ${historyRecords.length} records.`);
+    historyRecords.forEach(r => {
+      console.log(`issueID populated: ${r.issueID ? "yes" : "no"}, status: ${r.status}`);
+    });
 
     const issues = historyRecords
       .filter(record => record.issueID)
@@ -137,6 +144,7 @@ export const getHandledIssuesByAdmin = async (req: Request, res: Response) => {
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };
+
 
 
 export const deleteIssueByAdmin = async (req: AuthRequest, res: Response) => {

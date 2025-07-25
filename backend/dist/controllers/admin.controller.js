@@ -92,14 +92,19 @@ const updateIssueStatus = (req, res) => __awaiter(void 0, void 0, void 0, functi
 exports.updateIssueStatus = updateIssueStatus;
 const getHandledIssuesByAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { adminId } = req.params;
+        const { id } = req.params; // use 'id' if route param is ':id'
+        console.log("Fetching handled issues for admin:", id);
         const historyRecords = yield issueStatusHistory_model_1.IssueStatusHistoryModel.find({
-            handledBy: adminId,
+            handledBy: id, // use 'id' here
             status: { $in: ["In Progress", "Resolved"] },
         })
             .populate("issueID")
             .sort({ changedAt: -1 })
             .lean();
+        console.log(`Found ${historyRecords.length} records.`);
+        historyRecords.forEach(r => {
+            console.log(`issueID populated: ${r.issueID ? "yes" : "no"}, status: ${r.status}`);
+        });
         const issues = historyRecords
             .filter(record => record.issueID)
             .map(record => (Object.assign(Object.assign({}, record.issueID), { handledBy: record.handledBy, lastStatus: record.status, lastUpdated: record.changedAt })));

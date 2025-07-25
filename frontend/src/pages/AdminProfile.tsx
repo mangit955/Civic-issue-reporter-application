@@ -51,6 +51,19 @@ const AdminProfile = () => {
     phonenumber: user?.phonenumber || "",
     department: user?.department || "",
   });
+  
+  const getPriorityColor = (priority: string | undefined) => {
+  switch (priority) {
+    case "High":
+      return "bg-red-100 text-red-800";
+    case "Medium":
+      return "bg-yellow-100 text-yellow-800";
+    case "Low":
+      return "bg-green-100 text-green-800";
+    default:
+      return "bg-gray-100 text-gray-800";
+  }
+};
 
   if (isLoading) {
     return <p className="text-center mt-10">Loading profile...</p>;
@@ -298,7 +311,7 @@ const AdminProfile = () => {
               <div className="text-2xl font-bold">
                 {respondedIssues.filter(issue => issue.resolvedDate).length > 0 
                   ? Math.round(respondedIssues.filter(issue => issue.resolvedDate).reduce((acc, issue) => {
-                      const reportDate = new Date(issue.reportDate);
+                      const reportDate = new Date(issue.reportDate ?? "");
                       const resolvedDate = new Date(issue.resolvedDate!);
                       return acc + (resolvedDate.getTime() - reportDate.getTime()) / (1000 * 60 * 60 * 24);
                     }, 0) / respondedIssues.filter(issue => issue.resolvedDate).length)
@@ -362,11 +375,12 @@ const AdminProfile = () => {
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
                     <div className="flex items-center space-x-2">
                       <MapPin className="h-4 w-4 text-muted-foreground" />
-                      <span>{issue.location}</span>
+                      <span>{issue.location?.address}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Calendar className="h-4 w-4 text-muted-foreground" />
-                      <span>Reported: {issue.reportDate}</span>
+                      <span>Reported: {issue.reportDate? new 
+                      Date(issue.reportDate).toLocaleDateString() : "N/A"}</span>
                     </div>
                     {issue.resolvedDate && (
                       <div className="flex items-center space-x-2">
