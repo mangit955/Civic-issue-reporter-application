@@ -10,7 +10,12 @@ const IssueStatusHistorySchema = new mongoose_1.Schema({
     },
     status: {
         type: String,
-        enum: ["Reported", "In Progress", "Resolved", "Rejected"],
+        enum: ["Reported", "In Progress", "Resolved", "Rejected", "Pending"],
+        required: true,
+    },
+    handledBy: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "Admin",
         required: true,
     },
     changedAt: {

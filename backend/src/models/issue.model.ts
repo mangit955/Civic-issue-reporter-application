@@ -44,7 +44,7 @@ const IssueSchema = new Schema<IIssue & Document>(
     },
     status: {
       type: String,
-      enum: ["Reported", "In Progress", "Resolved", "Rejected"],
+      enum: ["Reported", "In Progress", "Resolved", "Rejected","Pending"],
       default: "Reported",
     },
     location: {

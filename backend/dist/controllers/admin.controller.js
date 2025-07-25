@@ -8,10 +8,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteIssueByAdmin = exports.updateIssueStatus = exports.updateAdminProfile = exports.getAdminProfile = void 0;
+exports.deleteIssueByAdmin = exports.getHandledIssuesByAdmin = exports.updateIssueStatus = exports.updateAdminProfile = exports.getAdminProfile = void 0;
 const admin_model_1 = require("../models/admin.model");
 const issue_model_1 = require("../models/issue.model");
+const issueStatusHistory_model_1 = require("../models/issueStatusHistory.model");
+const mongoose_1 = __importDefault(require("mongoose"));
 const getAdminProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
@@ -36,12 +41,7 @@ exports.getAdminProfile = getAdminProfile;
 const updateAdminProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const loggedInAdminId = req.adminId;
-        if (id !== loggedInAdminId) {
-            res.status(403).json({ message: "Unauthorised access" });
-            return;
-        }
-        const { fullName, email, phonenumber, department } = req.body;
+        const { fullName, email, phonenumber, department, } = req.body;
         if (!fullName || !email || !phonenumber || !department) {
             res.status(400).json({ message: "All fields are required" });
             return;
@@ -62,30 +62,55 @@ exports.updateAdminProfile = updateAdminProfile;
 const updateIssueStatus = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const loggedInAdminId = req.adminId;
-        if (id !== loggedInAdminId) {
-            res.status(403).json({ message: "Unauthorised access" });
-            return;
-        }
-        const { issueId, status } = req.body;
-        const validStatuses = ["Reported", "In Progress", "Resolved", "Rejected"];
+        const { status } = req.body;
+        const adminId = req.adminId;
+        const validStatuses = ["Reported", "In Progress", "Resolved", "Rejected", "Pending"];
         if (!validStatuses.includes(status)) {
             res.status(400).json({ message: "Invalid status value" });
             return;
         }
-        const updatedIssue = yield issue_model_1.IssueModel.findByIdAndUpdate(issueId, { status }, { new: true });
+        const updatedIssue = yield issue_model_1.IssueModel.findByIdAndUpdate(id, { status }, { new: true });
         if (!updatedIssue) {
             res.status(404).json({ message: "Issue not found" });
             return;
         }
-        res.json({ message: "Issue updated successfully", user: updatedIssue });
+        // Create a record in IssueStatusHistory for this status change
+        yield issueStatusHistory_model_1.IssueStatusHistoryModel.create({
+            issueID: new mongoose_1.default.Types.ObjectId(id),
+            status,
+            handledBy: new mongoose_1.default.Types.ObjectId(adminId),
+            changedBy: updatedIssue.citizenId, // original reporter, optional
+            changedAt: new Date(), // optional if timestamps enabled
+        });
+        res.json({ message: "Issue updated successfully", issue: updatedIssue });
     }
     catch (error) {
         console.error("Error updating status:", error);
-        res.status(500).json({ message: "Internal Server Error" });
+        res.status(500).json({ message: "Internal server error" });
     }
 });
 exports.updateIssueStatus = updateIssueStatus;
+const getHandledIssuesByAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { adminId } = req.params;
+        const historyRecords = yield issueStatusHistory_model_1.IssueStatusHistoryModel.find({
+            handledBy: adminId,
+            status: { $in: ["In Progress", "Resolved"] },
+        })
+            .populate("issueID")
+            .sort({ changedAt: -1 })
+            .lean();
+        const issues = historyRecords
+            .filter(record => record.issueID)
+            .map(record => (Object.assign(Object.assign({}, record.issueID), { handledBy: record.handledBy, lastStatus: record.status, lastUpdated: record.changedAt })));
+        res.status(200).json({ success: true, issues });
+    }
+    catch (error) {
+        console.error("Error fetching handled issues:", error);
+        res.status(500).json({ success: false, message: "Server Error" });
+    }
+});
+exports.getHandledIssuesByAdmin = getHandledIssuesByAdmin;
 const deleteIssueByAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const authReq = req;
     const issueId = req.body.issueId;

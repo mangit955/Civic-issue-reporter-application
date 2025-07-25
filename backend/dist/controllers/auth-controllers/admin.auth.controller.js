@@ -61,6 +61,7 @@ const adminSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             email,
             phonenumber,
             department,
+            adminAccessCode,
         });
         console.log("Admin created!");
         res.status(200).json({ message: "Admin Signed up!" });

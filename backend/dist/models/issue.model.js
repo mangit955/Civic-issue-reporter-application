@@ -39,7 +39,7 @@ const IssueSchema = new mongoose_1.Schema({
     },
     status: {
         type: String,
-        enum: ["Reported", "In Progress", "Resolved", "Rejected"],
+        enum: ["Reported", "In Progress", "Resolved", "Rejected", "Pending"],
         default: "Reported",
     },
     location: {

@@ -2,6 +2,7 @@ import { AdminModel } from "../models/admin.model";
 import { IssueModel } from "../models/issue.model";
 import { Request, Response } from "express";
 import { IssueStatusHistoryModel } from "../models/issueStatusHistory.model";
+import mongoose from "mongoose";
 
 interface AuthRequest extends Request {
   adminId?: string;
@@ -40,14 +41,8 @@ export const updateAdminProfile = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const loggedInAdminId = req.adminId;
 
-    if (id !== loggedInAdminId) {
-      res.status(403).json({ message: "Unauthorised access" });
-      return;
-    }
-
-    const { fullName, email, phonenumber, department } = req.body;
+    const { fullName, email, phonenumber, department, } = req.body;
 
     if (!fullName || !email || !phonenumber || !department) {
       res.status(400).json({ message: "All fields are required" });
@@ -78,22 +73,17 @@ export const updateIssueStatus = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const loggedInAdminId = req.adminId;
+    const { status } = req.body;
+    const adminId = req.adminId;
 
-    if (id !== loggedInAdminId) {
-      res.status(403).json({ message: "Unauthorised access" });
-      return;
-    }
-    const { issueId, status } = req.body;
-
-    const validStatuses = ["Reported", "In Progress", "Resolved", "Rejected"];
+    const validStatuses = ["Reported", "In Progress", "Resolved", "Rejected", "Pending"];
     if (!validStatuses.includes(status)) {
       res.status(400).json({ message: "Invalid status value" });
       return;
     }
 
     const updatedIssue = await IssueModel.findByIdAndUpdate(
-      issueId,
+      id,
       { status },
       { new: true }
     );
@@ -103,12 +93,22 @@ export const updateIssueStatus = async (
       return;
     }
 
-    res.json({ message: "Issue updated successfully", user: updatedIssue });
+    // Create a record in IssueStatusHistory for this status change
+    await IssueStatusHistoryModel.create({
+      issueID: new mongoose.Types.ObjectId(id),
+      status,
+      handledBy: new mongoose.Types.ObjectId(adminId!),
+      changedBy: updatedIssue.citizenId, // original reporter, optional
+      changedAt: new Date(), // optional if timestamps enabled
+    });
+
+    res.json({ message: "Issue updated successfully", issue: updatedIssue });
   } catch (error) {
     console.error("Error updating status:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 export const getHandledIssuesByAdmin = async (req: Request, res: Response) => {
   try {
@@ -116,14 +116,14 @@ export const getHandledIssuesByAdmin = async (req: Request, res: Response) => {
 
     const historyRecords = await IssueStatusHistoryModel.find({
       handledBy: adminId,
-      status: { $in: ["In Progress", "Resolved"] }, // handled statuses
+      status: { $in: ["In Progress", "Resolved"] },
     })
-      .populate("issueID") // get full issue details
+      .populate("issueID")
       .sort({ changedAt: -1 })
       .lean();
 
-      const issues = historyRecords
-      .filter(record => record.issueID) // ensure populated
+    const issues = historyRecords
+      .filter(record => record.issueID)
       .map(record => ({
         ...record.issueID,
         handledBy: record.handledBy,
@@ -137,6 +137,7 @@ export const getHandledIssuesByAdmin = async (req: Request, res: Response) => {
     res.status(500).json({ success: false, message: "Server Error" });
   }
 };
+
 
 export const deleteIssueByAdmin = async (req: AuthRequest, res: Response) => {
   const authReq = req as AuthRequest;

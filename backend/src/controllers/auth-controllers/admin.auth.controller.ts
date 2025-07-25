@@ -69,6 +69,7 @@ export const adminSignup = async (
       email,
       phonenumber,
       department,
+      adminAccessCode,
     });
     console.log("Admin created!");
     res.status(200).json({ message: "Admin Signed up!" });

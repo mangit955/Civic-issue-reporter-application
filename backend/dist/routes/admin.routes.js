@@ -10,6 +10,7 @@ router.post("/admin/signup", admin_auth_controller_1.adminSignup);
 router.post("/admin/signin", admin_auth_controller_1.adminSignin);
 router.get("/admin/profile/:id", auth_middleware_1.authMiddleware, admin_controller_1.getAdminProfile);
 router.get("/admin/issues", auth_middleware_1.authMiddleware, issues_controllers_1.getIssues);
+router.get("/admin/:id/handled-issues", auth_middleware_1.authMiddleware, admin_controller_1.getHandledIssuesByAdmin);
 router.put("/admin/:id", auth_middleware_1.authMiddleware, admin_controller_1.updateAdminProfile);
 router.put("/admin/issue/:id/status", auth_middleware_1.authMiddleware, admin_controller_1.updateIssueStatus);
 router.delete("/issue/admin/:id", auth_middleware_1.authMiddleware, admin_controller_1.deleteIssueByAdmin);

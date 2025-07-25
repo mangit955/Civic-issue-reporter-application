@@ -9,7 +9,7 @@ const IssueStatusHistorySchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["Reported", "In Progress", "Resolved", "Rejected"],
+      enum: ["Reported", "In Progress", "Resolved", "Rejected","Pending"],
       required: true,
     },
     handledBy: {
