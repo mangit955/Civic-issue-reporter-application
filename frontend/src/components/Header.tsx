@@ -5,11 +5,14 @@ import civicIssueLogo from "../assets/civic-issue.png";
 import { useAuth } from "../contexts/AuthContext.tsx";
 import { handleSupportClick } from "./SupportModel.tsx";
 
+type HeaderProps = {
+  onFeaturesClick?: () => void;
+  onHowItWorksClick?: () => void;
+};
 
-const Header = () => {
 
-  const { user, logout } = useAuth();
-
+const Header: React.FC<HeaderProps> = ({ onFeaturesClick, onHowItWorksClick }) => {
+  const { user, logout } = useAuth()
   const handleLogout = () => {
     logout();
   };
@@ -31,17 +34,38 @@ const Header = () => {
                 </div>
             </Link>
 
-            <nav className="hidden lg:flex items-center space-x-6">
-                <a href="#features" className="text-foreground hover:text-primary transition-colors">
-                    Features
-                </a>
-                <a href="#how-it-works" className="text-foreground hover:text-primary transition-colors">
-                How It Works
-                </a>
-                <a href="#contact" onClick={handleSupportClick} className="text-foreground hover:text-primary transition-colors">
-                Contact
-                </a>
-            </nav>
+           <nav className="hidden lg:flex items-center space-x-6">
+        <a
+          href="#features"
+          className="text-foreground hover:text-primary transition-colors"
+          onClick={(e) => {
+            e.preventDefault();             // Prevent default anchor jump
+            onFeaturesClick && onFeaturesClick();  // Call parent handler
+          }}
+        >
+          Features
+        </a>
+
+        <a
+          href="#how-it-works"
+          className="text-foreground hover:text-primary transition-colors"
+          onClick={(e) => {
+            e.preventDefault();
+            onHowItWorksClick && onHowItWorksClick();
+          }}
+        >
+          How It Works
+        </a>
+
+        <a
+          href="#contact"
+          onClick={handleSupportClick}
+          className="text-foreground hover:text-primary transition-colors"
+        >
+          Contact
+        </a>
+      </nav>
+
 
             <div className="flex items-center space-x-3">
             {user ? (

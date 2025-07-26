@@ -1,7 +1,25 @@
 import { BarChart3, Camera, MapPin, Shield, Users, Zap } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { motion } from "framer-motion";
+import React from "react";
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 50 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.1, duration: 0.5 }
+  }),
+};
+
 
 const Features = () => {
+   React.useEffect(() => {
+  console.log("Features mounted");
+  return () => {
+    console.log("Features unmounted");
+  };
+}, []);
 
     const features = [
         {
@@ -45,35 +63,44 @@ const Features = () => {
   return (
     <section id="features" className="py-20 bg-muted/30">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
             Powerful Features for Better Communities
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Everything you need to report, track, and resolve civic issues efficiently and effectively.
           </p>
         </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-                <Card key={index} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-fade-in" style={{animationDelay: `${index * 0.1}s`}}>
-                    <CardHeader>
-                        <div className={`w-12 h-12 rounded-lg bg-background flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                            <feature.icon className={`h-6 w-6 ${feature.color}`} />
-                        </div>
-                        <CardTitle className="text-xl text-foreground">{feature.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <CardDescription className="text-muted-foreground leading-relaxed">
-                            {feature.description}
-                        </CardDescription>
-                    </CardContent>
-                </Card>
-            ))}
+          {features.map((feature, index) => (
+            <motion.div
+              key={feature.title}
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              custom={index}
+            >
+              <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                <CardHeader>
+                  <div className={`w-12 h-12 rounded-lg bg-background flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    <feature.icon className={`h-6 w-6 ${feature.color}`} />
+                  </div>
+                  <CardTitle className="text-xl text-foreground">{feature.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-muted-foreground leading-relaxed">
+                    {feature.description}
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
+
 
 export default Features
