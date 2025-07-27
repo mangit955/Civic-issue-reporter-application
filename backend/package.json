@@ -33,6 +33,7 @@
     "@types/cookie-parser": "^1.4.9",
     "@types/cors": "^2.8.19",
     "@types/multer": "^2.0.0",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "nodemon": "^3.1.10"
   }
 }
