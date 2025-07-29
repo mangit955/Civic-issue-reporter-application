@@ -132,7 +132,7 @@ const SignUp = () => {
 
   return (
      <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden ">
-       <div className="pointer-events-none fixed inset-0 -z-10 bg-[#f5f5f5] " />
+       <div className="pointer-events-none fixed inset-0 -z-10 bg-[#f0f7f5] " />
     
 
       <div className="w-full max-w-md">

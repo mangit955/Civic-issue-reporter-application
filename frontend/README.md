@@ -30,3 +30,6 @@ frontend-backend connection >>
     
 lottie animations for react =>
     npm install lottie-react
+
+framer-motion for smooth transition between pages =>
+    npm install framer-motion

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Header from "../components/Header";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import {
@@ -29,7 +28,7 @@ import {
 } from "../components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
 import { BACKEND_URL } from "../config/config";
-// import { useAuth } from "../contexts/AuthContext";
+import HeaderAfterAuth from "../components/HeaderAfterAuth";
 
 interface Issues {
   _id: string;
@@ -197,8 +196,8 @@ const AdminHome = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#fafafa]">
-      <Header />
+    <div className="min-h-screen bg-[#f0f7f5]">
+      <HeaderAfterAuth />
 
       <div className="pt-20 container mx-auto px-4 py-8 space-y-8">
         {/* Welcome Section with Profile Link */}
@@ -248,17 +247,18 @@ const AdminHome = () => {
         </div>
 
         {/* Search and Filters */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center space-x-2 w-full md:w-auto">
-            <Search className="h-5 w-5 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search issues..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full md:w-80"
-            />
-          </div>
+       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+  <div className="relative w-full md:w-80">
+    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+    <Input
+      type="text"
+      placeholder="Search issues..."
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      className="pl-10 bg-white"
+    />
+</div>
+
           <div className="flex items-center space-x-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -321,7 +321,7 @@ const AdminHome = () => {
         </div>
 
         {/* Issues Table */}
-        <div className="rounded-md border">
+        <div className="rounded-md border bg-white">
           <Table>
             <TableCaption>A list of all reported issues.</TableCaption>
             <TableHeader>

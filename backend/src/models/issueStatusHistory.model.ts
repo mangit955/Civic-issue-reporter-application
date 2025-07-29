@@ -23,7 +23,7 @@ const IssueStatusHistorySchema = new Schema(
     },
     changedBy: {
       type: Schema.Types.ObjectId,
-      ref: "Citizen",
+      ref: "Admin",
       required: true,
     },
   },

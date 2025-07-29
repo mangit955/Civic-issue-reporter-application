@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 
 interface AuthRequest extends Request {
   adminId?: string;
+  role?: string;
 }
 
 export const getAdminProfile = async (
@@ -98,7 +99,7 @@ export const updateIssueStatus = async (
       issueID: new mongoose.Types.ObjectId(id),
       status,
       handledBy: new mongoose.Types.ObjectId(adminId!),
-      changedBy: updatedIssue.citizenId, // original reporter, optional
+      changedBy: new mongoose.Types.ObjectId(adminId!), // original reporter, optional
       changedAt: new Date(), // optional if timestamps enabled
     });
 
@@ -110,30 +111,32 @@ export const updateIssueStatus = async (
 };
 
 
-export const getHandledIssuesByAdmin = async (req: Request, res: Response) => {
+export const getHandledIssuesByAdmin = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
+    const adminId = req.adminId;  // from authMiddleware
 
-    console.log("Fetching handled issues for admin:", id);
+    if (!adminId) {
+       res.status(401).json({ success: false, message: "Unauthorized" });
+       return;
+    }
 
-const historyRecords = await IssueStatusHistoryModel.find({
-  handledBy: id,
-  status: { $in: ["In Progress", "Resolved"] },
-})
-.populate("issueID")
-.sort({ changedAt: -1 })
-.lean();
+    console.log("Fetching handled issues for admin:", adminId);
 
-console.log(`Found ${historyRecords.length} records.`);
+    const historyRecords = await IssueStatusHistoryModel.find({
+      handledBy: adminId,
+      status: { $in: ["In Progress", "Resolved"] },
+    })
+      .populate("issueID")
+      .sort({ changedAt: -1 })
+      .lean();
 
-historyRecords.forEach(r => {
-  console.log(`issueID populated: ${r.issueID ? "yes" : "no"}, status: ${r.status}`);
-});
+    console.log(`Found ${historyRecords.length} records.`);
 
     const issues = historyRecords
       .filter(record => record.issueID)
       .map(record => ({
         ...record.issueID,
+        status: record.status,
         handledBy: record.handledBy,
         lastStatus: record.status,
         lastUpdated: record.changedAt,
@@ -149,26 +152,26 @@ historyRecords.forEach(r => {
 export const deleteIssueByAdmin = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const loggedInAdminId = req.adminId; // from auth middleware
-    const { issueId } = req.params;
+    const { issueid } = req.params;
 
-    // Validate issueId format
-    if (!mongoose.Types.ObjectId.isValid(issueId)) {
+    // Validate issueid format
+    if (!mongoose.Types.ObjectId.isValid(issueid)) {
       res.status(400).json({ message: "Invalid issue ID format" });
       return;
     }
 
     // Optional: restrict deletion to assigned admin only, uncomment if needed
-    // const result = await IssueModel.deleteOne({ _id: issueId, handledBy: loggedInAdminId });
+    // const result = await IssueModel.deleteOne({ _id: issueid, handledBy: loggedInAdminId });
 
     // If allowing any admin to delete:
-    const result = await IssueModel.deleteOne({ _id: issueId });
+    const result = await IssueModel.deleteOne({ _id: issueid });
 
     if (result.deletedCount === 0) {
       res.status(404).json({ message: "Issue not found or unauthorized" });
       return;
     }
 
-    console.log(`Admin ${loggedInAdminId} deleted issue ${issueId}`);
+    console.log(`Admin ${loggedInAdminId} deleted issue ${issueid}`);
     res.json({ message: "Deleted Successfully!" });
   } catch (error) {
     console.error("Error deleting issue:", error);

@@ -21,7 +21,7 @@ import {
   FileText,
   Edit,
 } from "lucide-react";
-import Header from "../components/Header";
+import HeaderAfterAuth from "../components/HeaderAfterAuth";
 import { useAuth } from "../contexts/AuthContext";
 import { toast } from "sonner";
 import { BACKEND_URL } from "../config/config";
@@ -132,9 +132,9 @@ const CitizenProfile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#fafafa]">
+    <div className="min-h-screen bg-[#f0f7f5]">
       {/* Navbar */}
-      <Header />
+      <HeaderAfterAuth />
 
       <div className="pt-20 container mx-auto my-9 max-w-4xl space-y-6 px-4">
         {/* Profile Header */}
@@ -144,7 +144,7 @@ const CitizenProfile = () => {
               <div className="flex items-center space-x-4">
                 <Avatar className="h-20 w-20">
                   <AvatarImage src="/placeholder.svg" />
-                  <AvatarFallback className="text-lg">
+                  <AvatarFallback className="text-lg bg-[#bedbff]">
                     {profile.fullName
                       .split(" ")
                       .map((n) => n[0])

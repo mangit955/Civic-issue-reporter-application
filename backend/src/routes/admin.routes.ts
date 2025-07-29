@@ -23,7 +23,7 @@ router.get("/admin/profile/:id", authMiddleware, getAdminProfile);
 
 router.get("/admin/issues", authMiddleware, getIssues);
 
-router.get("/admin/:id/handled-issues", authMiddleware, getHandledIssuesByAdmin);
+router.get("/admin/handled-issues", authMiddleware, getHandledIssuesByAdmin);
 
 router.put("/admin/:id", authMiddleware, updateAdminProfile);
 

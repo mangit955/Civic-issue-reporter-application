@@ -3,14 +3,12 @@ import { Eye, EyeOff } from "lucide-react";
 import civicIssueLogo from "../assets/civic-issue.png";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card.tsx";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx";
 import { Label } from "../components/ui/label.tsx";
 import { Input } from "../components/ui/input.tsx";
 import { Button } from "../components/ui/button.tsx";
 import { useAuth } from "../contexts/AuthContext.tsx";
-
 import { motion, AnimatePresence } from "framer-motion";
 
 const SignIn = () => {
@@ -36,7 +34,7 @@ const SignIn = () => {
     try {
       const success = await login(citizenForm.email, citizenForm.password, "citizen");
       if (success) {
-        toast("Sign In Successful!", { description: "Welcome back, citizen!" });
+        toast("Sign In Successful!", { description: "Welcome back !" });
         navigate("/citizen");
       } else {
         toast.error("Sign In Failed!", { description: "Invalid credentials" });
@@ -70,8 +68,7 @@ const SignIn = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Faint blue-green gradient background */}
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[#f5f5f5]" />
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[#f0f7f5]" />
 
       <div className="w-full max-w-md">
         {/* Logo and Title */}

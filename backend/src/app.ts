@@ -18,10 +18,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(cookieParser());
 
+
 // routes declaration
 
 app.use("/api/v1", citizenRoutes);
 app.use("/api/v1", adminRoutes);
 app.use("/api/v1", issueRoutes);
+
+app.use("/api", (_req, res) => {
+  res.status(404).json({ message: "API route not found" });
+});
 
 export default app;

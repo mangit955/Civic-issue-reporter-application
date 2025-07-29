@@ -4,11 +4,10 @@ import { Input } from "../components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Search, Plus, MapPin, Clock, User } from "lucide-react";
 import { Link } from "react-router-dom";
-import Header from "../components/Header";
 import { BACKEND_URL } from "../config/config";
 import  Player  from "lottie-react";
 import emptyAnimation from "../assets/animations/empty.json";
-// import { useAuth } from "../contexts/AuthContext";
+import HeaderAfterAuth from "../components/HeaderAfterAuth";
 interface Issues {
   _id: string;
   title: string;
@@ -77,9 +76,9 @@ const CitizenHome = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#fafafa]">
+    <div className="min-h-screen bg-[#f0f7f5]">
       {/* Navbar */}
-      <Header />
+      <HeaderAfterAuth />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-20">
@@ -101,14 +100,14 @@ const CitizenHome = () => {
         {/* Search Section */}
         <div className="my-8">
           <h2 className="text-2xl font-bold text-foreground mb-4">Search Issues by Location</h2>
-          <div className="relative max-w-md">
+          <div className="relative max-w-md ">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               type="text"
               placeholder="Enter city name..."
               value={searchCity}
               onChange={(e) => setSearchCity(e.target.value)}
-              className="pl-10"
+              className="pl-10 bg-white"
             />
           </div>
         </div>

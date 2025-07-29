@@ -7,12 +7,12 @@ import { Badge } from "../components/ui/badge.tsx";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar.tsx";
 import { Separator } from "../components/ui/separator.tsx";
 import { User, Mail, Phone, MapPin, Calendar, FileText, Edit, Shield, CheckCircle } from "lucide-react";
-import Header from '../components/Header.tsx';
 import { useAuth } from '../contexts/AuthContext.tsx';
 import { toast } from 'sonner';
 import { BACKEND_URL } from '../config/config.tsx';
 import Player from "lottie-react";
 import emptyAnimation from "../assets/animations/box.json"; 
+import HeaderAfterAuth from "../components/HeaderAfterAuth";
 
 
 interface Issues {
@@ -91,31 +91,13 @@ const AdminProfile = () => {
     }
   };
 
-  // const fetchHandledIssues = async () => {
-  //   try {
-  //     const response = await fetch(`/api/v1/admin/${user.id}/handled-issues`, {
-  //       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-  //     });
-  //     const data = await response.json();
-  //     setRespondedIssues(data.issues);
-  //   } catch (error) {
-  //     console.error("Error fetching handled issues:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (user?.id) fetchHandledIssues();
-  // }, [user?.id]);
-
     useEffect(() => {
-  if (!token || !user?.id) return;
+  if (!token ) return;
 
   const fetchMyIssues = async () => {
     setLoadingMyIssues(true);
     try {
-      const response = await fetch(`${BACKEND_URL}/api/v1/admin/${user.id}/handled-issues`, {
+      const response = await fetch(`${BACKEND_URL}/api/v1/admin/handled-issues`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -144,27 +126,7 @@ const AdminProfile = () => {
   };
 
   fetchMyIssues();
-}, [token, user?.id]);
-
-  // const handleStatusChange = async (issueId: string, newStatus: string) => {
-  //   try {
-  //     await fetch(`/api/v1/admin/issue/${issueId}/status`, {
-  //       method: "PUT",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //       },
-  //       body: JSON.stringify({ status: newStatus }),
-  //     });
-  
-  //     toast.success("Issue status updated!");
-  //     // ✅ Refetch handled issues
-  //     // fetchHandledIssues();
-  //   } catch (error) {
-  //     console.error("Error updating status:", error);
-  //     toast.error("Failed to update status");
-  //   }
-  // };
+}, [token]); 
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -178,10 +140,10 @@ const AdminProfile = () => {
   if (loadingMyIssues) return <p>Loading handled issues...</p>;
 
   return (
-    <div className="min-h-screen bg-[#fafafa]">
+    <div className="min-h-screen bg-[#f0f7f5]">
 
       {/* Navbar */}
-      <Header />
+      <HeaderAfterAuth />
       
       <div className="pt-20 container mx-auto my-9 max-w-4xl space-y-6 px-4">
         {/* Profile Header */}
@@ -189,9 +151,9 @@ const AdminProfile = () => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <Avatar className="h-20 w-20">
+                <Avatar className="h-20 w-20 ">
                   <AvatarImage src="/placeholder.svg" />
-                  <AvatarFallback className="text-lg">
+                  <AvatarFallback className="text-lg bg-[#bedbff] ">
                     {profile.fullName.split(' ').map(n => n[0]).join('')}
                   </AvatarFallback>
                 </Avatar>
