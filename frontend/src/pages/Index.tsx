@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import Header from "../components/Header.tsx";
 import Features from "../components/Features.tsx";
 import HowItWorks from "../components/HowItWorks.tsx";
@@ -13,7 +13,7 @@ const Index = () => {
   const [howItWorksAnimationKey, setHowItWorksAnimationKey] = useState(0);
 
   const handleFeaturesClick = () => {
-    setFeaturesAnimationKey((prev) => prev + 1); 
+    setFeaturesAnimationKey((prev) => prev + 1);
     document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -23,12 +23,10 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+<div className="relative min-h-screen overflow-hidden ">
+  <div className="pointer-events-none fixed inset-0 -z-10 bg-[#f0f7f5] " />
       <AuthProvider>
-        <Header
-          onFeaturesClick={handleFeaturesClick}
-          onHowItWorksClick={handleHowItWorksClick}
-        />
+        <Header onFeaturesClick={handleFeaturesClick} onHowItWorksClick={handleHowItWorksClick} />
         <Hero />
         <Features key={`features-${featuresAnimationKey}`} />
         <IssueTypes />

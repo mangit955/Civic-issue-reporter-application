@@ -178,12 +178,12 @@ const AdminProfile = () => {
   if (loadingMyIssues) return <p>Loading handled issues...</p>;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#fafafa]">
 
       {/* Navbar */}
       <Header />
       
-      <div className="container mx-auto max-w-4xl space-y-6 py-9">
+      <div className="pt-20 container mx-auto my-9 max-w-4xl space-y-6 px-4">
         {/* Profile Header */}
         <Card>
           <CardHeader>
@@ -407,7 +407,7 @@ const AdminProfile = () => {
 export default AdminProfile;
 
 
-// const respondedIssues = [
+
 //   {
 //     id: 1,
 //     title: "Broken streetlight on Oak Avenue",

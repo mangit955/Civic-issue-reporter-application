@@ -132,11 +132,11 @@ const CitizenProfile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#fafafa]">
       {/* Navbar */}
       <Header />
 
-      <div className="container mx-auto my-9 max-w-4xl space-y-6 px-4">
+      <div className="pt-20 container mx-auto my-9 max-w-4xl space-y-6 px-4">
         {/* Profile Header */}
         <Card>
           <CardHeader>

@@ -77,12 +77,12 @@ const CitizenHome = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#fafafa]">
       {/* Navbar */}
       <Header />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-20">
 
         {/* Welcome Section with Profile Link */}
         <div className="flex items-center justify-between">

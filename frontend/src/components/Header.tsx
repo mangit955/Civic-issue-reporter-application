@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 import { Button } from "./ui/button.tsx";
 import { LogIn, LogOut, Shield, User } from "lucide-react";
 import civicIssueLogo from "../assets/civic-issue.png";
@@ -10,79 +10,85 @@ type HeaderProps = {
   onHowItWorksClick?: () => void;
 };
 
-
 const Header: React.FC<HeaderProps> = ({ onFeaturesClick, onHowItWorksClick }) => {
-  const { user, logout } = useAuth()
+  const { user, logout } = useAuth();
+
   const handleLogout = () => {
     logout();
   };
 
   return (
-    <header className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+    <header
+      className="
+        w-full
+        fixed top-0 left-0 right-0
+        z-50
+        bg-white/30
+        backdrop-blur-md
+        border-b border-gray-200/50
+        supports-[backdrop-filter]:bg-white/30
+      "
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
+          <Link to="/" className="flex items-center space-x-2">
+            <div className="flex items-center justify-center w-17 h-17 rounded-lg">
+              <img src={civicIssueLogo} alt="civicIssueLogo" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-foreground">CivicIssueReporter</h1>
+              <p className="text-xs text-muted-foreground">Building Better Communities</p>
+            </div>
+          </Link>
 
-            <Link to="/" className="flex items-center space-x-2">
-                <div className="flex items-center justify-center w-17 h-17 rounded-lg">
-                <img src={civicIssueLogo} alt="civicIssueLogo" />
-                </div>
-                <div>
-                    <h1 className="text-xl font-bold text-foreground">CivicIssueReporter</h1>
-                    <p className="text-xs text-muted-foreground">
-                        Building Better Communities
-                    </p>
-                </div>
-            </Link>
+          <nav className="hidden lg:flex items-center space-x-6">
+            <a
+              href="#features"
+              className="text-foreground hover:text-primary transition-colors"
+              onClick={(e) => {
+                e.preventDefault();
+                onFeaturesClick && onFeaturesClick();
+              }}
+            >
+              Features
+            </a>
 
-           <nav className="hidden lg:flex items-center space-x-6">
-        <a
-          href="#features"
-          className="text-foreground hover:text-primary transition-colors"
-          onClick={(e) => {
-            e.preventDefault();             // Prevent default anchor jump
-            onFeaturesClick && onFeaturesClick();  // Call parent handler
-          }}
-        >
-          Features
-        </a>
+            <a
+              href="#how-it-works"
+              className="text-foreground hover:text-primary transition-colors"
+              onClick={(e) => {
+                e.preventDefault();
+                onHowItWorksClick && onHowItWorksClick();
+              }}
+            >
+              How It Works
+            </a>
 
-        <a
-          href="#how-it-works"
-          className="text-foreground hover:text-primary transition-colors"
-          onClick={(e) => {
-            e.preventDefault();
-            onHowItWorksClick && onHowItWorksClick();
-          }}
-        >
-          How It Works
-        </a>
+            <a
+              href="#contact"
+              onClick={handleSupportClick}
+              className="text-foreground hover:text-primary transition-colors"
+            >
+              Contact
+            </a>
+          </nav>
 
-        <a
-          href="#contact"
-          onClick={handleSupportClick}
-          className="text-foreground hover:text-primary transition-colors"
-        >
-          Contact
-        </a>
-      </nav>
-
-
-            <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3">
             {user ? (
               <>
                 <span className="text-sm text-muted-foreground hidden sm:block">
                   Welcome, {user?.fullName ? user.fullName.split(" ")[0] : "Guest"}!
                 </span>
-                <Link to={user.role === 'citizen' ? '/citizen' : '/admin'}>
+                <Link to={user.role === "citizen" ? "/citizen" : "/admin"}>
                   <Button variant="outline" size="sm" className="flex items-center space-x-2">
                     <User className="h-4 w-4" />
                     <span className="hidden sm:block">Dashboard</span>
                   </Button>
                 </Link>
-                <Button 
+                <Button
                   onClick={handleLogout}
-                  variant="outline" 
-                  size="sm" 
+                  variant="outline"
+                  size="sm"
                   className="flex items-center space-x-2"
                 >
                   <LogOut className="h-4 w-4" />
@@ -109,7 +115,7 @@ const Header: React.FC<HeaderProps> = ({ onFeaturesClick, onHowItWorksClick }) =
         </div>
       </div>
     </header>
-  )
-}
+  );
+};
 
 export default Header;
