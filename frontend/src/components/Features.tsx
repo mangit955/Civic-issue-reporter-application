@@ -81,7 +81,17 @@ const Features = () => {
               viewport={{ once: true, amount: 0.2 }}
               custom={index}
             >
-              <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <Card className=" backdrop-blur-md 
+  bg-white/70 
+  border border-white/20 
+  shadow-lg 
+  rounded-xl 
+  p-6 
+  ring-1 ring-white/10 
+  transition-transform 
+  hover:scale-[1.02]
+] 
+   ">
                 <CardHeader>
                   <div className={`w-12 h-12 rounded-lg bg-background flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                     <feature.icon className={`h-6 w-6 ${feature.color}`} />

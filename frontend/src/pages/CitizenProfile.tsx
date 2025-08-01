@@ -132,13 +132,19 @@ const CitizenProfile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f0f7f5]">
+    <div className="min-h-screen bg-[#f3f6f8]">
       {/* Navbar */}
       <HeaderAfterAuth />
 
       <div className="pt-20 container mx-auto my-9 max-w-4xl space-y-6 px-4">
         {/* Profile Header */}
-        <Card>
+        <Card className="bg-white/70 
+  border border-white/20 
+  shadow-lg 
+  rounded-xl 
+  p-6 
+  ring-1 ring-white/10 
+  ">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
@@ -231,7 +237,13 @@ const CitizenProfile = () => {
 
         {/* Issues Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
+          <Card className="bg-white/70 
+  border border-white/20 
+  shadow-lg 
+  rounded-xl 
+  p-6 
+  ring-1 ring-white/10 
+ ">
             <CardContent className="p-6">
               <div className="text-2xl font-bold">{myIssues.length}</div>
               <p className="text-xs text-muted-foreground">
@@ -239,7 +251,13 @@ const CitizenProfile = () => {
               </p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-white/70 
+  border border-white/20 
+  shadow-lg 
+  rounded-xl 
+  p-6 
+  ring-1 ring-white/10 
+  ">
             <CardContent className="p-6">
               <div className="text-2xl font-bold text-green-600">
                 {myIssues.filter((issue) => issue.status === "Resolved").length}
@@ -247,7 +265,13 @@ const CitizenProfile = () => {
               <p className="text-xs text-muted-foreground">Resolved</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-white/70 
+  border border-white/20 
+  shadow-lg 
+  rounded-xl 
+  p-6 
+  ring-1 ring-white/10 
+">
             <CardContent className="p-6">
               <div className="text-2xl font-bold text-blue-600">
                 {
@@ -258,7 +282,13 @@ const CitizenProfile = () => {
               <p className="text-xs text-muted-foreground">In Progress</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-white/70 
+  border border-white/20 
+  shadow-lg 
+  rounded-xl 
+  p-6 
+  ring-1 ring-white/10 
+  ">
             <CardContent className="p-6">
               <div className="text-2xl font-bold text-yellow-600">
                 {myIssues.filter((issue) => issue.status === "Pending").length}
@@ -269,7 +299,13 @@ const CitizenProfile = () => {
         </div>
 
         {/* Reported Issues */}
-        <Card>
+        <Card className="bg-white/70 
+  border border-white/20 
+  shadow-lg 
+  rounded-xl 
+  p-6 
+  ring-1 ring-white/10 
+  ">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <FileText className="h-5 w-5" />

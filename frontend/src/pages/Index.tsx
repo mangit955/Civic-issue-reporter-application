@@ -22,9 +22,20 @@ const Index = () => {
     document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" });
   };
 
-  return (
-<div className="relative min-h-screen overflow-hidden ">
-  <div className="pointer-events-none fixed inset-0 -z-10 bg-[#f0f7f5] " />
+ return (
+  <div className="relative min-h-screen overflow-hidden">
+    <div className="fixed inset-0 z-0 "
+    style={{
+  backgroundImage: `
+    radial-gradient(circle at top left, rgba(255,255,255,0.6) 0%, transparent 35%),
+    radial-gradient(circle at bottom right, rgba(255,255,255,0.5) 0%, transparent 35%),
+    linear-gradient(135deg, #f2f6f6 0%, #e8ecef 35%, #f9eeee 100%)
+  `,
+  backgroundAttachment: 'fixed',
+  backgroundBlendMode: 'screen',
+}}
+ />
+    <div className="relative z-10">
       <AuthProvider>
         <Header onFeaturesClick={handleFeaturesClick} onHowItWorksClick={handleHowItWorksClick} />
         <Hero />
@@ -35,7 +46,9 @@ const Index = () => {
         <Footer />
       </AuthProvider>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default Index;

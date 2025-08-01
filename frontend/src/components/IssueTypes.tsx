@@ -47,7 +47,7 @@ const IssueTypes = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {issueTypes.map((type, index) => (
-            <Card key={index} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in overflow-hidden" style={{animationDelay: `${index * 0.1}s`}}>
+            <Card key={index} className="group  bg-white/70 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in overflow-hidden" style={{animationDelay: `${index * 0.1}s`}}>
               <div className="relative h-48 overflow-hidden">
                 <img 
                   src={type.image}

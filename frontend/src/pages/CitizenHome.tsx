@@ -5,9 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Search, Plus, MapPin, Clock, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { BACKEND_URL } from "../config/config";
-import  Player  from "lottie-react";
+import Player from "lottie-react";
 import emptyAnimation from "../assets/animations/empty.json";
 import HeaderAfterAuth from "../components/HeaderAfterAuth";
+
 interface Issues {
   _id: string;
   title: string;
@@ -17,7 +18,7 @@ interface Issues {
     latitude: number;
     longitude: number;
     address: string;
-  }
+  };
   reportedBy: string;
   reportedAt: string;
   image: string;
@@ -25,10 +26,7 @@ interface Issues {
 }
 
 const CitizenHome = () => {
-
-  // const { user } = useAuth();
   const [searchCity, setSearchCity] = useState("");
-  
   const [reportedIssues, setReportedIssues] = useState<Issues[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -41,8 +39,6 @@ const CitizenHome = () => {
           },
         });
         const data = await response.json();
-        console.log("Fetched Issues:", data);
-  
         if (Array.isArray(data.issues)) {
           setReportedIssues(data.issues);
         } else {
@@ -54,43 +50,58 @@ const CitizenHome = () => {
         setLoading(false);
       }
     };
-  
+
     fetchIssues();
   }, []);
-  
-  if (loading) return <div className="flex justify-center items-center h-screen"></div>;
 
-  const filteredIssues = searchCity 
-    ? reportedIssues.filter(issue => 
-        issue.location && issue.location.address && issue.location.address.toLowerCase().includes(searchCity.toLowerCase())
+  if (loading)
+    return <div className="flex justify-center items-center h-screen"></div>;
+
+  const filteredIssues = searchCity
+    ? reportedIssues.filter(
+        (issue) =>
+          issue.location &&
+          issue.location.address &&
+          issue.location.address
+            .toLowerCase()
+            .includes(searchCity.toLowerCase())
       )
     : reportedIssues;
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Open": return "bg-red-100 text-red-800";
-      case "In Progress": return "bg-yellow-100 text-yellow-800";
-      case "Resolved": return "bg-green-100 text-green-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "Open":
+        return "bg-red-200/70 text-red-900";
+      case "In Progress":
+        return "bg-yellow-200/70 text-yellow-900";
+      case "Resolved":
+        return "bg-green-200/70 text-green-900";
+      default:
+        return "bg-gray-200/70 text-gray-900";
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#f0f7f5]">
+    <div className="min-h-screen bg-[#f3f6f8]">
       {/* Navbar */}
       <HeaderAfterAuth />
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-20">
-
-        {/* Welcome Section with Profile Link */}
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-20 space-y-10">
+        {/* Welcome Section */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Welcome, Citizen!</h1>
-            <p className="text-muted-foreground mt-2">Help improve your community by reporting issues</p>
+            <h1 className="text-4xl font-extrabold bg-[#0577b7]/80 bg-clip-text text-transparent drop-shadow-sm tracking-wide">
+              Welcome, Citizen!
+            </h1>
+            <p className="text-gray-500 mt-2 text-base">
+              Help improve your community by reporting issues
+            </p>
           </div>
           <Link to={`/citizen/profile`}>
-            <Button variant="outline" className="flex items-center space-x-2">
+            <Button
+              variant="outline"
+              className="flex items-center space-x-2 rounded-full shadow-sm hover:shadow-md transition-all"
+            >
               <User className="h-4 w-4" />
               <span>My Profile</span>
             </Button>
@@ -98,68 +109,85 @@ const CitizenHome = () => {
         </div>
 
         {/* Search Section */}
-        <div className="my-8">
-          <h2 className="text-2xl font-bold text-foreground mb-4">Search Issues by Location</h2>
-          <div className="relative max-w-md ">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+        <div>
+          <h2 className="text-2xl font-semibold text-gray-600 mb-4">
+            Search Issues by Location
+          </h2>
+          <div className="relative max-w-md">
+             <Search
+      className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500 z-20"
+      aria-hidden="true"
+    />
             <Input
               type="text"
               placeholder="Enter city name..."
               value={searchCity}
               onChange={(e) => setSearchCity(e.target.value)}
-              className="pl-10 bg-white"
+              className="pl-10 bg-white/70 backdrop-blur-md border border-gray-200 rounded-full placeholder:text-gray-400  "
             />
           </div>
         </div>
 
         {/* Issues Grid */}
-        <div className="mb-8">
+        <div>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-foreground">
+            <h2 className="text-2xl font-semibold text-gray-600">
               Recent Issues
               {searchCity && (
-                <span className="text-lg font-normal text-muted-foreground ml-2">
+                <span className="text-lg font-normal text-gray-400 ml-2">
                   in {searchCity}
                 </span>
               )}
             </h2>
-            <div className="text-sm text-muted-foreground">
-              {filteredIssues.length} issue{filteredIssues.length !== 1 ? 's' : ''} found
+            <div className="text-sm text-gray-400">
+              {filteredIssues.length} issue
+              {filteredIssues.length !== 1 ? "s" : ""} found
             </div>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[600px] overflow-y-auto">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-h-[600px] overflow-y-auto">
             {filteredIssues.map((issue) => (
-              <Card key={issue._id} className="hover:shadow-lg transition-shadow duration-200">
-                <div className="relative h-48 overflow-hidden rounded-t-lg">
-                  <img 
+              <Card
+                key={issue._id}
+                className="rounded-2xl bg-white/70 backdrop-blur-md border border-gray-200 shadow-md hover:shadow-xl transition-all"
+              >
+                <div className="relative h-48 overflow-hidden rounded-t-2xl">
+                  <img
                     src={issue.image || "/placeholder.jpg"}
                     alt={issue.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                   />
-                  <div className={`absolute top-3 right-3 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(issue.status)}`}>
+                  <div
+                    className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
+                      issue.status
+                    )}`}
+                  >
                     {issue.status}
                   </div>
                 </div>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">{issue.title}</CardTitle>
+                  <CardTitle className="text-lg text-gray-800">
+                    {issue.title}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
+                  <p className="text-gray-500 text-sm mb-3 line-clamp-2">
                     {issue.description}
                   </p>
-                  <div className="space-y-2 text-xs text-muted-foreground">
+                  <div className="space-y-2 text-xs text-gray-500">
                     <div className="flex items-center space-x-2">
-                      <MapPin className="h-3 w-3" />
+                      <MapPin className="h-3 w-3 text-gray-400" />
                       <span>{issue.location.address}</span>
-                      <span className="font-medium text-primary">• {issue.type}</span>
+                      <span className="font-medium text-teal-600">
+                        • {issue.type}
+                      </span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <User className="h-3 w-3" />
+                      <User className="h-3 w-3 text-gray-400" />
                       <span>Reported by {issue.reportedBy}</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <Clock className="h-3 w-3" />
+                      <Clock className="h-3 w-3 text-gray-400" />
                       <span>{issue.reportedAt}</span>
                     </div>
                   </div>
@@ -170,30 +198,34 @@ const CitizenHome = () => {
 
           {filteredIssues.length === 0 && (
             <div className="flex flex-col items-center justify-center text-center py-12">
-    <div className="max-w-xs mx-auto mb-4">
-      <Player
-        autoplay
-        loop
-        animationData={emptyAnimation}
-        style={{ height: "180px", width: "180px" }}
-      />
-    </div>
-    <p className="text-muted-foreground">
-      {searchCity
-        ? <>No issues found for <span className="font-semibold">{searchCity}</span></>
-        : "No issues available at the moment."}
-    </p>
-  </div>
-
+              <div className="max-w-xs mx-auto mb-4">
+                <Player
+                  autoplay
+                  loop
+                  animationData={emptyAnimation}
+                  style={{ height: "180px", width: "180px" }}
+                />
+              </div>
+              <p className="text-gray-400">
+                {searchCity ? (
+                  <>
+                    No issues found for{" "}
+                    <span className="font-semibold">{searchCity}</span>
+                  </>
+                ) : (
+                  "No issues available at the moment."
+                )}
+              </p>
+            </div>
           )}
         </div>
 
         {/* Create Issue Button */}
         <div className="fixed bottom-8 right-8">
           <Link to="/citizen/create-issue">
-            <Button 
-              size="lg" 
-              className="civic-gradient border-0 text-white hover:opacity-90 shadow-lg h-14 px-6 rounded-full"
+            <Button
+              size="lg"
+              className="civic-gradient border-0 text-white hover:scale-105 hover:opacity-90 shadow-lg h-14 px-6 rounded-full transition-transform"
             >
               <Plus className="h-5 w-5 mr-2" />
               Report New Issue

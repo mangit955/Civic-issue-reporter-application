@@ -140,14 +140,20 @@ const AdminProfile = () => {
   if (loadingMyIssues) return <p>Loading handled issues...</p>;
 
   return (
-    <div className="min-h-screen bg-[#f0f7f5]">
+    <div className="min-h-screen bg-[#f3f6f8]">
 
       {/* Navbar */}
       <HeaderAfterAuth />
       
       <div className="pt-20 container mx-auto my-9 max-w-4xl space-y-6 px-4">
         {/* Profile Header */}
-        <Card>
+        <Card className="bg-white/70 
+  border border-white/20 
+  shadow-lg 
+  rounded-xl 
+  p-6 
+  ring-1 ring-white/10 
+  ">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
@@ -246,13 +252,25 @@ const AdminProfile = () => {
 
         {/* Response Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card>
+          <Card className='bg-white/70 
+  border border-white/20 
+  shadow-lg 
+  rounded-xl 
+  p-6 
+  ring-1 ring-white/10 
+ '>
             <CardContent className="p-6">
               <div className="text-2xl font-bold">{respondedIssues.length}</div>
               <p className="text-xs text-muted-foreground">Total Issues Handled</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className='bg-white/70 
+  border border-white/20 
+  shadow-lg 
+  rounded-xl 
+  p-6 
+  ring-1 ring-white/10 
+  '>
             <CardContent className="p-6">
               <div className="text-2xl font-bold text-green-600">
                 {respondedIssues.filter(issue => issue.status === "Resolved").length}
@@ -260,7 +278,13 @@ const AdminProfile = () => {
               <p className="text-xs text-muted-foreground">Successfully Resolved</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className='bg-white/70 
+  border border-white/20 
+  shadow-lg 
+  rounded-xl 
+  p-6 
+  ring-1 ring-white/10 
+  '>
             <CardContent className="p-6">
               <div className="text-2xl font-bold text-blue-600">
                 {respondedIssues.filter(issue => issue.status === "In Progress").length}
@@ -268,7 +292,13 @@ const AdminProfile = () => {
               <p className="text-xs text-muted-foreground">Currently Working On</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className='bg-white/70 
+  border border-white/20 
+  shadow-lg 
+  rounded-xl 
+  p-6 
+  ring-1 ring-white/10 
+ '>
             <CardContent className="p-6">
               <div className="text-2xl font-bold">
                 {respondedIssues.filter(issue => issue.resolvedDate).length > 0 
@@ -285,7 +315,13 @@ const AdminProfile = () => {
         </div>
 
         {/* Responded Issues */}
-        <Card>
+        <Card className='bg-white/70 
+  border border-white/20 
+  shadow-lg 
+  rounded-xl 
+  p-6 
+  ring-1 ring-white/10 
+  '>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <CheckCircle className="h-5 w-5" />

@@ -61,7 +61,7 @@ return (
                 viewport={{ once: true, amount: 0.2 }}
                 custom={index}
               >
-                <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-2 bg-background">
+                <Card className="group  backdrop-blur-md hover:shadow-lg transition-all duration-300 hover:-translate-y-2 bg-white/70 shadow-lg   ">
                   <CardContent className="p-6 text-center">
                     <div className="relative mb-6">
                       <div className={`w-16 h-16 ${step.color} rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>

@@ -123,9 +123,9 @@ const ReportIssue = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f0f7f5]">
+    <div className="min-h-screen bg-[#f3f6f8]">
       {/* Header */}
-      <header className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+      <header className="w-full border-b bg-white/10 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -154,7 +154,7 @@ const ReportIssue = () => {
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Map Section */}
-          <Card className="h-fit">
+          <Card className="h-fit shadow-lg bg-white/80">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <MapPin className="h-5 w-5" />
@@ -183,7 +183,7 @@ const ReportIssue = () => {
           </Card>
 
           {/* Form Section */}
-          <Card>
+          <Card className="shadow-lg bg-white/80">
             <CardHeader>
               <CardTitle>Issue Details</CardTitle>
             </CardHeader>
@@ -204,6 +204,7 @@ const ReportIssue = () => {
                       }
                       placeholder="Enter your issue title"
                       required
+                      className="shadow-sm"
                     />
                   </div>
                 </div>
@@ -247,6 +248,7 @@ const ReportIssue = () => {
                         handleInputChange("issueLocation", e.target.value)
                       }
                       placeholder="Enter or select location on map"
+                      className="shadow-sm"
                     />
                   </div>
 
@@ -261,7 +263,7 @@ const ReportIssue = () => {
                         handleInputChange("issueDescription", e.target.value)
                       }
                       placeholder="Describe the issue in detail..."
-                      className="min-h-24"
+                      className="min-h-24 shadow-sm"
                       required
                     />
                   </div>

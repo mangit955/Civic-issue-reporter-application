@@ -196,14 +196,14 @@ const AdminHome = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f0f7f5]">
+    <div className="min-h-screen bg-[#f3f6f8]">
       <HeaderAfterAuth />
 
       <div className="pt-20 container mx-auto px-4 py-8 space-y-8">
         {/* Welcome Section with Profile Link */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">
+            <h1 className="text-3xl font-bold text-foreground/70">
               Admin Dashboard
             </h1>
             <p className="text-muted-foreground mt-2">
@@ -211,7 +211,7 @@ const AdminHome = () => {
             </p>
           </div>
           <Link to="/admin/profile">
-            <Button variant="outline" className="flex items-center space-x-2">
+            <Button variant="outline" className="flex items-center space-x-2 shadow-sm ">
               <User className="h-4 w-4" />
               <span>My Profile</span>
             </Button>
@@ -220,25 +220,25 @@ const AdminHome = () => {
 
         {/* Statistics Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-6 rounded-lg border shadow-sm bg-card">
+          <div className="p-6 rounded-lg border shadow-lg bg-card ">
             <div className="text-2xl font-bold text-foreground">
               {issues.length}
             </div>
             <p className="text-sm text-muted-foreground">Total Issues</p>
           </div>
-          <div className="p-6 rounded-lg border shadow-sm bg-card">
+          <div className="p-6 rounded-lg border shadow-lg bg-card">
             <div className="text-2xl font-bold text-green-600">
               {issues.filter((issue) => issue.status === "Resolved").length}
             </div>
             <p className="text-sm text-muted-foreground">Resolved Issues</p>
           </div>
-          <div className="p-6 rounded-lg border shadow-sm bg-card">
+          <div className="p-6 rounded-lg border shadow-lg bg-card">
             <div className="text-2xl font-bold text-blue-600">
               {issues.filter((issue) => issue.status === "In Progress").length}
             </div>
             <p className="text-sm text-muted-foreground">Issues In Progress</p>
           </div>
-          <div className="p-6 rounded-lg border shadow-sm bg-card">
+          <div className="p-6 rounded-lg border shadow-lg bg-card">
             <div className="text-2xl font-bold text-yellow-600">
               {issues.filter((issue) => issue.status === "Pending").length}
             </div>
@@ -247,9 +247,9 @@ const AdminHome = () => {
         </div>
 
         {/* Search and Filters */}
-       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-  <div className="relative w-full md:w-80">
-    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+       <div className="flex flex-col md:flex-row items-center justify-between gap-4 ">
+  <div className="relative w-full md:w-80 shadow-sm rounded">
+    <Search className="absolute  left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
     <Input
       type="text"
       placeholder="Search issues..."
@@ -262,7 +262,7 @@ const AdminHome = () => {
           <div className="flex items-center space-x-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="gap-2">
+                <Button variant="outline" className="gap-2 shadow-sm">
                   Status <ChevronsUpDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -321,7 +321,7 @@ const AdminHome = () => {
         </div>
 
         {/* Issues Table */}
-        <div className="rounded-md border bg-white">
+        <div className="rounded-md border bg-white shadow-lg">
           <Table>
             <TableCaption>A list of all reported issues.</TableCaption>
             <TableHeader>

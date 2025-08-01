@@ -36,7 +36,7 @@ const Header: React.FC<HeaderProps> = () => {
               <img src={civicIssueLogo} alt="civicIssueLogo" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-foreground">CivicIssueReporter</h1>
+              <h1 className="text-xl font-bold text-foreground">CivicIssueRepoter</h1>
               <p className="text-xs text-muted-foreground">Building Better Communities</p>
             </div>
           </Link>

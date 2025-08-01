@@ -16,7 +16,7 @@ const Footer = () => {
                 {/* <MapPin className="h-5 w-5 text-white" /> */}
                 <img src={civicIssueLogo} alt="civicIssueLogo" />
               </div>
-              <h3 className="text-lg font-bold text-foreground">CivicIssueReporter</h3>
+              <h3 className="text-lg font-bold text-foreground">CivicIssueRepoter</h3>
             </div>
             <p className="text-muted-foreground">
               Empowering communities to report and resolve civic issues through technology and civic engagement.
@@ -82,7 +82,7 @@ const Footer = () => {
 
         <div className="border-t mt-12 pt-8 text-center">
           <p className="text-muted-foreground">
-            © 2024 CivicIssueReporter. All rights reserved. Building better communities together.
+            © 2024 CivicIssueRepoter. All rights reserved. Building better communities together.
           </p>
         </div>
       </div>
