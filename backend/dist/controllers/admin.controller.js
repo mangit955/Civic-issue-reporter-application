@@ -41,7 +41,7 @@ exports.getAdminProfile = getAdminProfile;
 const updateAdminProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const { fullName, email, phonenumber, department, } = req.body;
+        const { fullName, email, phonenumber, department } = req.body;
         if (!fullName || !email || !phonenumber || !department) {
             res.status(400).json({ message: "All fields are required" });
             return;
@@ -64,7 +64,13 @@ const updateIssueStatus = (req, res) => __awaiter(void 0, void 0, void 0, functi
         const { id } = req.params;
         const { status } = req.body;
         const adminId = req.adminId;
-        const validStatuses = ["Reported", "In Progress", "Resolved", "Rejected", "Pending"];
+        const validStatuses = [
+            "Reported",
+            "In Progress",
+            "Resolved",
+            "Rejected",
+            "Pending",
+        ];
         if (!validStatuses.includes(status)) {
             res.status(400).json({ message: "Invalid status value" });
             return;
@@ -91,8 +97,9 @@ const updateIssueStatus = (req, res) => __awaiter(void 0, void 0, void 0, functi
 });
 exports.updateIssueStatus = updateIssueStatus;
 const getHandledIssuesByAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const authReq = req;
     try {
-        const adminId = req.adminId; // from authMiddleware
+        const adminId = authReq.adminId; // from authMiddleware
         if (!adminId) {
             res.status(401).json({ success: false, message: "Unauthorized" });
             return;
@@ -107,8 +114,8 @@ const getHandledIssuesByAdmin = (req, res) => __awaiter(void 0, void 0, void 0, 
             .lean();
         console.log(`Found ${historyRecords.length} records.`);
         const issues = historyRecords
-            .filter(record => record.issueID)
-            .map(record => (Object.assign(Object.assign({}, record.issueID), { status: record.status, handledBy: record.handledBy, lastStatus: record.status, lastUpdated: record.changedAt })));
+            .filter((record) => record.issueID)
+            .map((record) => (Object.assign(Object.assign({}, record.issueID), { status: record.status, handledBy: record.handledBy, lastStatus: record.status, lastUpdated: record.changedAt })));
         res.status(200).json({ success: true, issues });
     }
     catch (error) {

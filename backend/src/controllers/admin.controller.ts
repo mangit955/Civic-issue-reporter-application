@@ -6,7 +6,6 @@ import mongoose from "mongoose";
 
 interface AuthRequest extends Request {
   adminId?: string;
-  role?: string;
 }
 
 export const getAdminProfile = async (
@@ -43,7 +42,7 @@ export const updateAdminProfile = async (
   try {
     const { id } = req.params;
 
-    const { fullName, email, phonenumber, department, } = req.body;
+    const { fullName, email, phonenumber, department } = req.body;
 
     if (!fullName || !email || !phonenumber || !department) {
       res.status(400).json({ message: "All fields are required" });
@@ -77,7 +76,13 @@ export const updateIssueStatus = async (
     const { status } = req.body;
     const adminId = req.adminId;
 
-    const validStatuses = ["Reported", "In Progress", "Resolved", "Rejected", "Pending"];
+    const validStatuses = [
+      "Reported",
+      "In Progress",
+      "Resolved",
+      "Rejected",
+      "Pending",
+    ];
     if (!validStatuses.includes(status)) {
       res.status(400).json({ message: "Invalid status value" });
       return;
@@ -110,14 +115,17 @@ export const updateIssueStatus = async (
   }
 };
 
-
-export const getHandledIssuesByAdmin = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getHandledIssuesByAdmin = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
+  const authReq = req as AuthRequest;
   try {
-    const adminId = req.adminId;  // from authMiddleware
+    const adminId = authReq.adminId; // from authMiddleware
 
     if (!adminId) {
-       res.status(401).json({ success: false, message: "Unauthorized" });
-       return;
+      res.status(401).json({ success: false, message: "Unauthorized" });
+      return;
     }
 
     console.log("Fetching handled issues for admin:", adminId);
@@ -133,8 +141,8 @@ export const getHandledIssuesByAdmin = async (req: AuthRequest, res: Response): 
     console.log(`Found ${historyRecords.length} records.`);
 
     const issues = historyRecords
-      .filter(record => record.issueID)
-      .map(record => ({
+      .filter((record) => record.issueID)
+      .map((record) => ({
         ...record.issueID,
         status: record.status,
         handledBy: record.handledBy,
@@ -149,7 +157,10 @@ export const getHandledIssuesByAdmin = async (req: AuthRequest, res: Response): 
   }
 };
 
-export const deleteIssueByAdmin = async (req: AuthRequest, res: Response): Promise<void> => {
+export const deleteIssueByAdmin = async (
+  req: AuthRequest,
+  res: Response
+): Promise<void> => {
   try {
     const loggedInAdminId = req.adminId; // from auth middleware
     const { issueid } = req.params;
@@ -178,4 +189,3 @@ export const deleteIssueByAdmin = async (req: AuthRequest, res: Response): Promi
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-

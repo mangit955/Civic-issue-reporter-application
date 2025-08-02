@@ -1,6 +1,21 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
+interface DecodedToken {
+  id: string;
+  role: "admin" | "citizen";
+}
+
+declare global {
+  namespace Express {
+    interface Request {
+      citizenId?: string;
+      adminId?: string;
+      role?: "admin" | "citizen";
+    }
+  }
+}
+
 export const authMiddleware = (
   req: Request,
   res: Response,
@@ -21,13 +36,19 @@ export const authMiddleware = (
   const token = authHeader.split(" ")[1];
   // JWT_PASSWORD is expected to be set in the environment variables
   try {
-    const decoded = jwt.verify(token, process.env.JWT_PASSWORD!) as {
-      id: string;
-    };
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_PASSWORD!
+    ) as DecodedToken;
 
     console.log("Decoded JWT:", decoded);
     //@ts-ignore
-    req.citizenId = decoded.id;
+    if (decoded.role === "citizen") {
+      req.citizenId = decoded.id;
+    } else if (decoded.role === "admin") {
+      req.adminId = decoded.id;
+    }
+    req.role = decoded.role;
     next();
   } catch (e) {
     console.log("Error verifying JWT:", e);

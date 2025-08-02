@@ -33,3 +33,6 @@ lottie animations for react =>
 
 framer-motion for smooth transition between pages =>
     npm install framer-motion
+
+    npm install react-hook-form zod @hookform/resolvers
+

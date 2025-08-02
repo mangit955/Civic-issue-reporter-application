@@ -23,7 +23,10 @@ const signupSchema = z.object({
     .length(10, { message: "Phone number must be exactly 10 digits" })
     .trim(),
   department: z.string().trim(),
-  adminAccessCode: z.number().int().min(1000, { message: "Admin access code must be at least 4 digits" }),
+  adminAccessCode: z
+    .number()
+    .int()
+    .min(1000, { message: "Admin access code must be at least 4 digits" }),
 });
 
 export const adminSignup = async (
@@ -40,15 +43,16 @@ export const adminSignup = async (
       department,
       adminAccessCode,
     } = parsedData;
-
+  
+    //Check if the admin already exists
     const existingUser = await AdminModel.findOne({ email });
     if (existingUser) {
       res.status(400).json({ message: " User already exists" });
       return;
     }
 
+    //Hash password and create new admin
     const hashedPassword = await bcrypt.hash(password, 10);
-
     await AdminModel.create({
       fullName,
       password: hashedPassword,
@@ -57,6 +61,7 @@ export const adminSignup = async (
       department,
       adminAccessCode,
     });
+
     console.log("Admin created!");
     res.status(200).json({ message: "Admin Signed up!" });
   } catch (err: any) {
@@ -82,16 +87,17 @@ export const adminSignin = async (
   try {
     const { email, password, adminAccessCode } = req.body;
 
+    // Find admin by email and access code
     const existingUser = await AdminModel.findOne({
       email,
       adminAccessCode,
     });
-
     if (!existingUser) {
-      res.status(400).json({ message: "Admin not found!" });
+      res.status(404).json({ message: "Admin not found!" });
       return;
     }
 
+    // Verify password
     const isPasswordValid = await bcrypt.compare(
       password,
       existingUser.password as string
@@ -101,6 +107,7 @@ export const adminSignin = async (
       return;
     }
 
+    // Generate JWT token
     const token = jwt.sign(
       {
         id: existingUser._id,

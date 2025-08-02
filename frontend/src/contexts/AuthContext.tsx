@@ -1,5 +1,11 @@
 import { BACKEND_URL } from "../config/config";
-import React, { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  type ReactNode,
+} from "react";
 
 interface User {
   id: string;
@@ -14,7 +20,12 @@ interface User {
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  login: (email: string, password: string, role: "citizen" | "admin", adminAccessCode?: string) => Promise<void>;
+  login: (
+    email: string,
+    password: string,
+    role: "citizen" | "admin",
+    adminAccessCode?: string
+  ) => Promise<void>;
   register: (userData: any, role: "citizen" | "admin") => Promise<void>;
   logout: () => void;
   isLoading: boolean;
@@ -44,26 +55,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const storedUser = localStorage.getItem("auth_user");
       const storedRole = localStorage.getItem("auth_role");
       const storedUserId = localStorage.getItem("auth_user_id");
-  
+
       if (!token || !storedRole || !storedUserId) {
         console.warn("Missing token or user info in localStorage");
         return;
       }
-  
+
       const endpoint =
         storedRole === "admin"
           ? `admin/profile/${storedUserId}`
           : `citizen/profile/${storedUserId}`;
-  
+
       const response = await fetch(`${BACKEND_URL}/api/v1/${endpoint}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
-  
+
       const result = await response.json();
-  
+
       if (response.ok) {
         setUser(result);
         localStorage.setItem("auth_user", JSON.stringify(result));
@@ -74,7 +85,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error("Error fetching profile:", error);
     }
   };
-  
+
   useEffect(() => {
     const storedToken = localStorage.getItem("auth_token");
     const storedUser = localStorage.getItem("auth_user");
@@ -85,10 +96,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(parsedUser);
 
         // ✅ Fetch fresh user profile from server
-        fetchProfile(parsedUser.id, parsedUser.role, storedToken).finally(() => {
+        fetchProfile().finally(() => {
           setIsLoading(false);
         });
-
       } catch (error) {
         console.error("Failed to parse user from localStorage:", error);
         logout();
@@ -98,7 +108,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoading(false);
   }, []);
 
-  const login = async (email: string, password: string, role: "citizen" | "admin", adminAccessCode?: string) => {
+  const login = async (
+    email: string,
+    password: string,
+    role: "citizen" | "admin",
+    adminAccessCode?: string
+  ) => {
     setIsLoading(true);
     try {
       const endpoint = role === "admin" ? "admin/signin" : "citizen/signin";
@@ -149,15 +164,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       localStorage.setItem("auth_token", result.token);
       localStorage.setItem("auth_user", JSON.stringify(authUser));
-      
+
       console.log("Auth User After Login:", authUser);
 
       return true;
-
     } catch (error) {
       console.error("Login Error:", error);
       return false;
-
     } finally {
       setIsLoading(false);
     }
@@ -175,14 +188,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
 
       const result = await response.json();
-      if (!response.ok) throw new Error(result.message || "Registration failed");
+      if (!response.ok)
+        throw new Error(result.message || "Registration failed");
 
       setToken(result.token);
       setUser(result.user);
 
       localStorage.setItem("auth_token", result.token);
       localStorage.setItem("auth_user", JSON.stringify(result.user));
-
     } finally {
       setIsLoading(false);
     }
@@ -198,14 +211,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const updateUserProfile = async (updatedData: Partial<User>) => {
     setIsLoading(true);
     try {
-
       if (!token || !user) throw new Error("User is not authenticated");
       const userId = user.id; // Ensure correct key
 
-      const endpoint = user.role === "admin" 
-        ? `admin/${userId}` 
-        : `citizen/${userId}`;
-  
+      const endpoint =
+        user.role === "admin" ? `admin/${userId}` : `citizen/${userId}`;
+
       const response = await fetch(`${BACKEND_URL}/api/v1/${endpoint}`, {
         method: "PUT",
         headers: {
@@ -214,31 +225,39 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         },
         body: JSON.stringify(updatedData),
       });
-  
+
       const result = await response.json();
-  
+
       if (!response.ok) {
         throw new Error(result.message || "Profile update failed");
       }
-  
+
       // ✅ Update local state and storage
       const newUser = { ...user, ...updatedData };
       setUser(newUser);
       localStorage.setItem("auth_user", JSON.stringify(newUser));
-  
-      return result;
 
+      return result;
     } catch (error) {
       console.error("Update profile error:", error);
       throw error;
-
     } finally {
       setIsLoading(false);
     }
   };
-  
+
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout, updateUserProfile, isLoading }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        login,
+        register,
+        logout,
+        updateUserProfile,
+        isLoading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

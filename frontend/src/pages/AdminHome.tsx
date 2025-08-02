@@ -57,7 +57,7 @@ const AdminHome = () => {
 
   const [issues, setIssues] = useState<Issues[]>([]);
 
-  // ✅ Fetch issues from backend
+  //  Fetch issues from backend
   useEffect(() => {
     const fetchIssues = async () => {
       try {
@@ -116,16 +116,15 @@ const AdminHome = () => {
   const handleDeleteIssue = async (issueId: string) => {
     if (!window.confirm("Are you sure you want to delete this issue?")) return;
     try {
-     const response = await fetch(
-  `${BACKEND_URL}/api/v1/issue/admin/${issueId}`, // issueId in URL
-  {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-    },
-  }
-);
-
+      const response = await fetch(
+        `${BACKEND_URL}/api/v1/issue/admin/${issueId}`, // issueId in URL
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }
+      );
 
       const data = await response.json();
       if (response.ok) {
@@ -211,8 +210,11 @@ const AdminHome = () => {
             </p>
           </div>
           <Link to="/admin/profile">
-            <Button variant="outline" className="flex items-center space-x-2 shadow-sm ">
-              <User className="h-4 w-4" />
+            <Button
+              variant="outline"
+              className="flex items-center space-x-2 shadow-sm "
+            >
+              <User className="h-4 w-4 text-purple-600" />
               <span>My Profile</span>
             </Button>
           </Link>
@@ -247,23 +249,23 @@ const AdminHome = () => {
         </div>
 
         {/* Search and Filters */}
-       <div className="flex flex-col md:flex-row items-center justify-between gap-4 ">
-  <div className="relative w-full md:w-80 shadow-sm rounded">
-    <Search className="absolute  left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-    <Input
-      type="text"
-      placeholder="Search issues..."
-      value={searchQuery}
-      onChange={(e) => setSearchQuery(e.target.value)}
-      className="pl-10 bg-white"
-    />
-</div>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 ">
+          <div className="relative w-full md:w-80 shadow-sm rounded">
+            <Search className="absolute  left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search issues..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 bg-white"
+            />
+          </div>
 
           <div className="flex items-center space-x-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="gap-2 shadow-sm">
-                  Status <ChevronsUpDown className="h-4 w-4" />
+                  Status <ChevronsUpDown className="h-4 w-4 text-gray-500 " />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-[200px]">
@@ -335,9 +337,9 @@ const AdminHome = () => {
                     Title
                     {sortColumn === "title" &&
                       (sortDirection === "asc" ? (
-                        <ArrowUp className="ml-2 h-4 w-4" />
+                        <ArrowUp className="ml-2 h-4 w-4 text-gray-500 " />
                       ) : (
-                        <ArrowDown className="ml-2 h-4 w-4" />
+                        <ArrowDown className="ml-2 h-4 w-4 text-gray-500 " />
                       ))}
                   </Button>
                 </TableHead>
@@ -350,9 +352,9 @@ const AdminHome = () => {
                     Location
                     {sortColumn === "location" &&
                       (sortDirection === "asc" ? (
-                        <ArrowUp className="ml-2 h-4 w-4" />
+                        <ArrowUp className="ml-2 h-4 w-4 text-gray-500 " />
                       ) : (
-                        <ArrowDown className="ml-2 h-4 w-4" />
+                        <ArrowDown className="ml-2 h-4 w-4 text-gray-500 " />
                       ))}
                   </Button>
                 </TableHead>
@@ -365,9 +367,9 @@ const AdminHome = () => {
                     Status
                     {sortColumn === "status" &&
                       (sortDirection === "asc" ? (
-                        <ArrowUp className="ml-2 h-4 w-4" />
+                        <ArrowUp className="ml-2 h-4 w-4 text-gray-500 " />
                       ) : (
-                        <ArrowDown className="ml-2 h-4 w-4" />
+                        <ArrowDown className="ml-2 h-4 w-4 text-gray-500 " />
                       ))}
                   </Button>
                 </TableHead>
@@ -389,7 +391,7 @@ const AdminHome = () => {
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon">
-                            <Edit className="h-4 w-4" />
+                            <Edit className="h-4 w-4 text-blue-600" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
@@ -432,7 +434,7 @@ const AdminHome = () => {
                         size="icon"
                         onClick={() => handleDeleteIssue(issue._id)}
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-4 w-4 text-gray-500 " />
                       </Button>
                     </div>
                   </TableCell>

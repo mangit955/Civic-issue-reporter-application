@@ -17,7 +17,6 @@ import { toast } from "sonner";
 import { BACKEND_URL } from "../config/config";
 
 const ReportIssue = () => {
-
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: "",
@@ -37,17 +36,20 @@ const ReportIssue = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleLocationSelect = useCallback((lat: number, lng: number, address: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      location: {
-        address,
-        latitude: lat,
-        longitude: lng,
-      },
-      issueLocation: address, // also update address string if you use it
-    }));
-  }, []);
+  const handleLocationSelect = useCallback(
+    (lat: number, lng: number, address: string) => {
+      setFormData((prev) => ({
+        ...prev,
+        location: {
+          address,
+          latitude: lat,
+          longitude: lng,
+        },
+        issueLocation: address, // also update address string if you use it
+      }));
+    },
+    []
+  );
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];

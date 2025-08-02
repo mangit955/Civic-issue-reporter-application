@@ -3,8 +3,19 @@ import { Eye, EyeOff } from "lucide-react";
 import civicIssueLogo from "../assets/civic-issue.png";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card.tsx";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card.tsx";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../components/ui/tabs.tsx";
 import { Label } from "../components/ui/label.tsx";
 import { Input } from "../components/ui/input.tsx";
 import { Button } from "../components/ui/button.tsx";
@@ -32,7 +43,11 @@ const SignIn = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const success = await login(citizenForm.email, citizenForm.password, "citizen");
+      const success = await login(
+        citizenForm.email,
+        citizenForm.password,
+        "citizen"
+      );
       if (success) {
         toast("Sign In Successful!", { description: "Welcome back !" });
         navigate("/citizen");
@@ -51,16 +66,27 @@ const SignIn = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const success = await login(adminForm.email, adminForm.password, "admin", adminForm.adminAccessCode);
+      const success = await login(
+        adminForm.email,
+        adminForm.password,
+        "admin",
+        adminForm.adminAccessCode
+      );
       if (success) {
-        toast("Admin Sign In Successful!", { description: "Welcome back, administrator!" });
+        toast("Admin Sign In Successful!", {
+          description: "Welcome back, administrator!",
+        });
         navigate("/admin");
       } else {
-        toast.error("Admin Sign In Failed!", { description: "Invalid credentials" });
+        toast.error("Admin Sign In Failed!", {
+          description: "Invalid credentials",
+        });
       }
     } catch (error) {
       console.error(error);
-      toast.error("Admin Sign In Failed!", { description: "Something went wrong" });
+      toast.error("Admin Sign In Failed!", {
+        description: "Something went wrong",
+      });
     } finally {
       setLoading(false);
     }
@@ -75,13 +101,19 @@ const SignIn = () => {
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2 mb-4">
             <div className="flex items-center justify-center w-16 h-16 rounded-full bg-white shadow">
-              <img src={civicIssueLogo} alt="civicIssueLogo" className="w-15 h-15 object-contain" />
+              <img
+                src={civicIssueLogo}
+                alt="civicIssueLogo"
+                className="w-15 h-15 object-contain"
+              />
             </div>
             <div>
               <h1 className="text-3xl font-extrabold bg-gradient-to-r from-[#016dd0] to-[#159e52] bg-clip-text text-transparent">
                 CivicReport
               </h1>
-              <p className="text-sm text-muted-foreground">Building Better Communities</p>
+              <p className="text-sm text-muted-foreground">
+                Building Better Communities
+              </p>
             </div>
           </Link>
         </div>
@@ -97,7 +129,11 @@ const SignIn = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full ">
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full "
+            >
               <TabsList className="grid w-full grid-cols-2 rounded-full bg-gray-100 p-1">
                 <TabsTrigger
                   value="citizen"
@@ -123,7 +159,10 @@ const SignIn = () => {
                       transition={{ duration: 0.3 }}
                       className="mt-6"
                     >
-                      <form onSubmit={handleCitizenSignIn} className="space-y-4">
+                      <form
+                        onSubmit={handleCitizenSignIn}
+                        className="space-y-4"
+                      >
                         <div className="space-y-2 ">
                           <Label htmlFor="citizen-email">Email</Label>
                           <Input
@@ -131,7 +170,12 @@ const SignIn = () => {
                             type="email"
                             placeholder="citizen@example.com"
                             value={citizenForm.email}
-                            onChange={(e) => setCitizenForm({ ...citizenForm, email: e.target.value })}
+                            onChange={(e) =>
+                              setCitizenForm({
+                                ...citizenForm,
+                                email: e.target.value,
+                              })
+                            }
                             required
                           />
                         </div>
@@ -143,7 +187,12 @@ const SignIn = () => {
                               type={showPassword ? "text" : "password"}
                               placeholder="Enter your password"
                               value={citizenForm.password}
-                              onChange={(e) => setCitizenForm({ ...citizenForm, password: e.target.value })}
+                              onChange={(e) =>
+                                setCitizenForm({
+                                  ...citizenForm,
+                                  password: e.target.value,
+                                })
+                              }
                               required
                             />
                             <Button
@@ -153,7 +202,11 @@ const SignIn = () => {
                               className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                               onClick={() => setShowPassword(!showPassword)}
                             >
-                              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                              {showPassword ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
                             </Button>
                           </div>
                         </div>
@@ -186,7 +239,12 @@ const SignIn = () => {
                             type="email"
                             placeholder="admin@example.com"
                             value={adminForm.email}
-                            onChange={(e) => setAdminForm({ ...adminForm, email: e.target.value })}
+                            onChange={(e) =>
+                              setAdminForm({
+                                ...adminForm,
+                                email: e.target.value,
+                              })
+                            }
                             required
                           />
                         </div>
@@ -198,7 +256,12 @@ const SignIn = () => {
                               type={showPassword ? "text" : "password"}
                               placeholder="Enter your password"
                               value={adminForm.password}
-                              onChange={(e) => setAdminForm({ ...adminForm, password: e.target.value })}
+                              onChange={(e) =>
+                                setAdminForm({
+                                  ...adminForm,
+                                  password: e.target.value,
+                                })
+                              }
                               required
                             />
                             <Button
@@ -208,7 +271,11 @@ const SignIn = () => {
                               className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                               onClick={() => setShowPassword(!showPassword)}
                             >
-                              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                              {showPassword ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
                             </Button>
                           </div>
                         </div>
@@ -219,7 +286,12 @@ const SignIn = () => {
                             type="text"
                             placeholder="Enter admin access code"
                             value={adminForm.adminAccessCode}
-                            onChange={(e) => setAdminForm({ ...adminForm, adminAccessCode: e.target.value })}
+                            onChange={(e) =>
+                              setAdminForm({
+                                ...adminForm,
+                                adminAccessCode: e.target.value,
+                              })
+                            }
                             required
                           />
                         </div>
@@ -244,7 +316,10 @@ const SignIn = () => {
                     Sign up here
                   </Link>
                 </p>
-                <Link to="/" className="text-sm text-muted-foreground hover:text-primary">
+                <Link
+                  to="/"
+                  className="text-sm text-muted-foreground hover:text-primary"
+                >
                   ← Back to Home
                 </Link>
               </div>

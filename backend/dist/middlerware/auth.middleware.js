@@ -21,7 +21,13 @@ const authMiddleware = (req, res, next) => {
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_PASSWORD);
         console.log("Decoded JWT:", decoded);
         //@ts-ignore
-        req.citizenId = decoded.id;
+        if (decoded.role === "citizen") {
+            req.citizenId = decoded.id;
+        }
+        else if (decoded.role === "admin") {
+            req.adminId = decoded.id;
+        }
+        req.role = decoded.role;
         next();
     }
     catch (e) {

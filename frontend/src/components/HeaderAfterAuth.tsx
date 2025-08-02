@@ -4,7 +4,6 @@ import { LogIn, LogOut, Shield, User } from "lucide-react";
 import civicIssueLogo from "../assets/civic-issue.png";
 import { useAuth } from "../contexts/AuthContext.tsx";
 
-
 type HeaderProps = {
   onFeaturesClick?: () => void;
   onHowItWorksClick?: () => void;
@@ -36,8 +35,12 @@ const Header: React.FC<HeaderProps> = () => {
               <img src={civicIssueLogo} alt="civicIssueLogo" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-foreground">CivicIssueRepoter</h1>
-              <p className="text-xs text-muted-foreground">Building Better Communities</p>
+              <h1 className="text-xl font-bold text-foreground">
+                CivicIssueRepoter
+              </h1>
+              <p className="text-xs text-muted-foreground">
+                Building Better Communities
+              </p>
             </div>
           </Link>
 
@@ -45,8 +48,12 @@ const Header: React.FC<HeaderProps> = () => {
             {user ? (
               <>
                 <Link to={user.role === "citizen" ? "/citizen" : "/admin"}>
-                  <Button variant="outline" size="sm" className="flex items-center space-x-2">
-                    <User className="h-4 w-4" />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center space-x-2"
+                  >
+                    <User className="h-4 w-4 text-purple-600" />
                     <span className="hidden sm:block">Dashboard</span>
                   </Button>
                 </Link>
@@ -56,20 +63,27 @@ const Header: React.FC<HeaderProps> = () => {
                   size="sm"
                   className="flex items-center space-x-2"
                 >
-                  <LogOut className="h-4 w-4" />
+                  <LogOut className="h-4 w-4 text-red-600" />
                   <span>Logout</span>
                 </Button>
               </>
             ) : (
               <>
                 <Link to="/signin">
-                  <Button variant="outline" size="sm" className="hidden sm:flex items-center space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="hidden sm:flex items-center space-x-2"
+                  >
                     <LogIn className="h-4 w-4" />
                     <span>Sign In</span>
                   </Button>
                 </Link>
                 <Link to="/signup">
-                  <Button size="sm" className="flex items-center space-x-2 civic-gradient border-0 text-white hover:opacity-90">
+                  <Button
+                    size="sm"
+                    className="flex items-center space-x-2 civic-gradient border-0 text-white hover:opacity-90"
+                  >
                     <Shield className="h-4 w-4" />
                     <span>Sign Up</span>
                   </Button>

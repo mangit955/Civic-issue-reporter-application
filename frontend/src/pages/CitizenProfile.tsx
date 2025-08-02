@@ -35,7 +35,7 @@ interface Issues {
     latitude: number;
     longitude: number;
     address: string;
-  }
+  };
   createdAt: string;
   file?: string;
   status: string;
@@ -79,7 +79,7 @@ const CitizenProfile = () => {
     }
   };
 
-  // ✅ Fetch issues reported by this user
+  // Fetch issues reported by this user
   useEffect(() => {
     if (!token) return;
 
@@ -120,14 +120,16 @@ const CitizenProfile = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Open":
-        return "bg-red-100 text-red-800";
-      case "In Progress":
-        return "bg-yellow-100 text-yellow-800";
+      case "Rejected":
+        return "bg-red-200/70 text-red-900";
+      case "Pending":
+        return "bg-yellow-200/70 text-yellow-900";
       case "Resolved":
-        return "bg-green-100 text-green-800";
+        return "bg-green-200/70 text-green-900";
+      case "In Progress":
+        return "bg-blue-200/70 text-blue-900";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-200/70 text-gray-900";
     }
   };
 
@@ -138,13 +140,15 @@ const CitizenProfile = () => {
 
       <div className="pt-20 container mx-auto my-9 max-w-4xl space-y-6 px-4">
         {/* Profile Header */}
-        <Card className="bg-white/70 
+        <Card
+          className="bg-white/70 
   border border-white/20 
   shadow-lg 
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
-  ">
+  "
+        >
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
@@ -158,7 +162,7 @@ const CitizenProfile = () => {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <CardTitle className="text-2xl">Citizen Profile</CardTitle>
+                  <CardTitle className="text-2xl">My Profile</CardTitle>
                   <CardDescription>
                     Manage your profile and view your reported issues
                   </CardDescription>
@@ -170,7 +174,7 @@ const CitizenProfile = () => {
                   isEditing ? handleSaveProfile : () => setIsEditing(true)
                 }
               >
-                <Edit className="h-4 w-4 mr-2" />
+                <Edit className="h-4 w-4 mr-2 text-indigo-600" />
                 {isEditing ? "Save Changes" : "Edit Profile"}
               </Button>
             </div>
@@ -180,7 +184,7 @@ const CitizenProfile = () => {
               <div className="space-y-2">
                 <Label htmlFor="name">Full Name</Label>
                 <div className="flex items-center space-x-2">
-                  <User className="h-4 w-4 text-muted-foreground" />
+                  <User className="h-4 w-4 text-blue-600 hover:text-blue-800  transition duration-300" />
                   {isEditing ? (
                     <Input
                       id="name"
@@ -190,7 +194,7 @@ const CitizenProfile = () => {
                       }
                     />
                   ) : (
-                    <span>{profile.fullName}</span>
+                    <span className="text-gray-400">{profile.fullName}</span>
                   )}
                 </div>
               </div>
@@ -198,7 +202,7 @@ const CitizenProfile = () => {
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <div className="flex items-center space-x-2">
-                  <Mail className="h-4 w-4 text-muted-foreground" />
+                  <Mail className="h-4 w-4 text-blue-600 hover:text-blue-800  transition duration-300" />
                   {isEditing ? (
                     <Input
                       id="email"
@@ -209,7 +213,7 @@ const CitizenProfile = () => {
                       }
                     />
                   ) : (
-                    <span>{profile.email}</span>
+                    <span className="text-gray-400">{profile.email}</span>
                   )}
                 </div>
               </div>
@@ -217,7 +221,7 @@ const CitizenProfile = () => {
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone Number</Label>
                 <div className="flex items-center space-x-2">
-                  <Phone className="h-4 w-4 text-muted-foreground" />
+                  <Phone className="h-4 w-4 text-blue-600 hover:text-blue-800  transition duration-300" />
                   {isEditing ? (
                     <Input
                       id="phone"
@@ -227,7 +231,7 @@ const CitizenProfile = () => {
                       }
                     />
                   ) : (
-                    <span>{profile.phonenumber}</span>
+                    <span className="text-gray-400">{profile.phonenumber}</span>
                   )}
                 </div>
               </div>
@@ -237,13 +241,15 @@ const CitizenProfile = () => {
 
         {/* Issues Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="bg-white/70 
+          <Card
+            className="bg-white/70 
   border border-white/20 
   shadow-lg 
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
- ">
+ "
+          >
             <CardContent className="p-6">
               <div className="text-2xl font-bold">{myIssues.length}</div>
               <p className="text-xs text-muted-foreground">
@@ -251,13 +257,15 @@ const CitizenProfile = () => {
               </p>
             </CardContent>
           </Card>
-          <Card className="bg-white/70 
+          <Card
+            className="bg-white/70 
   border border-white/20 
   shadow-lg 
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
-  ">
+  "
+          >
             <CardContent className="p-6">
               <div className="text-2xl font-bold text-green-600">
                 {myIssues.filter((issue) => issue.status === "Resolved").length}
@@ -265,13 +273,15 @@ const CitizenProfile = () => {
               <p className="text-xs text-muted-foreground">Resolved</p>
             </CardContent>
           </Card>
-          <Card className="bg-white/70 
+          <Card
+            className="bg-white/70 
   border border-white/20 
   shadow-lg 
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
-">
+"
+          >
             <CardContent className="p-6">
               <div className="text-2xl font-bold text-blue-600">
                 {
@@ -282,13 +292,15 @@ const CitizenProfile = () => {
               <p className="text-xs text-muted-foreground">In Progress</p>
             </CardContent>
           </Card>
-          <Card className="bg-white/70 
+          <Card
+            className="bg-white/70 
   border border-white/20 
   shadow-lg 
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
-  ">
+  "
+          >
             <CardContent className="p-6">
               <div className="text-2xl font-bold text-yellow-600">
                 {myIssues.filter((issue) => issue.status === "Pending").length}
@@ -299,16 +311,18 @@ const CitizenProfile = () => {
         </div>
 
         {/* Reported Issues */}
-        <Card className="bg-white/70 
+        <Card
+          className="bg-white/70 
   border border-white/20 
   shadow-lg 
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
-  ">
+  "
+        >
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <FileText className="h-5 w-5" />
+              <FileText className="h-5 w-5 text-indigo-500 hover:text-indigo-700  transition duration-300" />
               <span>My Reported Issues</span>
             </CardTitle>
             <CardDescription>
@@ -329,7 +343,7 @@ const CitizenProfile = () => {
                 {myIssues.map((issue) => (
                   <div
                     key={issue._id}
-                    className="border rounded-lg p-4 space-y-3"
+                    className="border rounded-lg p-4 space-y-3 shadow-sm bg-pink-50"
                   >
                     <div className="flex items-start justify-between">
                       <div className="space-y-1">
@@ -353,20 +367,20 @@ const CitizenProfile = () => {
 
                     <Separator />
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div className="grid grid-cols-1  gap-4 text-sm">
                       <div className="flex items-center space-x-2">
-                        <MapPin className="h-4 w-4 text-muted-foreground" />
+                        <MapPin className="h-4 w-4 text-blue-600" />
                         <span>{issue.location.address}</span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        <Calendar className="h-4 w-4 text-pink-500" />
                         <span>
                           Reported:{" "}
                           {new Date(issue.createdAt).toLocaleDateString()}
                         </span>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <FileText className="h-4 w-4 text-muted-foreground" />
+                        <FileText className="h-4 w-4 text-purple-600" />
                         <span>Type: {issue.issueType}</span>
                       </div>
                     </div>

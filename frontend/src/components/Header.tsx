@@ -10,7 +10,10 @@ type HeaderProps = {
   onHowItWorksClick?: () => void;
 };
 
-const Header: React.FC<HeaderProps> = ({ onFeaturesClick, onHowItWorksClick }) => {
+const Header: React.FC<HeaderProps> = ({
+  onFeaturesClick,
+  onHowItWorksClick,
+}) => {
   const { user, logout } = useAuth();
 
   const handleLogout = () => {
@@ -36,66 +39,73 @@ const Header: React.FC<HeaderProps> = ({ onFeaturesClick, onHowItWorksClick }) =
               <img src={civicIssueLogo} alt="civicIssueLogo" />
             </div>
             <div>
-  <h1 className="text-xlz font-bold text-foreground">CivicIssueRepoter</h1>
-  <p className="text-xs text-muted-foreground">Building Better Communities</p>
-</div>
-
+              <h1 className="text-xlz font-bold text-foreground">
+                CivicIssueRepoter
+              </h1>
+              <p className="text-xs text-muted-foreground">
+                Building Better Communities
+              </p>
+            </div>
           </Link>
 
-<nav className="hidden lg:flex items-center space-x-8">
-  <a
-    href="#features"
-    className="relative text-foreground font-medium transition-all duration-200
+          <nav className="hidden lg:flex items-center space-x-8">
+            <a
+              href="#features"
+              className="relative text-foreground font-medium transition-all duration-200
                after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-cyan-500
                after:transition-all after:duration-200
                hover:text-cyan-500 hover:after:w-full
                focus-visible:text-cyan-500 focus-visible:after:w-full outline-none"
-    onClick={(e) => {
-      e.preventDefault();
-      onFeaturesClick && onFeaturesClick();
-    }}
-  >
-    Features
-  </a>
+              onClick={(e) => {
+                e.preventDefault();
+                onFeaturesClick && onFeaturesClick();
+              }}
+            >
+              Features
+            </a>
 
-  <a
-    href="#how-it-works"
-    className="relative text-foreground font-medium transition-all duration-200
+            <a
+              href="#how-it-works"
+              className="relative text-foreground font-medium transition-all duration-200
                after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-cyan-500
                after:transition-all after:duration-200
                hover:text-cyan-500 hover:after:w-full
                focus-visible:text-cyan-500 focus-visible:after:w-full outline-none"
-    onClick={(e) => {
-      e.preventDefault();
-      onHowItWorksClick && onHowItWorksClick();
-    }}
-  >
-    How It Works
-  </a>
+              onClick={(e) => {
+                e.preventDefault();
+                onHowItWorksClick && onHowItWorksClick();
+              }}
+            >
+              How It Works
+            </a>
 
-  <a
-    href="#contact"
-    onClick={handleSupportClick}
-    className="relative text-foreground font-medium transition-all duration-200
+            <a
+              href="#contact"
+              onClick={handleSupportClick}
+              className="relative text-foreground font-medium transition-all duration-200
                after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-cyan-500
                after:transition-all after:duration-200
                hover:text-cyan-500 hover:after:w-full
                focus-visible:text-cyan-500 focus-visible:after:w-full outline-none"
-  >
-    Contact
-  </a>
-</nav>
-
+            >
+              Contact
+            </a>
+          </nav>
 
           <div className="flex items-center space-x-3">
             {user ? (
               <>
                 <span className="text-sm text-muted-foreground hidden sm:block">
-                  Welcome, {user?.fullName ? user.fullName.split(" ")[0] : "Guest"}!
+                  Welcome,{" "}
+                  {user?.fullName ? user.fullName.split(" ")[0] : "Guest"}!
                 </span>
                 <Link to={user.role === "citizen" ? "/citizen" : "/admin"}>
-                  <Button variant="outline" size="sm" className="flex items-center space-x-2">
-                    <User className="h-4 w-4" />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center space-x-2"
+                  >
+                    <User className="h-4 w-4 text-purple-600" />
                     <span className="hidden sm:block">Dashboard</span>
                   </Button>
                 </Link>
@@ -105,20 +115,27 @@ const Header: React.FC<HeaderProps> = ({ onFeaturesClick, onHowItWorksClick }) =
                   size="sm"
                   className="flex items-center space-x-2"
                 >
-                  <LogOut className="h-4 w-4" />
+                  <LogOut className="h-4 w-4 text-red-600" />
                   <span>Logout</span>
                 </Button>
               </>
             ) : (
               <>
                 <Link to="/signin">
-                  <Button variant="outline" size="sm" className="hidden sm:flex items-center space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="hidden sm:flex items-center space-x-2"
+                  >
                     <LogIn className="h-4 w-4" />
                     <span>Sign In</span>
                   </Button>
                 </Link>
                 <Link to="/signup">
-                  <Button size="sm" className="flex items-center space-x-2 civic-gradient border-0 text-white hover:opacity-90">
+                  <Button
+                    size="sm"
+                    className="flex items-center space-x-2 civic-gradient border-0 text-white hover:opacity-90"
+                  >
                     <Shield className="h-4 w-4" />
                     <span>Sign Up</span>
                   </Button>

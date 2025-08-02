@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { Search, Plus, MapPin, Clock, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { BACKEND_URL } from "../config/config";
@@ -70,12 +75,14 @@ const CitizenHome = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Open":
+      case "Rejected":
         return "bg-red-200/70 text-red-900";
-      case "In Progress":
+      case "Pending":
         return "bg-yellow-200/70 text-yellow-900";
       case "Resolved":
         return "bg-green-200/70 text-green-900";
+      case "In Progress":
+        return "bg-blue-200/70 text-blue-900";
       default:
         return "bg-gray-200/70 text-gray-900";
     }
@@ -102,7 +109,7 @@ const CitizenHome = () => {
               variant="outline"
               className="flex items-center space-x-2 rounded-full shadow-sm hover:shadow-md transition-all"
             >
-              <User className="h-4 w-4" />
+              <User className="h-4 w-4 text-purple-600" />
               <span>My Profile</span>
             </Button>
           </Link>
@@ -114,10 +121,10 @@ const CitizenHome = () => {
             Search Issues by Location
           </h2>
           <div className="relative max-w-md">
-             <Search
-      className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500 z-20"
-      aria-hidden="true"
-    />
+            <Search
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500 z-20"
+              aria-hidden="true"
+            />
             <Input
               type="text"
               placeholder="Enter city name..."

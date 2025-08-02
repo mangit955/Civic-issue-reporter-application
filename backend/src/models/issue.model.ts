@@ -44,7 +44,7 @@ const IssueSchema = new Schema<IIssue & Document>(
     },
     status: {
       type: String,
-      enum: ["Reported", "In Progress", "Resolved", "Rejected","Pending"],
+      enum: ["Reported", "In Progress", "Resolved", "Rejected", "Pending"],
       default: "Reported",
     },
     location: {
@@ -56,9 +56,9 @@ const IssueSchema = new Schema<IIssue & Document>(
       ref: "Multimedia",
     },
     handledBy: {
-  type: Schema.Types.ObjectId,
-  ref: "Admin",
-}
+      type: Schema.Types.ObjectId,
+      ref: "Admin",
+    },
   },
   { timestamps: true }
 );

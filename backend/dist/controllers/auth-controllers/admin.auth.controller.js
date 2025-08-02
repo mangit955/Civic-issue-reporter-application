@@ -32,7 +32,10 @@ const signupSchema = zod_1.z.object({
         .length(10, { message: "Phone number must be exactly 10 digits" })
         .trim(),
     department: zod_1.z.string().trim(),
-    adminAccessCode: zod_1.z.number().int().min(1000, { message: "Admin access code must be at least 4 digits" }),
+    adminAccessCode: zod_1.z
+        .number()
+        .int()
+        .min(1000, { message: "Admin access code must be at least 4 digits" }),
 });
 const adminSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

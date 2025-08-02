@@ -80,6 +80,7 @@ const citizenSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
         const token = jsonwebtoken_1.default.sign({
             id: existingCitizen._id,
+            role: "citizen",
         }, process.env.JWT_PASSWORD, { expiresIn: "1d" });
         res.json({
             token,

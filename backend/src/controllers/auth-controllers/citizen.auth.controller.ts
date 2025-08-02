@@ -88,6 +88,7 @@ export const citizenSignin = async (
     const token = jwt.sign(
       {
         id: existingCitizen._id,
+        role: "citizen",
       },
       process.env.JWT_PASSWORD!,
       { expiresIn: "1d" }

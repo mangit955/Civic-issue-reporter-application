@@ -20,7 +20,7 @@ const MapComponent: React.FC<MapComponentProps> = ({ onLocationSelect }) => {
     mapRef.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/mapbox/streets-v12",
-      center: [77.757218,  20.932185], // Default: Bangalore (lng, lat)
+      center: [77.757218, 20.932185], // Default: Bangalore (lng, lat)
       zoom: 12,
     });
 
@@ -50,7 +50,8 @@ const MapComponent: React.FC<MapComponentProps> = ({ onLocationSelect }) => {
         });
 
         markerRef.current.on("dragend", async () => {
-          if (mapRef.current) mapRef.current.getCanvas().style.cursor = "crosshair";
+          if (mapRef.current)
+            mapRef.current.getCanvas().style.cursor = "crosshair";
 
           const lngLat = markerRef.current!.getLngLat();
           const address = await reverseGeocode(lngLat.lng, lngLat.lat);

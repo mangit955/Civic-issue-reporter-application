@@ -4,8 +4,19 @@ import civicIssueLogo from "../assets/civic-issue.png";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card.tsx";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs.tsx";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card.tsx";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../components/ui/tabs.tsx";
 import { Label } from "../components/ui/label.tsx";
 import { Input } from "../components/ui/input.tsx";
 import { Button } from "../components/ui/button.tsx";
@@ -33,6 +44,7 @@ const SignUp = () => {
     confirmPassword: "",
     agreeToTerms: false,
   });
+  
   const [activeTab, setActiveTab] = useState("citizen");
   const navigate = useNavigate();
 
@@ -47,16 +59,19 @@ const SignUp = () => {
       return;
     }
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || ""}/api/v1/citizen/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName: citizenForm.fullName,
-          email: citizenForm.email,
-          password: citizenForm.password,
-          phonenumber: citizenForm.phonenumber,
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL || ""}/api/v1/citizen/signup`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fullName: citizenForm.fullName,
+            email: citizenForm.email,
+            password: citizenForm.password,
+            phonenumber: citizenForm.phonenumber,
+          }),
+        }
+      );
       if (response.ok) {
         toast.success("Registration Successful! You can now sign in.");
         navigate("/signin");
@@ -95,24 +110,30 @@ const SignUp = () => {
       toast.error("Please agree to the terms and conditions.");
       return;
     }
-    if (adminForm.phonenumber.trim().length !== 10 || !/^\d{10}$/.test(adminForm.phonenumber.trim())) {
+    if (
+      adminForm.phonenumber.trim().length !== 10 ||
+      !/^\d{10}$/.test(adminForm.phonenumber.trim())
+    ) {
       toast.error("Phone number must be exactly 10 digits.");
       return;
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || ""}/api/v1/admin/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName: adminForm.fullName,
-          email: adminForm.email,
-          password: adminForm.password,
-          phonenumber: adminForm.phonenumber,
-          department: adminForm.department,
-          adminAccessCode: Number(adminForm.adminAccessCode.trim()),
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL || ""}/api/v1/admin/signup`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fullName: adminForm.fullName,
+            email: adminForm.email,
+            password: adminForm.password,
+            phonenumber: adminForm.phonenumber,
+            department: adminForm.department,
+            adminAccessCode: Number(adminForm.adminAccessCode.trim()),
+          }),
+        }
+      );
       if (response.ok) {
         toast.success("Admin Registration Successful! Pending approval.");
         navigate("/signin");
@@ -131,21 +152,26 @@ const SignUp = () => {
   };
 
   return (
-     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden ">
-       <div className="pointer-events-none fixed inset-0 -z-10 bg-[#f0f7f5] " />
-    
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden ">
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[#f0f7f5] " />
 
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2 mb-4">
             <div className="flex items-center justify-center w-16 h-16 rounded-full bg-white shadow">
-              <img src={civicIssueLogo} alt="civicIssueLogo" className="w-15 h-15 object-contain" />
+              <img
+                src={civicIssueLogo}
+                alt="civicIssueLogo"
+                className="w-15 h-15 object-contain"
+              />
             </div>
             <div>
               <h1 className="text-3xl font-extrabold bg-gradient-to-r from-[#016dd0] to-[#159e52] bg-clip-text text-transparent">
                 CivicReport
               </h1>
-              <p className="text-sm text-muted-foreground">Building Better Communities</p>
+              <p className="text-sm text-muted-foreground">
+                Building Better Communities
+              </p>
             </div>
           </Link>
         </div>
@@ -155,10 +181,16 @@ const SignUp = () => {
             <CardTitle>
               <center>Create Account</center>
             </CardTitle>
-            <CardDescription>Join our community to report issues and help build better cities</CardDescription>
+            <CardDescription>
+              Join our community to report issues and help build better cities
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full"
+            >
               <TabsList className="grid w-full grid-cols-2 rounded-full bg-gray-200/80 p-1">
                 <TabsTrigger
                   value="citizen"
@@ -186,14 +218,22 @@ const SignUp = () => {
                       transition={{ duration: 0.33, ease: "easeOut" }}
                       className="mt-6"
                     >
-                      <form onSubmit={handleCitizenSignUp} className="space-y-4">
+                      <form
+                        onSubmit={handleCitizenSignUp}
+                        className="space-y-4"
+                      >
                         <div className="space-y-2">
                           <Label htmlFor="citizen-fullName">Full Name</Label>
                           <Input
                             id="citizen-fullName"
                             placeholder="Jhon Doe"
                             value={citizenForm.fullName}
-                            onChange={(e) => setCitizenForm({ ...citizenForm, fullName: e.target.value })}
+                            onChange={(e) =>
+                              setCitizenForm({
+                                ...citizenForm,
+                                fullName: e.target.value,
+                              })
+                            }
                             required
                           />
                         </div>
@@ -204,7 +244,12 @@ const SignUp = () => {
                             type="email"
                             placeholder="citizen@example.com"
                             value={citizenForm.email}
-                            onChange={(e) => setCitizenForm({ ...citizenForm, email: e.target.value })}
+                            onChange={(e) =>
+                              setCitizenForm({
+                                ...citizenForm,
+                                email: e.target.value,
+                              })
+                            }
                             required
                           />
                         </div>
@@ -215,7 +260,12 @@ const SignUp = () => {
                             type="tel"
                             placeholder="0123456789"
                             value={citizenForm.phonenumber}
-                            onChange={(e) => setCitizenForm({ ...citizenForm, phonenumber: e.target.value })}
+                            onChange={(e) =>
+                              setCitizenForm({
+                                ...citizenForm,
+                                phonenumber: e.target.value,
+                              })
+                            }
                             required
                           />
                         </div>
@@ -227,7 +277,12 @@ const SignUp = () => {
                               type={showPassword ? "text" : "password"}
                               placeholder="Create a strong password"
                               value={citizenForm.password}
-                              onChange={(e) => setCitizenForm({ ...citizenForm, password: e.target.value })}
+                              onChange={(e) =>
+                                setCitizenForm({
+                                  ...citizenForm,
+                                  password: e.target.value,
+                                })
+                              }
                               required
                             />
                             <Button
@@ -237,19 +292,30 @@ const SignUp = () => {
                               className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                               onClick={() => setShowPassword(!showPassword)}
                             >
-                              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                              {showPassword ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
                             </Button>
                           </div>
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="citizen-confirmPassword">Confirm Password</Label>
+                          <Label htmlFor="citizen-confirmPassword">
+                            Confirm Password
+                          </Label>
                           <div className="relative">
                             <Input
                               id="citizen-confirmPassword"
                               type={showConfirmPassword ? "text" : "password"}
                               placeholder="Confirm your password"
                               value={citizenForm.confirmPassword}
-                              onChange={(e) => setCitizenForm({ ...citizenForm, confirmPassword: e.target.value })}
+                              onChange={(e) =>
+                                setCitizenForm({
+                                  ...citizenForm,
+                                  confirmPassword: e.target.value,
+                                })
+                              }
                               required
                             />
                             <Button
@@ -257,9 +323,15 @@ const SignUp = () => {
                               variant="ghost"
                               size="sm"
                               className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                              onClick={() =>
+                                setShowConfirmPassword(!showConfirmPassword)
+                              }
                             >
-                              {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                              {showConfirmPassword ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
                             </Button>
                           </div>
                         </div>
@@ -268,12 +340,18 @@ const SignUp = () => {
                             id="citizen-terms"
                             checked={citizenForm.agreeToTerms}
                             onCheckedChange={(checked) =>
-                              setCitizenForm({ ...citizenForm, agreeToTerms: checked as boolean })
+                              setCitizenForm({
+                                ...citizenForm,
+                                agreeToTerms: checked as boolean,
+                              })
                             }
                           />
                           <Label htmlFor="citizen-terms" className="text-sm">
                             I agree to the{" "}
-                            <Link to="/terms" className="text-primary hover:underline">
+                            <Link
+                              to="/terms"
+                              className="text-primary hover:underline"
+                            >
                               Terms and Conditions
                             </Link>
                           </Label>
@@ -309,7 +387,12 @@ const SignUp = () => {
                             id="admin-fullName"
                             placeholder="Narendra Modi"
                             value={adminForm.fullName}
-                            onChange={(e) => setAdminForm({ ...adminForm, fullName: e.target.value })}
+                            onChange={(e) =>
+                              setAdminForm({
+                                ...adminForm,
+                                fullName: e.target.value,
+                              })
+                            }
                             required
                           />
                         </div>
@@ -320,7 +403,12 @@ const SignUp = () => {
                             type="email"
                             placeholder="admin@city.gov"
                             value={adminForm.email}
-                            onChange={(e) => setAdminForm({ ...adminForm, email: e.target.value })}
+                            onChange={(e) =>
+                              setAdminForm({
+                                ...adminForm,
+                                email: e.target.value,
+                              })
+                            }
                             required
                           />
                         </div>
@@ -331,7 +419,12 @@ const SignUp = () => {
                             type="tel"
                             placeholder="0123456789"
                             value={adminForm.phonenumber}
-                            onChange={(e) => setAdminForm({ ...adminForm, phonenumber: e.target.value })}
+                            onChange={(e) =>
+                              setAdminForm({
+                                ...adminForm,
+                                phonenumber: e.target.value,
+                              })
+                            }
                             required
                           />
                         </div>
@@ -341,7 +434,12 @@ const SignUp = () => {
                             id="admin-department"
                             placeholder="Public Works"
                             value={adminForm.department}
-                            onChange={(e) => setAdminForm({ ...adminForm, department: e.target.value })}
+                            onChange={(e) =>
+                              setAdminForm({
+                                ...adminForm,
+                                department: e.target.value,
+                              })
+                            }
                             required
                           />
                         </div>
@@ -352,7 +450,12 @@ const SignUp = () => {
                             type="text"
                             placeholder="Contact your supervisor for the code"
                             value={adminForm.adminAccessCode}
-                            onChange={(e) => setAdminForm({ ...adminForm, adminAccessCode: e.target.value })}
+                            onChange={(e) =>
+                              setAdminForm({
+                                ...adminForm,
+                                adminAccessCode: e.target.value,
+                              })
+                            }
                             required
                           />
                         </div>
@@ -364,7 +467,12 @@ const SignUp = () => {
                               type={showPassword ? "text" : "password"}
                               placeholder="Create a strong password"
                               value={adminForm.password}
-                              onChange={(e) => setAdminForm({ ...adminForm, password: e.target.value })}
+                              onChange={(e) =>
+                                setAdminForm({
+                                  ...adminForm,
+                                  password: e.target.value,
+                                })
+                              }
                               required
                             />
                             <Button
@@ -374,19 +482,30 @@ const SignUp = () => {
                               className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                               onClick={() => setShowPassword(!showPassword)}
                             >
-                              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                              {showPassword ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
                             </Button>
                           </div>
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="admin-confirmPassword">Confirm Password</Label>
+                          <Label htmlFor="admin-confirmPassword">
+                            Confirm Password
+                          </Label>
                           <div className="relative">
                             <Input
                               id="admin-confirmPassword"
                               type={showConfirmPassword ? "text" : "password"}
                               placeholder="Confirm your password"
                               value={adminForm.confirmPassword}
-                              onChange={(e) => setAdminForm({ ...adminForm, confirmPassword: e.target.value })}
+                              onChange={(e) =>
+                                setAdminForm({
+                                  ...adminForm,
+                                  confirmPassword: e.target.value,
+                                })
+                              }
                               required
                             />
                             <Button
@@ -394,9 +513,15 @@ const SignUp = () => {
                               variant="ghost"
                               size="sm"
                               className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                              onClick={() =>
+                                setShowConfirmPassword(!showConfirmPassword)
+                              }
                             >
-                              {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                              {showConfirmPassword ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
                             </Button>
                           </div>
                         </div>
@@ -405,12 +530,18 @@ const SignUp = () => {
                             id="admin-terms"
                             checked={adminForm.agreeToTerms}
                             onCheckedChange={(checked) =>
-                              setAdminForm({ ...adminForm, agreeToTerms: checked as boolean })
+                              setAdminForm({
+                                ...adminForm,
+                                agreeToTerms: checked as boolean,
+                              })
                             }
                           />
                           <Label htmlFor="admin-terms" className="text-sm">
                             I agree to the{" "}
-                            <Link to="/terms" className="text-primary hover:underline">
+                            <Link
+                              to="/terms"
+                              className="text-primary hover:underline"
+                            >
                               Terms and Conditions
                             </Link>
                           </Label>
@@ -434,7 +565,10 @@ const SignUp = () => {
                     Sign in here
                   </Link>
                 </p>
-                <Link to="/" className="text-sm text-muted-foreground hover:text-primary">
+                <Link
+                  to="/"
+                  className="text-sm text-muted-foreground hover:text-primary"
+                >
                   ← Back to Home
                 </Link>
               </div>
