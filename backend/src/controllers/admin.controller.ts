@@ -128,27 +128,54 @@ export const getHandledIssuesByAdmin = async (
       return;
     }
 
-    console.log("Fetching handled issues for admin:", adminId);
+    const historyRecords = await IssueStatusHistoryModel.aggregate([
+  {
+    $match: {
+      handledBy: new mongoose.Types.ObjectId(adminId),
+      status: { $in: ["In Progress", "Resolved","Pending"] },
+    },
+  },
+  {
+    $sort: { changedAt: -1 },
+  },
+  {
+    $group: {
+      _id: "$issueID",
+      latestRecord: { $first: "$$ROOT" },
+    },
+  },
+  {
+    $replaceRoot: { newRoot: "$latestRecord" },
+  },
+  {
+    $lookup: {
+      from: "issues",
+      localField: "issueID",
+      foreignField: "_id",
+      as: "issueDetails",
+    },
+  },
+  {
+    $unwind: "$issueDetails",
+  },
+  {
+    $project: {
+      status: 1,
+      handledBy: 1,
+      lastStatus: "$status",
+      lastUpdated: "$changedAt",
+      issueDetails: 1,
+    },
+  },
+]);
+const issues = historyRecords.map((record) => ({
+  ...record.issueDetails,
+  status: record.status,
+  handledBy: record.handledBy,
+  lastStatus: record.lastStatus,
+  lastUpdated: record.lastUpdated,
+}));
 
-    const historyRecords = await IssueStatusHistoryModel.find({
-      handledBy: adminId,
-      status: { $in: ["In Progress", "Resolved"] },
-    })
-      .populate("issueID")
-      .sort({ changedAt: -1 })
-      .lean();
-
-    console.log(`Found ${historyRecords.length} records.`);
-
-    const issues = historyRecords
-      .filter((record) => record.issueID)
-      .map((record) => ({
-        ...record.issueID,
-        status: record.status,
-        handledBy: record.handledBy,
-        lastStatus: record.status,
-        lastUpdated: record.changedAt,
-      }));
 
     res.status(200).json({ success: true, issues });
   } catch (error) {

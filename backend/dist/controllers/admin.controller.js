@@ -104,18 +104,47 @@ const getHandledIssuesByAdmin = (req, res) => __awaiter(void 0, void 0, void 0, 
             res.status(401).json({ success: false, message: "Unauthorized" });
             return;
         }
-        console.log("Fetching handled issues for admin:", adminId);
-        const historyRecords = yield issueStatusHistory_model_1.IssueStatusHistoryModel.find({
-            handledBy: adminId,
-            status: { $in: ["In Progress", "Resolved"] },
-        })
-            .populate("issueID")
-            .sort({ changedAt: -1 })
-            .lean();
-        console.log(`Found ${historyRecords.length} records.`);
-        const issues = historyRecords
-            .filter((record) => record.issueID)
-            .map((record) => (Object.assign(Object.assign({}, record.issueID), { status: record.status, handledBy: record.handledBy, lastStatus: record.status, lastUpdated: record.changedAt })));
+        const historyRecords = yield issueStatusHistory_model_1.IssueStatusHistoryModel.aggregate([
+            {
+                $match: {
+                    handledBy: new mongoose_1.default.Types.ObjectId(adminId),
+                    status: { $in: ["In Progress", "Resolved", "Pending"] },
+                },
+            },
+            {
+                $sort: { changedAt: -1 },
+            },
+            {
+                $group: {
+                    _id: "$issueID",
+                    latestRecord: { $first: "$$ROOT" },
+                },
+            },
+            {
+                $replaceRoot: { newRoot: "$latestRecord" },
+            },
+            {
+                $lookup: {
+                    from: "issues",
+                    localField: "issueID",
+                    foreignField: "_id",
+                    as: "issueDetails",
+                },
+            },
+            {
+                $unwind: "$issueDetails",
+            },
+            {
+                $project: {
+                    status: 1,
+                    handledBy: 1,
+                    lastStatus: "$status",
+                    lastUpdated: "$changedAt",
+                    issueDetails: 1,
+                },
+            },
+        ]);
+        const issues = historyRecords.map((record) => (Object.assign(Object.assign({}, record.issueDetails), { status: record.status, handledBy: record.handledBy, lastStatus: record.lastStatus, lastUpdated: record.lastUpdated })));
         res.status(200).json({ success: true, issues });
     }
     catch (error) {

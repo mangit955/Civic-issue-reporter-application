@@ -41,11 +41,13 @@ const adminSignup = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         const parsedData = signupSchema.parse(req.body);
         const { fullName, password, email, phonenumber, department, adminAccessCode, } = parsedData;
+        //Check if the admin already exists
         const existingUser = yield admin_model_1.AdminModel.findOne({ email });
         if (existingUser) {
             res.status(400).json({ message: " User already exists" });
             return;
         }
+        //Hash password and create new admin
         const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
         yield admin_model_1.AdminModel.create({
             fullName,
@@ -76,19 +78,22 @@ exports.adminSignup = adminSignup;
 const adminSignin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password, adminAccessCode } = req.body;
+        // Find admin by email and access code
         const existingUser = yield admin_model_1.AdminModel.findOne({
             email,
             adminAccessCode,
         });
         if (!existingUser) {
-            res.status(400).json({ message: "Admin not found!" });
+            res.status(404).json({ message: "Admin not found!" });
             return;
         }
+        // Verify password
         const isPasswordValid = yield bcryptjs_1.default.compare(password, existingUser.password);
         if (!isPasswordValid) {
             res.status(401).json({ message: "Invalid password" });
             return;
         }
+        // Generate JWT token
         const token = jsonwebtoken_1.default.sign({
             id: existingUser._id,
             role: "admin",
