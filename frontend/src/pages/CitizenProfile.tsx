@@ -141,7 +141,7 @@ const CitizenProfile = () => {
       <div className="pt-20 container mx-auto my-9 max-w-4xl space-y-6 px-4">
         {/* Profile Header */}
         <Card
-          className="bg-white/70 
+          className="bg-white/80 
   border border-white/20 
   shadow-lg 
   rounded-xl 
@@ -343,7 +343,7 @@ const CitizenProfile = () => {
                 {myIssues.map((issue) => (
                   <div
                     key={issue._id}
-                    className="border rounded-lg p-4 space-y-3 shadow-sm bg-pink-50"
+                    className="border rounded-lg p-4 space-y-3 shadow-sm bg-yellow-50"
                   >
                     <div className="flex items-start justify-between">
                       <div className="space-y-1">

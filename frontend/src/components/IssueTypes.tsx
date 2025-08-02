@@ -9,7 +9,7 @@ const IssueTypes = () => {
       description:
         "Report potholes, damaged roads, broken sidewalks, and street maintenance issues.",
       image:
-        "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=400&h=250&fit=crop",
+        "https://images.unsplash.com/photo-1547399152-f5bbd6a254b8?q=80&w=1176&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       count: "1,247 reports",
     },
     {
@@ -18,7 +18,7 @@ const IssueTypes = () => {
       description:
         "Report illegal dumping, overflowing bins, litter, and garbage collection issues.",
       image:
-        "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=400&h=250&fit=crop",
+        "https://plus.unsplash.com/premium_photo-1663076452996-abef3ccfc4f4?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       count: "892 reports",
     },
     {
@@ -27,7 +27,7 @@ const IssueTypes = () => {
       description:
         "Report damaged trees, fallen branches, landscaping problems, and green space issues.",
       image:
-        "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?q=80&w=400&h=250&fit=crop",
+        "https://plus.unsplash.com/premium_photo-1664298311043-46b3814a511f?w=1000&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2xpbWF0ZSUyMGNoYW5nZXxlbnwwfHwwfHx8MA%3D%3D",
       count: "534 reports",
     },
     {
@@ -36,7 +36,7 @@ const IssueTypes = () => {
       description:
         "Report water leaks, gas issues, electrical problems, and utility infrastructure concerns.",
       image:
-        "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?q=80&w=400&h=250&fit=crop",
+        "https://images.unsplash.com/photo-1591645321243-3adc1e75cfdc?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGluZnJhc3RydWN0dXJlfGVufDB8fDB8fHww",
       count: "678 reports",
     },
   ];

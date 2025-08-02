@@ -207,6 +207,7 @@ const SignUp = () => {
               </TabsList>
 
               {/* Citizen Tab Content */}
+
               <TabsContent value="citizen">
                 <AnimatePresence mode="wait">
                   {activeTab === "citizen" && (
@@ -369,6 +370,7 @@ const SignUp = () => {
               </TabsContent>
 
               {/* Admin Tab Content */}
+              
               <TabsContent value="admin">
                 <AnimatePresence mode="wait">
                   {activeTab === "admin" && (

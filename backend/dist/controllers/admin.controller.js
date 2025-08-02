@@ -144,7 +144,7 @@ const getHandledIssuesByAdmin = (req, res) => __awaiter(void 0, void 0, void 0, 
                 },
             },
         ]);
-        const issues = historyRecords.map((record) => (Object.assign(Object.assign({}, record.issueDetails), { status: record.status, handledBy: record.handledBy, lastStatus: record.lastStatus, lastUpdated: record.lastUpdated })));
+        const issues = historyRecords.map((record) => (Object.assign(Object.assign({}, record.issueDetails), { status: record.status, handledBy: record.handledBy, lastStatus: record.lastStatus, lastUpdated: record.lastUpdated, isRejected: record.status === "Rejected" })));
         res.status(200).json({ success: true, issues });
     }
     catch (error) {

@@ -43,12 +43,12 @@ const SignIn = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const success = await login(
+      const result = await login(
         citizenForm.email,
         citizenForm.password,
         "citizen"
       );
-      if (success) {
+      if (result === true) {
         toast("Sign In Successful!", { description: "Welcome back !" });
         navigate("/citizen");
       } else {
@@ -66,13 +66,13 @@ const SignIn = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const success = await login(
+      const result = await login(
         adminForm.email,
         adminForm.password,
         "admin",
         adminForm.adminAccessCode
       );
-      if (success) {
+      if (result === true) {
         toast("Admin Sign In Successful!", {
           description: "Welcome back, administrator!",
         });
@@ -98,6 +98,7 @@ const SignIn = () => {
 
       <div className="w-full max-w-md">
         {/* Logo and Title */}
+
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2 mb-4">
             <div className="flex items-center justify-center w-16 h-16 rounded-full bg-white shadow">
@@ -119,6 +120,7 @@ const SignIn = () => {
         </div>
 
         {/* Card with glass effect */}
+
         <Card className="rounded-2xl shadow-2xl bg-white  border-0">
           <CardHeader>
             <CardTitle>
@@ -149,7 +151,7 @@ const SignIn = () => {
                 </TabsTrigger>
               </TabsList>
 
-              <AnimatePresence exitBeforeEnter initial={false}>
+              <AnimatePresence initial={false}>
                 {activeTab === "citizen" && (
                   <TabsContent value="citizen" key="citizen">
                     <motion.div

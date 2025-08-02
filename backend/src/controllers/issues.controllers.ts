@@ -62,8 +62,6 @@ export const createIssue = async (
         })
       )
     );
-
-    console.log("Request body:", req.body);
     console.log("Response body:", {
       message: "Issue created",
       media: mediaDocs,

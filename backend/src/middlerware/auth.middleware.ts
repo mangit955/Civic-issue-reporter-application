@@ -51,7 +51,7 @@ export const authMiddleware = (
     req.role = decoded.role;
     next();
   } catch (e) {
-    console.log("Error verifying JWT:", e);
+    console.error("Error verifying JWT:", e);
     res.status(403).json({
       message: "Invalid token or expired",
     });

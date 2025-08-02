@@ -47,8 +47,6 @@ interface Issues {
 }
 
 const AdminHome = () => {
-  // const { token } = useAuth();
-
   const [searchQuery, setSearchQuery] = useState("");
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
@@ -84,7 +82,7 @@ const AdminHome = () => {
     fetchIssues();
   }, []);
 
-  // ✅ Update Issue Status
+  //  Update Issue Status
   const handleStatusUpdate = async (issueId: string, status: string) => {
     try {
       const response = await fetch(

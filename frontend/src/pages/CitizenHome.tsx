@@ -156,7 +156,11 @@ const CitizenHome = () => {
             {filteredIssues.map((issue) => (
               <Card
                 key={issue._id}
-                className="rounded-2xl bg-white/70 backdrop-blur-md border border-gray-200 shadow-md hover:shadow-xl transition-all"
+                className={`rounded-2xl bg-white/70 backdrop-blur-md border border-gray-200 shadow-md hover:shadow-xl transition-all ${
+                  issue.status === "Rejected"
+                    ? "opacity-30 grayscale"
+                    : "opacity-100"
+                }`}
               >
                 <div className="relative h-48 overflow-hidden rounded-t-2xl">
                   <img
@@ -228,11 +232,13 @@ const CitizenHome = () => {
         </div>
 
         {/* Create Issue Button */}
-        <div className="fixed bottom-8 right-8">
+        <div className="fixed bottom-8 right-8 z-50">
           <Link to="/citizen/create-issue">
             <Button
               size="lg"
-              className="civic-gradient border-0 text-white hover:scale-105 hover:opacity-90 shadow-lg h-14 px-6 rounded-full transition-transform"
+              className="civic-gradient text-white border-0 h-14 px-6 rounded-full 
+                 shadow-lg hover:shadow-2xl hover:scale-105 
+                 transition-transform duration-300"
             >
               <Plus className="h-5 w-5 mr-2" />
               Report New Issue

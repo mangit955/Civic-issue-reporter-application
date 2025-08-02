@@ -98,8 +98,8 @@ export const updateIssueStatus = async (
       res.status(404).json({ message: "Issue not found" });
       return;
     }
+    // Creating a record in IssueStatusHistory for this status change
 
-    // Create a record in IssueStatusHistory for this status change
     await IssueStatusHistoryModel.create({
       issueID: new mongoose.Types.ObjectId(id),
       status,
@@ -174,6 +174,7 @@ const issues = historyRecords.map((record) => ({
   handledBy: record.handledBy,
   lastStatus: record.lastStatus,
   lastUpdated: record.lastUpdated,
+  isRejected: record.status === "Rejected",
 }));
 
 
@@ -197,19 +198,14 @@ export const deleteIssueByAdmin = async (
       res.status(400).json({ message: "Invalid issue ID format" });
       return;
     }
-
-    // Optional: restrict deletion to assigned admin only, uncomment if needed
-    // const result = await IssueModel.deleteOne({ _id: issueid, handledBy: loggedInAdminId });
-
     // If allowing any admin to delete:
+
     const result = await IssueModel.deleteOne({ _id: issueid });
 
     if (result.deletedCount === 0) {
       res.status(404).json({ message: "Issue not found or unauthorized" });
       return;
     }
-
-    console.log(`Admin ${loggedInAdminId} deleted issue ${issueid}`);
     res.json({ message: "Deleted Successfully!" });
   } catch (error) {
     console.error("Error deleting issue:", error);

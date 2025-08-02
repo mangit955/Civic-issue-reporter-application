@@ -252,12 +252,4 @@
   }
 }
 
-.animate-gradient-x {
-  background: linear-gradient(90deg, #0af, #0fb, #8e54e9, #4776e6, #0af);
-  background-size: 300% 100%;
-  animation: gradient-move 3s linear infinite;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
-}
+

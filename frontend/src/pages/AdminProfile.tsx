@@ -58,9 +58,7 @@ const AdminProfile = () => {
   const { user, updateUserProfile, token, isLoading } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [respondedIssues, setRespondedIssues] = useState<Issues[]>([]);
-  // const [loading, setLoading] = useState(true);
   const [loadingMyIssues, setLoadingMyIssues] = useState(true);
-  // const [myIssues, setMyIssues] = useState<Issues[]>([]);
 
   const [profile, setProfile] = useState({
     fullName: user?.fullName || "",
@@ -68,19 +66,6 @@ const AdminProfile = () => {
     phonenumber: user?.phonenumber || "",
     department: user?.department || "",
   });
-
-  const getPriorityColor = (priority: string | undefined) => {
-    switch (priority) {
-      case "High":
-        return "bg-red-100 text-red-800";
-      case "Medium":
-        return "bg-yellow-100 text-yellow-800";
-      case "Low":
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
 
   if (isLoading) {
     return <p className="text-center mt-10">Loading profile...</p>;
@@ -170,7 +155,7 @@ const AdminProfile = () => {
       <div className="pt-20 container mx-auto my-9 max-w-4xl space-y-6 px-4">
         {/* Profile Header */}
         <Card
-          className="bg-white/70 
+          className="bg-white/80 
   border border-white/20 
   shadow-lg 
   rounded-xl 
@@ -448,9 +433,7 @@ const AdminProfile = () => {
                         <Badge className={getStatusColor(issue.status)}>
                           {issue.status}
                         </Badge>
-                        <Badge className={getPriorityColor(issue.priority)}>
-                          {issue.priority}
-                        </Badge>
+                        
                       </div>
                     </div>
 

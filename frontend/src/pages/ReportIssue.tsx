@@ -192,9 +192,8 @@ const ReportIssue = () => {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Personal Information */}
-                <div className="space-y-4">
-                  {/* <h3 className="text-lg font-medium">Personal Information</h3> */}
 
+                <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="title">Issue Title *</Label>
                     <Input
@@ -212,6 +211,7 @@ const ReportIssue = () => {
                 </div>
 
                 {/* Issue Information */}
+
                 <div className="space-y-4">
                   <h3 className="text-lg font-medium">Issue Information</h3>
 
@@ -272,6 +272,7 @@ const ReportIssue = () => {
                 </div>
 
                 {/* File Upload */}
+
                 <div className="space-y-4">
                   <h3 className="text-lg font-medium">Upload Media</h3>
 
@@ -297,6 +298,7 @@ const ReportIssue = () => {
                 </div>
 
                 {/* Submit Button */}
+                
                 <Button
                   type="submit"
                   className="w-full civic-gradient border-0 text-white hover:opacity-90"

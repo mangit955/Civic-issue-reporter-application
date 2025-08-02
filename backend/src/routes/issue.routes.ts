@@ -8,7 +8,6 @@ router.post(
   "/citizen/create-issue",
   authMiddleware,
   (req: Request, res: Response, next: NextFunction) => {
-    console.log("Before upload middleware");
     upload.array("files", 10)(req, res, (err) => {
       console.log("Upload middleware callback");
       if (err) {

@@ -7,7 +7,6 @@ import {
   CardTitle,
 } from "./ui/card";
 import { motion } from "framer-motion";
-import React from "react";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 50 },
@@ -19,13 +18,6 @@ const fadeInUp = {
 };
 
 const Features = () => {
-  React.useEffect(() => {
-    console.log("Features mounted");
-    return () => {
-      console.log("Features unmounted");
-    };
-  }, []);
-
   const features = [
     {
       icon: Camera,
