@@ -22,6 +22,7 @@ import { Input } from "../components/ui/input.tsx";
 import { Button } from "../components/ui/button.tsx";
 import { Checkbox } from "../components/ui/checkbox.tsx";
 import { motion, AnimatePresence } from "framer-motion";
+import { VITE_BACKEND_URL } from "../config/config.tsx";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -60,7 +61,7 @@ const SignUp = () => {
     }
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL || ""}/api/v1/citizen/signup`,
+        `${VITE_BACKEND_URL}/api/v1/citizen/signup`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -72,15 +73,20 @@ const SignUp = () => {
           }),
         }
       );
+
+    console.log("📥 Response Status:", response.status);
+    const data = await response.json();
+    console.log("📥 Response Body:", data);
+
       if (response.ok) {
         toast.success("Registration Successful! You can now sign in.");
         navigate("/signin");
       } else {
-        toast.error("Something went wrong! Please try again.");
+        toast.error(data.message || "Something went wrong! Please try again.");
       }
     } catch (error) {
+      console.error("Network or Server Error:", error);
       toast.error("Something went wrong! Please try again.");
-      console.error(error);
     }
   };
 
@@ -120,7 +126,7 @@ const SignUp = () => {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL || ""}/api/v1/admin/signup`,
+              `${VITE_BACKEND_URL}/api/v1/admin/signup`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
