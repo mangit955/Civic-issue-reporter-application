@@ -321,7 +321,7 @@ const AdminHome = () => {
         </div>
 
         {/* Issues Table */}
-        <div className="rounded-md border bg-white shadow-lg text-slate-400 pl-6 pr-6 hover:shadow-xl transition-shadow duration-300 ">
+        <div className="rounded-md border bg-white shadow-lg text-slate-500 pl-6 pr-6 hover:shadow-xl transition-shadow duration-300 ">
           <Table>
             <TableCaption>A list of all reported issues.</TableCaption>
             <TableHeader>

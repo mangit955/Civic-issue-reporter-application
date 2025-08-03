@@ -47,6 +47,10 @@ const Header: React.FC<HeaderProps> = () => {
           <div className="flex items-center space-x-3">
             {user ? (
               <>
+              <span className="text-sm text-muted-foreground hidden sm:block">
+                  Welcome,{" "}
+                  {user?.fullName ? user.fullName.split(" ")[0] : "Guest"}!
+                </span>
                 <Link to={user.role === "citizen" ? "/citizen" : "/admin"}>
                   <Button
                     variant="outline"
