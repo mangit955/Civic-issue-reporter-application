@@ -7,7 +7,7 @@ A real-time, full-stack civic issue management platform designed to improve loca
 ## 🔗 Live Demo
 
 Check out the deployed application here:  
-👉 [https://your-deployment-url.com](https://your-deployment-url.com)
+👉 [https://civic-issue-reporter-application.vercel.app/]
 
 ---
 
