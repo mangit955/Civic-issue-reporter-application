@@ -16,6 +16,7 @@ Check out the deployed application here:
   <img src="Assets/Home.png" alt="HomePreview" width="500" />
   <img src="Assets/AdminHome.png" alt="HomePreview" width="500" />
   <img src="Assets/CitizenHome.png" alt="HomePreview" width="500" />
+  <img src="Assets/ReportIssue.png" alt="HomePreview" width="500" />
 </div>
 
 ---
