@@ -147,6 +147,7 @@ const CitizenProfile = () => {
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
+  hover:shadow-xl transition-shadow duration-300 
   "
         >
           <CardHeader>
@@ -170,6 +171,7 @@ const CitizenProfile = () => {
               </div>
               <Button
                 variant={isEditing ? "default" : "outline"}
+                className="text-slate-600"
                 onClick={
                   isEditing ? handleSaveProfile : () => setIsEditing(true)
                 }
@@ -248,6 +250,8 @@ const CitizenProfile = () => {
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
+  hover:shadow-xl transition-shadow duration-300 
+  hover:scale-[1.02] transition-transform
  "
           >
             <CardContent className="p-6">
@@ -264,6 +268,8 @@ const CitizenProfile = () => {
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
+  hover:shadow-xl transition-shadow duration-300 
+  hover:scale-[1.02] transition-transform
   "
           >
             <CardContent className="p-6">
@@ -280,6 +286,8 @@ const CitizenProfile = () => {
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
+  hover:shadow-xl transition-shadow duration-300 
+  hover:scale-[1.02] transition-transform
 "
           >
             <CardContent className="p-6">
@@ -299,6 +307,8 @@ const CitizenProfile = () => {
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
+  hover:shadow-xl transition-shadow duration-300 
+  hover:scale-[1.02] transition-transform
   "
           >
             <CardContent className="p-6">
@@ -318,10 +328,11 @@ const CitizenProfile = () => {
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
+  hover:shadow-xl transition-shadow duration-300 
   "
         >
           <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
+            <CardTitle className="flex items-center space-x-2 text-slate-700">
               <FileText className="h-5 w-5 text-indigo-500 hover:text-indigo-700  transition duration-300" />
               <span>My Reported Issues</span>
             </CardTitle>

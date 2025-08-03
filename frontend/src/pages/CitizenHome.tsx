@@ -107,9 +107,9 @@ const CitizenHome = () => {
           <Link to={`/citizen/profile`}>
             <Button
               variant="outline"
-              className="flex items-center space-x-2 rounded-full shadow-sm hover:shadow-md transition-all text-slate-700"
+              className="flex items-center space-x-2 rounded-full shadow-sm hover:shadow-md transition-all text-slate-500"
             >
-              <User className="h-4 w-4 text-purple-600" />
+              <User className="h-4 w-4 text-purple-700" />
               <span>My Profile</span>
             </Button>
           </Link>
@@ -138,7 +138,7 @@ const CitizenHome = () => {
         {/* Issues Grid */}
         <div>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-semibold  text-slate-600">
+            <h2 className="text-2xl font-semibold  text-sky-600">
               Recent Issues
               {searchCity && (
                 <span className="text-lg font-normal text-gray-400 ml-2">
@@ -156,7 +156,7 @@ const CitizenHome = () => {
             {filteredIssues.map((issue) => (
               <Card
                 key={issue._id}
-                className={`rounded-2xl bg-white/70 backdrop-blur-md border border-gray-200 shadow-md hover:shadow-xl transition-all ${
+                className={`rounded-2xl bg-white/70 backdrop-blur-md border border-gray-200 shadow-md hover:shadow-xl transition-all hover:scale-[1.02] transition-transform ${
                   issue.status === "Rejected"
                     ? "opacity-30 grayscale"
                     : "opacity-100"

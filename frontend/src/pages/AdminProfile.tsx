@@ -140,6 +140,8 @@ const AdminProfile = () => {
         return "bg-blue-100 text-blue-800";
       case "Pending":
         return "bg-yellow-100 text-yellow-800";
+        case "Rejected":
+        return "bg-red-100 text-red-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
@@ -160,7 +162,8 @@ const AdminProfile = () => {
   shadow-lg 
   rounded-xl 
   p-6 
-  ring-1 ring-white/10 
+  ring-1 ring-white/10
+  hover:shadow-xl transition-shadow duration-300 
   "
         >
           <CardHeader>
@@ -189,6 +192,7 @@ const AdminProfile = () => {
               </div>
               <Button
                 variant={isEditing ? "default" : "outline"}
+                className="text-slate-500 "
                 onClick={
                   isEditing ? handleSaveProfile : () => setIsEditing(true)
                 }
@@ -285,9 +289,11 @@ const AdminProfile = () => {
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
+  hover:shadow-xl transition-shadow duration-300 
+  hover:scale-[1.02] transition-transform
  "
           >
-            <CardContent className="p-6">
+            <CardContent className="p-6 ">
               <div className="text-2xl font-bold">{respondedIssues.length}</div>
               <p className="text-xs text-muted-foreground">
                 Total Issues Handled
@@ -301,6 +307,8 @@ const AdminProfile = () => {
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
+  hover:shadow-xl transition-shadow duration-300 
+  hover:scale-[1.02] transition-transform
   "
           >
             <CardContent className="p-6">
@@ -322,6 +330,8 @@ const AdminProfile = () => {
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
+  hover:shadow-xl transition-shadow duration-300 
+  hover:scale-[1.02] transition-transform
   "
           >
             <CardContent className="p-6">
@@ -344,6 +354,8 @@ const AdminProfile = () => {
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
+  hover:shadow-xl transition-shadow duration-300 
+  hover:scale-[1.02] transition-transform
  "
           >
             <CardContent className="p-6">
@@ -383,6 +395,7 @@ const AdminProfile = () => {
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
+  hover:shadow-xl transition-shadow duration-300 
   "
         >
           <CardHeader>

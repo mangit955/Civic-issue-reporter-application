@@ -132,7 +132,7 @@ export const getHandledIssuesByAdmin = async (
   {
     $match: {
       handledBy: new mongoose.Types.ObjectId(adminId),
-      status: { $in: ["In Progress", "Resolved","Pending"] },
+      status: { $in: ["In Progress", "Resolved","Pending","Rejected"] },
     },
   },
   {

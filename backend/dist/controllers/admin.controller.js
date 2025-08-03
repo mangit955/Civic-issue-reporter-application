@@ -108,7 +108,7 @@ const getHandledIssuesByAdmin = (req, res) => __awaiter(void 0, void 0, void 0, 
             {
                 $match: {
                     handledBy: new mongoose_1.default.Types.ObjectId(adminId),
-                    status: { $in: ["In Progress", "Resolved", "Pending"] },
+                    status: { $in: ["In Progress", "Resolved", "Pending", "Rejected"] },
                 },
             },
             {

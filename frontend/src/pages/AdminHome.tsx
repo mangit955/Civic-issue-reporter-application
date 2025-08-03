@@ -210,9 +210,9 @@ const AdminHome = () => {
           <Link to="/admin/profile">
             <Button
               variant="outline"
-              className="flex items-center space-x-2 shadow-sm text-slate-700 "
+              className="flex items-center space-x-2 shadow-sm text-slate-500 "
             >
-              <User className="h-4 w-4 text-purple-600" />
+              <User className="h-4 w-4 text-purple-700" />
               <span>My Profile</span>
             </Button>
           </Link>
@@ -220,25 +220,25 @@ const AdminHome = () => {
 
         {/* Statistics Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
-          <div className="p-6 rounded-lg border shadow-lg bg-card  hover:scale-[1.02] transition-transform ">
+          <div className="p-6 rounded-lg border shadow-lg bg-card  hover:scale-[1.02] transition-transform hover:shadow-xl transition-shadow duration-300  ">
             <div className="text-2xl font-bold text-foreground  ">
               {issues.length}
             </div>
             <p className="text-sm text-muted-foreground">Total Issues</p>
           </div>
-          <div className="p-6 rounded-lg border shadow-lg bg-card hover:scale-[1.02] transition-transform">
+          <div className="p-6 rounded-lg border shadow-lg bg-card hover:scale-[1.02] transition-transform hover:shadow-xl transition-shadow duration-300 ">
             <div className="text-2xl font-bold text-green-600">
               {issues.filter((issue) => issue.status === "Resolved").length}
             </div>
             <p className="text-sm text-muted-foreground">Resolved Issues</p>
           </div>
-          <div className="p-6 rounded-lg border shadow-lg bg-card hover:scale-[1.02] transition-transform">
+          <div className="p-6 rounded-lg border shadow-lg bg-card hover:scale-[1.02] transition-transform hover:shadow-xl transition-shadow duration-300 ">
             <div className="text-2xl font-bold text-blue-600">
               {issues.filter((issue) => issue.status === "In Progress").length}
             </div>
             <p className="text-sm text-muted-foreground">Issues In Progress</p>
           </div>
-          <div className="p-6 rounded-lg border shadow-lg bg-card hover:scale-[1.02] transition-transform">
+          <div className="p-6 rounded-lg border shadow-lg bg-card hover:scale-[1.02] transition-transform hover:shadow-xl transition-shadow duration-300 ">
             <div className="text-2xl font-bold text-yellow-600">
               {issues.filter((issue) => issue.status === "Pending").length}
             </div>
@@ -262,7 +262,7 @@ const AdminHome = () => {
           <div className="flex items-center space-x-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="gap-2 shadow-sm">
+                <Button variant="outline" className="gap-2 shadow-sm text-slate-600">
                   Status <ChevronsUpDown className="h-4 w-4 text-gray-500 " />
                 </Button>
               </DropdownMenuTrigger>
@@ -321,7 +321,7 @@ const AdminHome = () => {
         </div>
 
         {/* Issues Table */}
-        <div className="rounded-md border bg-white shadow-lg">
+        <div className="rounded-md border bg-white shadow-lg text-slate-400 pl-6 pr-6 hover:shadow-xl transition-shadow duration-300 ">
           <Table>
             <TableCaption>A list of all reported issues.</TableCaption>
             <TableHeader>
@@ -330,7 +330,7 @@ const AdminHome = () => {
                   <Button
                     variant="ghost"
                     onClick={() => handleSort("title")}
-                    className="w-full"
+                    className="w-full text-gray-700"
                   >
                     Title
                     {sortColumn === "title" &&
@@ -345,7 +345,7 @@ const AdminHome = () => {
                   <Button
                     variant="ghost"
                     onClick={() => handleSort("location")}
-                    className="w-full"
+                    className="w-full text-gray-700 "
                   >
                     Location
                     {sortColumn === "location" &&
@@ -360,7 +360,7 @@ const AdminHome = () => {
                   <Button
                     variant="ghost"
                     onClick={() => handleSort("status")}
-                    className="w-full"
+                    className="w-full text-gray-700"
                   >
                     Status
                     {sortColumn === "status" &&
@@ -371,7 +371,7 @@ const AdminHome = () => {
                       ))}
                   </Button>
                 </TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="text-right text-gray-700">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

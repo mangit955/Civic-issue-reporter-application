@@ -51,9 +51,9 @@ const Header: React.FC<HeaderProps> = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex items-center space-x-2 text-slate-700"
+                    className="flex items-center space-x-2 text-slate-500"
                   >
-                    <User className="h-4 w-4 text-purple-600" />
+                    <User className="h-4 w-4 text-purple-700" />
                     <span className="hidden sm:block">Dashboard</span>
                   </Button>
                 </Link>
@@ -61,9 +61,9 @@ const Header: React.FC<HeaderProps> = () => {
                   onClick={handleLogout}
                   variant="outline"
                   size="sm"
-                  className="flex items-center space-x-2 text-slate-700"
+                  className="flex items-center space-x-2 text-slate-500"
                 >
-                  <LogOut className="h-4 w-4 text-red-600" />
+                  <LogOut className="h-4 w-4 text-pink-600" />
                   <span>Logout</span>
                 </Button>
               </>
