@@ -12,12 +12,18 @@ Check out the deployed application here:
 ---
 
 ## 📸 Preview
-<div style="display: flex">
-  <img src="Assets/Home.png" alt="HomePreview" width="500" />
-  <img src="Assets/AdminHome.png" alt="HomePreview" width="500" />
-  <img src="Assets/CitizenHome.png" alt="HomePreview" width="500" />
-  <img src="Assets/ReportIssue.png" alt="HomePreview" width="500" />
-</div>
+
+### LandingPage View
+<img src="Assets/Home.png" alt="HomePreview" width="500" />
+
+### Admin View
+<img src="Assets/AdminHome.png" alt="HomePreview" width="500" />
+
+### Citizen View
+<img src="Assets/CitizenHome.png" alt="HomePreview" width="500" />
+
+### Report an Issue View
+<img src="Assets/ReportIssue.png" alt="HomePreview" width="500" />
 
 ---
 
