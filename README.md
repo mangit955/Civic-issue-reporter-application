@@ -12,8 +12,11 @@ Check out the deployed application here:
 ---
 
 ## 📸 Preview
-
-![App Preview](https://your-image-url.com/screenshot.png)
+<div style="display: flex">
+  <img src="Assets/Home.png" alt="HomePreview" width="500" />
+  <img src="Assets/AdminHome.png" alt="HomePreview" width="500" />
+  <img src="Assets/CitizenHome.png" alt="HomePreview" width="500" />
+</div>
 
 ---
 
