@@ -1,1 +1,1 @@
-export const BACKEND_URL = "https://civic-issue-reporter-application.onrender.com";
+export const VITE_BACKEND_URL = "https://civic-issue-reporter-application.onrender.com";

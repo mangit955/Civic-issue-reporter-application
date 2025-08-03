@@ -27,7 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
-import { BACKEND_URL } from "../config/config";
+import { VITE_BACKEND_URL } from "../config/config";
 import HeaderAfterAuth from "../components/HeaderAfterAuth";
 
 interface Issues {
@@ -59,7 +59,7 @@ const AdminHome = () => {
   useEffect(() => {
     const fetchIssues = async () => {
       try {
-        const response = await fetch(`${BACKEND_URL}/api/v1/all-issues`, {
+        const response = await fetch(`${VITE_BACKEND_URL}/api/v1/all-issues`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
           },
@@ -86,7 +86,7 @@ const AdminHome = () => {
   const handleStatusUpdate = async (issueId: string, status: string) => {
     try {
       const response = await fetch(
-        `${BACKEND_URL}/api/v1/admin/issue/${issueId}/status`,
+        `${VITE_BACKEND_URL}/api/v1/admin/issue/${issueId}/status`,
         {
           method: "PUT",
           headers: {
@@ -115,7 +115,7 @@ const AdminHome = () => {
     if (!window.confirm("Are you sure you want to delete this issue?")) return;
     try {
       const response = await fetch(
-        `${BACKEND_URL}/api/v1/issue/admin/${issueId}`, // issueId in URL
+        `${VITE_BACKEND_URL}/api/v1/issue/admin/${issueId}`, // issueId in URL
         {
           method: "DELETE",
           headers: {

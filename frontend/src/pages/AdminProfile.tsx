@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext.tsx";
 import { toast } from "sonner";
-import { BACKEND_URL } from "../config/config.tsx";
+import { VITE_BACKEND_URL } from "../config/config.tsx";
 import Player from "lottie-react";
 import emptyAnimation from "../assets/animations/box.json";
 import HeaderAfterAuth from "../components/HeaderAfterAuth";
@@ -99,7 +99,7 @@ const AdminProfile = () => {
       setLoadingMyIssues(true);
       try {
         const response = await fetch(
-          `${BACKEND_URL}/api/v1/admin/handled-issues`,
+          `${VITE_BACKEND_URL}/api/v1/admin/handled-issues`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

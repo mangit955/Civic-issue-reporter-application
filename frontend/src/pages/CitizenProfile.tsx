@@ -24,7 +24,7 @@ import {
 import HeaderAfterAuth from "../components/HeaderAfterAuth";
 import { useAuth } from "../contexts/AuthContext";
 import { toast } from "sonner";
-import { BACKEND_URL } from "../config/config";
+import { VITE_BACKEND_URL } from "../config/config";
 
 interface Issues {
   _id: string;
@@ -87,7 +87,7 @@ const CitizenProfile = () => {
       try {
         setLoadingMyIssues(true);
 
-        const response = await fetch(`${BACKEND_URL}/api/v1/citizen/issues`, {
+        const response = await fetch(`${VITE_BACKEND_URL}/api/v1/citizen/issues`, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
