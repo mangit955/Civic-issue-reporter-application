@@ -125,9 +125,9 @@ const Header: React.FC<HeaderProps> = ({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="hidden sm:flex items-center space-x-2"
+                    className="hidden sm:flex items-center space-x-2 text-slate-700"
                   >
-                    <LogIn className="h-4 w-4" />
+                    <LogIn className="h-4 w-4 text-blue-600" />
                     <span>Sign In</span>
                   </Button>
                 </Link>

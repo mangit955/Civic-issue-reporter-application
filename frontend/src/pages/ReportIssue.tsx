@@ -135,15 +135,15 @@ const ReportIssue = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="flex items-center space-x-2"
+                  className="flex items-center space-x-2 text-slate-500"
                 >
-                  <ArrowLeft className="h-4 w-4" />
+                  <ArrowLeft className="h-4 w-4 text-blue-600" />
                   <span>Back to Dashboard</span>
                 </Button>
               </Link>
             </div>
             <div>
-              <h1 className="text-xl font-bold text-foreground">
+              <h1 className="text-xl font-bold text-cyan-600">
                 Report New Issue
               </h1>
             </div>
@@ -158,8 +158,8 @@ const ReportIssue = () => {
           {/* Map Section */}
           <Card className="h-fit shadow-lg bg-white/80">
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <MapPin className="h-5 w-5" />
+              <CardTitle className="flex items-center space-x-2  text-slate-600">
+                <MapPin className="h-5 w-5 text-green-600" />
                 <span>Select Issue Location</span>
               </CardTitle>
             </CardHeader>
@@ -185,7 +185,7 @@ const ReportIssue = () => {
           </Card>
 
           {/* Form Section */}
-          <Card className="shadow-lg bg-white/80">
+          <Card className="shadow-lg bg-white/80  text-slate-600">
             <CardHeader>
               <CardTitle>Issue Details</CardTitle>
             </CardHeader>
@@ -286,7 +286,7 @@ const ReportIssue = () => {
                         onChange={handleFileChange}
                         className="flex-1"
                       />
-                      <Upload className="h-5 w-5 text-muted-foreground" />
+                      <Upload className="h-5 w-5 text-blue-600" />
                     </div>
                     {selectedFile && (
                       <p className="text-sm text-muted-foreground">

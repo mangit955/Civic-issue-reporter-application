@@ -210,7 +210,7 @@ const AdminHome = () => {
           <Link to="/admin/profile">
             <Button
               variant="outline"
-              className="flex items-center space-x-2 shadow-sm "
+              className="flex items-center space-x-2 shadow-sm text-slate-700 "
             >
               <User className="h-4 w-4 text-purple-600" />
               <span>My Profile</span>
