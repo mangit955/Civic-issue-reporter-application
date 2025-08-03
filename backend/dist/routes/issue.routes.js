@@ -6,7 +6,6 @@ const issues_controllers_1 = require("../controllers/issues.controllers");
 const auth_middleware_1 = require("../middlerware/auth.middleware");
 const router = (0, express_1.Router)();
 router.post("/citizen/create-issue", auth_middleware_1.authMiddleware, (req, res, next) => {
-    console.log("Before upload middleware");
     upload_middleware_1.upload.array("files", 10)(req, res, (err) => {
         console.log("Upload middleware callback");
         if (err) {

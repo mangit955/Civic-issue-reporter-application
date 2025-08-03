@@ -162,7 +162,7 @@ const CitizenProfile = () => {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <CardTitle className="text-2xl">My Profile</CardTitle>
+                  <CardTitle className="text-2xl text-slate-600">Citizen Profile</CardTitle>
                   <CardDescription>
                     Manage your profile and view your reported issues
                   </CardDescription>

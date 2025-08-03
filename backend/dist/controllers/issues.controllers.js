@@ -58,7 +58,6 @@ const createIssue = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             url: file.path,
             filename: file.originalname,
         })));
-        console.log("Request body:", req.body);
         console.log("Response body:", {
             message: "Issue created",
             media: mediaDocs,

@@ -177,7 +177,7 @@ const AdminProfile = () => {
                 </Avatar>
                 <div>
                   <div className="flex items-center space-x-2">
-                    <CardTitle className="text-2xl">
+                    <CardTitle className="text-2xl text-slate-600">
                       Administrator Profile
                     </CardTitle>
                     <Shield className="h-5 w-5 text-blue-600" />

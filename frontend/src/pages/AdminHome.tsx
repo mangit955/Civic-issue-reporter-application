@@ -200,7 +200,7 @@ const AdminHome = () => {
         {/* Welcome Section with Profile Link */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground/70">
+            <h1 className="text-3xl font-bold text-[#0577b7] ">
               Admin Dashboard
             </h1>
             <p className="text-muted-foreground mt-2">
@@ -219,26 +219,26 @@ const AdminHome = () => {
         </div>
 
         {/* Statistics Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-6 rounded-lg border shadow-lg bg-card ">
-            <div className="text-2xl font-bold text-foreground">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
+          <div className="p-6 rounded-lg border shadow-lg bg-card  hover:scale-[1.02] transition-transform ">
+            <div className="text-2xl font-bold text-foreground  ">
               {issues.length}
             </div>
             <p className="text-sm text-muted-foreground">Total Issues</p>
           </div>
-          <div className="p-6 rounded-lg border shadow-lg bg-card">
+          <div className="p-6 rounded-lg border shadow-lg bg-card hover:scale-[1.02] transition-transform">
             <div className="text-2xl font-bold text-green-600">
               {issues.filter((issue) => issue.status === "Resolved").length}
             </div>
             <p className="text-sm text-muted-foreground">Resolved Issues</p>
           </div>
-          <div className="p-6 rounded-lg border shadow-lg bg-card">
+          <div className="p-6 rounded-lg border shadow-lg bg-card hover:scale-[1.02] transition-transform">
             <div className="text-2xl font-bold text-blue-600">
               {issues.filter((issue) => issue.status === "In Progress").length}
             </div>
             <p className="text-sm text-muted-foreground">Issues In Progress</p>
           </div>
-          <div className="p-6 rounded-lg border shadow-lg bg-card">
+          <div className="p-6 rounded-lg border shadow-lg bg-card hover:scale-[1.02] transition-transform">
             <div className="text-2xl font-bold text-yellow-600">
               {issues.filter((issue) => issue.status === "Pending").length}
             </div>

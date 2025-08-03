@@ -80,7 +80,7 @@ const updateIssueStatus = (req, res) => __awaiter(void 0, void 0, void 0, functi
             res.status(404).json({ message: "Issue not found" });
             return;
         }
-        // Create a record in IssueStatusHistory for this status change
+        // Creating a record in IssueStatusHistory for this status change
         yield issueStatusHistory_model_1.IssueStatusHistoryModel.create({
             issueID: new mongoose_1.default.Types.ObjectId(id),
             status,
@@ -162,15 +162,12 @@ const deleteIssueByAdmin = (req, res) => __awaiter(void 0, void 0, void 0, funct
             res.status(400).json({ message: "Invalid issue ID format" });
             return;
         }
-        // Optional: restrict deletion to assigned admin only, uncomment if needed
-        // const result = await IssueModel.deleteOne({ _id: issueid, handledBy: loggedInAdminId });
         // If allowing any admin to delete:
         const result = yield issue_model_1.IssueModel.deleteOne({ _id: issueid });
         if (result.deletedCount === 0) {
             res.status(404).json({ message: "Issue not found or unauthorized" });
             return;
         }
-        console.log(`Admin ${loggedInAdminId} deleted issue ${issueid}`);
         res.json({ message: "Deleted Successfully!" });
     }
     catch (error) {
