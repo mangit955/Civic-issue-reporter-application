@@ -25,7 +25,7 @@ interface AuthContextType {
     password: string,
     role: "citizen" | "admin",
     adminAccessCode?: string
-  ) => Promise<void>;
+  ) => Promise<boolean>;
   register: (userData: any, role: "citizen" | "admin") => Promise<void>;
   logout: () => void;
   isLoading: boolean;
@@ -52,7 +52,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const fetchProfile = async () => {
     try {
       const token = localStorage.getItem("auth_token");
-      const storedUser = localStorage.getItem("auth_user");
       const storedRole = localStorage.getItem("auth_role");
       const storedUserId = localStorage.getItem("auth_user_id");
 
