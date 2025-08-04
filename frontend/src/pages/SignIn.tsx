@@ -21,6 +21,9 @@ import { Input } from "../components/ui/input.tsx";
 import { Button } from "../components/ui/button.tsx";
 import { useAuth } from "../contexts/AuthContext.tsx";
 import { motion, AnimatePresence } from "framer-motion";
+import Player from "lottie-react";
+import starloader from "../assets/animations/starloder.json";
+
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -329,6 +332,17 @@ const SignIn = () => {
           </CardContent>
         </Card>
       </div>
+      {loading && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70 backdrop-blur-sm">
+    <Player
+      autoplay
+      loop
+      animationData={starloader}
+      style={{ height: "200px", width: "200px" }}
+    />
+  </div>
+)}
+
     </div>
   );
 };
