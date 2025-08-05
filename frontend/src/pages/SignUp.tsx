@@ -45,75 +45,108 @@ const SignUp = () => {
     confirmPassword: "",
     agreeToTerms: false,
   });
-  
+
+  const [citizenErrors, setCitizenErrors] = useState<Record<string, string>>({});
+  const [adminErrors, setAdminErrors] = useState<Record<string, string>>({});
+
   const [activeTab, setActiveTab] = useState("citizen");
   const navigate = useNavigate();
 
+  // Password validation: min 8 chars, uppercase, lowercase, digit, special char
+  const validatePassword = (password: string) => {
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(password);
+  };
+
+  // Citizen signup handler
   const handleCitizenSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    setCitizenErrors({});
+
+    if (!validatePassword(citizenForm.password)) {
+      toast.error(
+        "Password must be at least 8 characters, include uppercase, lowercase, number and special character."
+      );
+      return;
+    }
     if (citizenForm.password !== citizenForm.confirmPassword) {
-      toast.error("Passwords do not match. Please try again.");
+      toast.error("Passwords do not match.");
       return;
     }
     if (!citizenForm.agreeToTerms) {
       toast.error("Please agree to the terms and conditions.");
       return;
     }
-    try {
-      const response = await fetch(
-        `${VITE_BACKEND_URL}/api/v1/citizen/signup`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            fullName: citizenForm.fullName,
-            email: citizenForm.email,
-            password: citizenForm.password,
-            phonenumber: citizenForm.phonenumber,
-          }),
-        }
-      );
+    if (
+      citizenForm.phonenumber.trim().length !== 10 ||
+      !/^\d{10}$/.test(citizenForm.phonenumber.trim())
+    ) {
+      toast.error("Phone number must be exactly 10 digits.");
+      return;
+    }
 
-    console.log("📥 Response Status:", response.status);
-    const data = await response.json();
-    console.log("📥 Response Body:", data);
+    try {
+      const response = await fetch(`${VITE_BACKEND_URL}/api/v1/citizen/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: citizenForm.fullName,
+          email: citizenForm.email,
+          password: citizenForm.password,
+          phonenumber: citizenForm.phonenumber,
+        }),
+      });
+
+      const data = await response.json();
 
       if (response.ok) {
         toast.success("Registration Successful! You can now sign in.");
         navigate("/signin");
+      } else if (data.errors && Array.isArray(data.errors)) {
+        const errs: Record<string, string> = {};
+        data.errors.forEach((err: any) => {
+          if (err.path && err.path.length > 0) {
+            errs[err.path[0]] = err.message;
+          }
+        });
+        setCitizenErrors(errs);
       } else {
         toast.error(data.message || "Something went wrong! Please try again.");
       }
     } catch (error) {
-      console.error("Network or Server Error:", error);
       toast.error("Something went wrong! Please try again.");
+      console.error(error);
     }
   };
 
+  // Admin signup handler
   const handleAdminSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    setAdminErrors({});
 
-    if (
-      !adminForm.fullName.trim() ||
-      !adminForm.email.trim() ||
-      !adminForm.phonenumber.trim() ||
-      !adminForm.department.trim() ||
-      !adminForm.password ||
-      !adminForm.adminAccessCode.trim()
-    ) {
-      toast.error("Please fill all required fields.");
+    if (!validatePassword(adminForm.password)) {
+      toast.error(
+        "Password must be at least 8 characters, include uppercase, lowercase, number and special character."
+      );
       return;
     }
     if (adminForm.password !== adminForm.confirmPassword) {
       toast.error("Passwords do not match.");
       return;
     }
-    if (!/^\d{4,}$/.test(adminForm.adminAccessCode)) {
-      toast.error("Admin access code must be at least 4 digits.");
-      return;
-    }
     if (!adminForm.agreeToTerms) {
       toast.error("Please agree to the terms and conditions.");
+      return;
+    }
+    if (
+      !adminForm.fullName.trim() ||
+      !adminForm.email.trim() ||
+      !adminForm.phonenumber.trim() ||
+      !adminForm.department.trim() ||
+      !adminForm.adminAccessCode.trim()
+    ) {
+      toast.error("Please fill all required fields.");
       return;
     }
     if (
@@ -123,33 +156,40 @@ const SignUp = () => {
       toast.error("Phone number must be exactly 10 digits.");
       return;
     }
+    if (!/^\d{4,}$/.test(adminForm.adminAccessCode)) {
+      toast.error("Admin access code must be at least 4 digits.");
+      return;
+    }
 
     try {
-      const response = await fetch(
-              `${VITE_BACKEND_URL}/api/v1/admin/signup`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            fullName: adminForm.fullName,
-            email: adminForm.email,
-            password: adminForm.password,
-            phonenumber: adminForm.phonenumber,
-            department: adminForm.department,
-            adminAccessCode: Number(adminForm.adminAccessCode.trim()),
-          }),
-        }
-      );
+      const response = await fetch(`${VITE_BACKEND_URL}/api/v1/admin/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: adminForm.fullName,
+          email: adminForm.email,
+          password: adminForm.password,
+          phonenumber: adminForm.phonenumber,
+          department: adminForm.department,
+          adminAccessCode: Number(adminForm.adminAccessCode.trim()),
+        }),
+      });
+
+      const data = await response.json();
+
       if (response.ok) {
         toast.success("Admin Registration Successful! Pending approval.");
         navigate("/signin");
+      } else if (data.errors && Array.isArray(data.errors)) {
+        const errs: Record<string, string> = {};
+        data.errors.forEach((err: any) => {
+          if (err.path && err.path.length > 0) {
+            errs[err.path[0]] = err.message;
+          }
+        });
+        setAdminErrors(errs);
       } else {
-        const errorData = await response.json();
-        toast.error(
-          errorData.errors
-            ? errorData.errors.map((e: any) => e.message).join(", ")
-            : errorData.message || "Signup failed"
-        );
+        toast.error(data.message || "Signup failed");
       }
     } catch (error) {
       toast.error("Something went wrong! Please try again.");
@@ -158,8 +198,8 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden ">
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[#f0f7f5] " />
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[#f0f7f5]" />
 
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
@@ -182,7 +222,7 @@ const SignUp = () => {
           </Link>
         </div>
 
-        <Card className="rounded-2xl shadow-2xl bg-white  border-0">
+        <Card className="rounded-2xl shadow-2xl bg-white border-0">
           <CardHeader>
             <CardTitle>
               <center>Create Account</center>
@@ -192,11 +232,7 @@ const SignUp = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs
-              value={activeTab}
-              onValueChange={setActiveTab}
-              className="w-full"
-            >
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="grid w-full grid-cols-2 rounded-full bg-gray-200/80 p-1">
                 <TabsTrigger
                   value="citizen"
@@ -213,7 +249,6 @@ const SignUp = () => {
               </TabsList>
 
               {/* Citizen Tab Content */}
-
               <TabsContent value="citizen">
                 <AnimatePresence mode="wait">
                   {activeTab === "citizen" && (
@@ -225,15 +260,12 @@ const SignUp = () => {
                       transition={{ duration: 0.33, ease: "easeOut" }}
                       className="mt-6"
                     >
-                      <form
-                        onSubmit={handleCitizenSignUp}
-                        className="space-y-4"
-                      >
+                      <form onSubmit={handleCitizenSignUp} className="space-y-4">
                         <div className="space-y-2">
                           <Label htmlFor="citizen-fullName">Full Name</Label>
                           <Input
                             id="citizen-fullName"
-                            placeholder="Jhon Doe"
+                            placeholder="John Doe"
                             value={citizenForm.fullName}
                             onChange={(e) =>
                               setCitizenForm({
@@ -243,6 +275,9 @@ const SignUp = () => {
                             }
                             required
                           />
+                          {citizenErrors.fullName && (
+                            <p className="text-red-600 text-sm">{citizenErrors.fullName}</p>
+                          )}
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="citizen-email">Email</Label>
@@ -259,6 +294,9 @@ const SignUp = () => {
                             }
                             required
                           />
+                          {citizenErrors.email && (
+                            <p className="text-red-600 text-sm">{citizenErrors.email}</p>
+                          )}
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="citizen-phone">Phone Number</Label>
@@ -275,6 +313,9 @@ const SignUp = () => {
                             }
                             required
                           />
+                          {citizenErrors.phonenumber && (
+                            <p className="text-red-600 text-sm">{citizenErrors.phonenumber}</p>
+                          )}
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="citizen-password">Password</Label>
@@ -306,6 +347,9 @@ const SignUp = () => {
                               )}
                             </Button>
                           </div>
+                          {citizenErrors.password && (
+                            <p className="text-red-600 text-sm">{citizenErrors.password}</p>
+                          )}
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="citizen-confirmPassword">
@@ -362,6 +406,9 @@ const SignUp = () => {
                               Terms and Conditions
                             </Link>
                           </Label>
+                          {citizenErrors.agreeToTerms && (
+                            <p className="text-red-600 text-sm">{citizenErrors.agreeToTerms}</p>
+                          )}
                         </div>
                         <Button
                           type="submit"
@@ -376,7 +423,7 @@ const SignUp = () => {
               </TabsContent>
 
               {/* Admin Tab Content */}
-              
+
               <TabsContent value="admin">
                 <AnimatePresence mode="wait">
                   {activeTab === "admin" && (
@@ -403,6 +450,9 @@ const SignUp = () => {
                             }
                             required
                           />
+                          {adminErrors.fullName && (
+                            <p className="text-red-600 text-sm">{adminErrors.fullName}</p>
+                          )}
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="admin-email">Official Email</Label>
@@ -419,6 +469,9 @@ const SignUp = () => {
                             }
                             required
                           />
+                          {adminErrors.email && (
+                            <p className="text-red-600 text-sm">{adminErrors.email}</p>
+                          )}
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="admin-phone">Phone Number</Label>
@@ -435,6 +488,9 @@ const SignUp = () => {
                             }
                             required
                           />
+                          {adminErrors.phonenumber && (
+                            <p className="text-red-600 text-sm">{adminErrors.phonenumber}</p>
+                          )}
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="admin-department">Department</Label>
@@ -450,6 +506,9 @@ const SignUp = () => {
                             }
                             required
                           />
+                          {adminErrors.department && (
+                            <p className="text-red-600 text-sm">{adminErrors.department}</p>
+                          )}
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="admin-code">Admin Access Code</Label>
@@ -466,6 +525,9 @@ const SignUp = () => {
                             }
                             required
                           />
+                          {adminErrors.adminAccessCode && (
+                            <p className="text-red-600 text-sm">{adminErrors.adminAccessCode}</p>
+                          )}
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="admin-password">Password</Label>
@@ -497,6 +559,9 @@ const SignUp = () => {
                               )}
                             </Button>
                           </div>
+                          {adminErrors.password && (
+                            <p className="text-red-600 text-sm">{adminErrors.password}</p>
+                          )}
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="admin-confirmPassword">
@@ -532,6 +597,9 @@ const SignUp = () => {
                               )}
                             </Button>
                           </div>
+                          {adminErrors.confirmPassword && (
+                            <p className="text-red-600 text-sm">{adminErrors.confirmPassword}</p>
+                          )}
                         </div>
                         <div className="flex items-center space-x-2">
                           <Checkbox
@@ -553,6 +621,9 @@ const SignUp = () => {
                               Terms and Conditions
                             </Link>
                           </Label>
+                          {adminErrors.agreeToTerms && (
+                            <p className="text-red-600 text-sm">{adminErrors.agreeToTerms}</p>
+                          )}
                         </div>
                         <Button
                           type="submit"

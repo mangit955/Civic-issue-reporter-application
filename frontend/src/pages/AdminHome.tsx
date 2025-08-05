@@ -2,33 +2,26 @@ import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, TableBody, TableCaption, TableCell,
+  TableHead, TableHeader, TableRow,
 } from "../components/ui/table";
 import { Badge } from "../components/ui/badge";
 import {
-  ArrowDown,
-  ArrowUp,
-  ChevronsUpDown,
-  Edit,
-  Search,
-  Trash2,
-  User,
+  ArrowDown, ArrowUp, ChevronsUpDown, Edit,
+  Search, Trash2, User,
 } from "lucide-react";
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuCheckboxItem,
+  DropdownMenuContent, DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
 import { VITE_BACKEND_URL } from "../config/config";
 import HeaderAfterAuth from "../components/HeaderAfterAuth";
+import { motion } from "framer-motion";
+import Player from "lottie-react";
+import starloader from "../assets/animations/starloder.json";
+import { useLoader } from "../contexts/LoaderContext";
+
 
 interface Issues {
   _id: string;
@@ -52,10 +45,10 @@ const AdminHome = () => {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [statusFilters, setStatusFilters] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-
   const [issues, setIssues] = useState<Issues[]>([]);
+  const { hideLoader } = useLoader();
+  
 
-  //  Fetch issues from backend
   useEffect(() => {
     const fetchIssues = async () => {
       try {
@@ -65,8 +58,6 @@ const AdminHome = () => {
           },
         });
         const data = await response.json();
-        console.log("Fetched Issues:", data);
-
         if (Array.isArray(data.issues)) {
           setIssues(data.issues);
         } else {
@@ -74,15 +65,16 @@ const AdminHome = () => {
         }
       } catch (error) {
         console.error("Error fetching issues:", error);
+        setIssues([]);
       } finally {
         setLoading(false);
+        hideLoader();
       }
     };
 
     fetchIssues();
-  }, []);
+  }, [hideLoader]);
 
-  //  Update Issue Status
   const handleStatusUpdate = async (issueId: string, status: string) => {
     try {
       const response = await fetch(
@@ -110,12 +102,11 @@ const AdminHome = () => {
     }
   };
 
-  // delete issue
   const handleDeleteIssue = async (issueId: string) => {
     if (!window.confirm("Are you sure you want to delete this issue?")) return;
     try {
       const response = await fetch(
-        `${VITE_BACKEND_URL}/api/v1/issue/admin/${issueId}`, // issueId in URL
+        `${VITE_BACKEND_URL}/api/v1/issue/admin/${issueId}`,
         {
           method: "DELETE",
           headers: {
@@ -146,15 +137,11 @@ const AdminHome = () => {
 
   const sortedIssues = [...issues].sort((a, b) => {
     if (!sortColumn) return 0;
-
     const aValue = a[sortColumn as keyof typeof a] as string;
     const bValue = b[sortColumn as keyof typeof b] as string;
-
-    if (sortDirection === "asc") {
-      return aValue.localeCompare(bValue);
-    } else {
-      return bValue.localeCompare(aValue);
-    }
+    return sortDirection === "asc"
+      ? aValue.localeCompare(bValue)
+      : bValue.localeCompare(aValue);
   });
 
   const filteredIssues = sortedIssues.filter((issue) => {
@@ -162,10 +149,8 @@ const AdminHome = () => {
       issue.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       issue.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       issue.location.address.toLowerCase().includes(searchQuery.toLowerCase());
-
     const statusMatch =
       statusFilters.length === 0 || statusFilters.includes(issue.status);
-
     return searchMatch && statusMatch;
   });
 
@@ -186,13 +171,25 @@ const AdminHome = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-lg text-muted-foreground">Loading issues...</p>
+      <div className="flex flex-col justify-center items-center h-screen bg-white">
+        <Player
+          autoplay
+          loop
+          animationData={starloader}
+          style={{ height: "200px", width: "200px" }}
+        />
+        <p className="text-muted-foreground mt-4">Fetching issues...</p>
       </div>
     );
   }
 
   return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="min-h-screen bg-[#f3f6f8]"
+    >
     <div className="min-h-screen bg-[#f3f6f8]">
       <HeaderAfterAuth />
 
@@ -450,6 +447,7 @@ const AdminHome = () => {
         </div>
       </div>
     </div>
+    </motion.div>
   );
 };
 

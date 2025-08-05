@@ -171,13 +171,13 @@ const CitizenProfile = () => {
               </div>
               <Button
                 variant={isEditing ? "default" : "outline"}
-                className="text-slate-600"
+                className="text-slate-500 active:bg-gray-200 focus:bg-gray-200 active:ring-0 focus:ring-0"
                 onClick={
                   isEditing ? handleSaveProfile : () => setIsEditing(true)
                 }
               >
-                <Edit className="h-4 w-4 mr-2 text-indigo-600" />
-                {isEditing ? "Save Changes" : "Edit Profile"}
+                <Edit className="h-4 w-4  text-purple-700" />
+                <div className="hidden sm:block">{isEditing ? "Save Changes" : "Edit Profile"}</div>
               </Button>
             </div>
           </CardHeader>

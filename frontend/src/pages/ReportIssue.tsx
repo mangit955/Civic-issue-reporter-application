@@ -301,7 +301,7 @@ const ReportIssue = () => {
                 
                 <Button
                   type="submit"
-                  className="w-full civic-gradient border-0 text-white hover:opacity-90"
+                  className="w-full civic-gradient border-0 text-white hover:opacity-70"
                   disabled={loading}
                   size="lg"
                 >

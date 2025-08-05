@@ -13,6 +13,9 @@ import { VITE_BACKEND_URL } from "../config/config";
 import Player from "lottie-react";
 import emptyAnimation from "../assets/animations/empty.json";
 import HeaderAfterAuth from "../components/HeaderAfterAuth";
+import starloader from "../assets/animations/starloder.json";
+import { motion } from "framer-motion";
+import { useLoader } from "../contexts/LoaderContext";
 
 interface Issues {
   _id: string;
@@ -30,19 +33,25 @@ interface Issues {
   status: string;
 }
 
+const MIN_LOADER_DURATION = 2500; // Minimum loader display time (ms)
+
 const CitizenHome = () => {
   const [searchCity, setSearchCity] = useState("");
   const [reportedIssues, setReportedIssues] = useState<Issues[]>([]);
   const [loading, setLoading] = useState(true);
+  const { hideLoader } = useLoader();
 
   useEffect(() => {
     const fetchIssues = async () => {
+      const startTime = Date.now();
+
       try {
         const response = await fetch(`${VITE_BACKEND_URL}/api/v1/all-issues`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
           },
         });
+
         const data = await response.json();
         if (Array.isArray(data.issues)) {
           setReportedIssues(data.issues);
@@ -52,22 +61,23 @@ const CitizenHome = () => {
       } catch (error) {
         console.error("Error fetching issues:", error);
       } finally {
-        setLoading(false);
+        const elapsed = Date.now() - startTime;
+        const delay = Math.max(MIN_LOADER_DURATION - elapsed, 0);
+
+        setTimeout(() => {
+          setLoading(false);
+          hideLoader();
+        }, delay);
       }
     };
 
     fetchIssues();
-  }, []);
-
-  if (loading)
-    return <div className="flex justify-center items-center h-screen"></div>;
+  }, [hideLoader]);
 
   const filteredIssues = searchCity
     ? reportedIssues.filter(
         (issue) =>
-          issue.location &&
-          issue.location.address &&
-          issue.location.address
+          issue.location?.address
             .toLowerCase()
             .includes(searchCity.toLowerCase())
       )
@@ -88,16 +98,33 @@ const CitizenHome = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-[#f3f6f8]">
-      {/* Navbar */}
-      <HeaderAfterAuth />
+  if (loading) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen bg-white">
+        <Player
+          autoplay
+          loop
+          animationData={starloader}
+          style={{ height: "200px", width: "200px" }}
+        />
+        <p className="text-muted-foreground mt-4">Fetching issues...</p>
+      </div>
+    );
+  }
 
+  return (
+     <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="min-h-screen bg-[#f3f6f8]"
+    >
+    <div className="min-h-screen bg-[#f3f6f8]">
+      <HeaderAfterAuth />
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-20 space-y-10">
-        {/* Welcome Section */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-extrabold text-[#0577b7]   tracking-wide">
+            <h1 className="text-4xl font-extrabold text-[#0577b7] tracking-wide">
               Welcome, Citizen!
             </h1>
             <p className="text-gray-500 mt-2 text-base">
@@ -115,9 +142,8 @@ const CitizenHome = () => {
           </Link>
         </div>
 
-        {/* Search Section */}
         <div>
-          <h2 className="text-2xl font-semibold  text-slate-600 mb-4">
+          <h2 className="text-2xl font-semibold text-slate-600 mb-4">
             Search Issues by Location
           </h2>
           <div className="relative max-w-md">
@@ -130,15 +156,14 @@ const CitizenHome = () => {
               placeholder="Enter city name..."
               value={searchCity}
               onChange={(e) => setSearchCity(e.target.value)}
-              className="pl-10 bg-white/70 backdrop-blur-md border border-gray-200 rounded-full placeholder:text-gray-400  "
+              className="pl-10 bg-white/70 backdrop-blur-md border border-gray-200 rounded-full placeholder:text-gray-400"
             />
           </div>
         </div>
 
-        {/* Issues Grid */}
         <div>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-semibold  text-sky-600">
+            <h2 className="text-2xl font-semibold text-sky-600">
               Recent Issues
               {searchCity && (
                 <span className="text-lg font-normal text-gray-400 ml-2">
@@ -156,7 +181,7 @@ const CitizenHome = () => {
             {filteredIssues.map((issue) => (
               <Card
                 key={issue._id}
-                className={`rounded-2xl bg-white/70 backdrop-blur-md border border-gray-200 shadow-md hover:shadow-xl transition-all hover:scale-[1.02] transition-transform ${
+                className={`rounded-2xl bg-white/70 backdrop-blur-md border border-gray-200 shadow-md hover:shadow-xl hover:scale-[1.02] transition-all ${
                   issue.status === "Rejected"
                     ? "opacity-30 grayscale"
                     : "opacity-100"
@@ -166,7 +191,7 @@ const CitizenHome = () => {
                   <img
                     src={issue.image || "/placeholder.jpg"}
                     alt={issue.title}
-                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   />
                   <div
                     className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
@@ -208,7 +233,12 @@ const CitizenHome = () => {
           </div>
 
           {filteredIssues.length === 0 && (
-            <div className="flex flex-col items-center justify-center text-center py-12">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              className="flex flex-col items-center justify-center text-center py-12"
+            >
               <div className="max-w-xs mx-auto mb-4">
                 <Player
                   autoplay
@@ -227,18 +257,17 @@ const CitizenHome = () => {
                   "No issues available at the moment."
                 )}
               </p>
-            </div>
+            </motion.div>
           )}
         </div>
 
-        {/* Create Issue Button */}
         <div className="fixed bottom-8 right-8 z-50">
           <Link to="/citizen/create-issue">
             <Button
               size="lg"
               className="civic-gradient text-white border-0 h-14 px-6 rounded-full 
-                 shadow-lg hover:shadow-2xl hover:scale-105 
-                 transition-transform duration-300"
+                shadow-lg hover:shadow-2xl hover:scale-105 
+                transition-transform duration-300"
             >
               <Plus className="h-5 w-5 mr-2" />
               Report New Issue
@@ -246,7 +275,8 @@ const CitizenHome = () => {
           </Link>
         </div>
       </main>
-    </div>
+      </div>
+    </motion.div>
   );
 };
 
