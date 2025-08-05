@@ -46,7 +46,9 @@ const SignUp = () => {
     agreeToTerms: false,
   });
 
-  const [citizenErrors, setCitizenErrors] = useState<Record<string, string>>({});
+  const [citizenErrors, setCitizenErrors] = useState<Record<string, string>>(
+    {}
+  );
   const [adminErrors, setAdminErrors] = useState<Record<string, string>>({});
 
   const [activeTab, setActiveTab] = useState("citizen");
@@ -87,16 +89,19 @@ const SignUp = () => {
     }
 
     try {
-      const response = await fetch(`${VITE_BACKEND_URL}/api/v1/citizen/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName: citizenForm.fullName,
-          email: citizenForm.email,
-          password: citizenForm.password,
-          phonenumber: citizenForm.phonenumber,
-        }),
-      });
+      const response = await fetch(
+        `${VITE_BACKEND_URL}/api/v1/citizen/signup`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fullName: citizenForm.fullName,
+            email: citizenForm.email,
+            password: citizenForm.password,
+            phonenumber: citizenForm.phonenumber,
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -260,7 +265,10 @@ const SignUp = () => {
                       transition={{ duration: 0.33, ease: "easeOut" }}
                       className="mt-6"
                     >
-                      <form onSubmit={handleCitizenSignUp} className="space-y-4">
+                      <form
+                        onSubmit={handleCitizenSignUp}
+                        className="space-y-4"
+                      >
                         <div className="space-y-2">
                           <Label htmlFor="citizen-fullName">Full Name</Label>
                           <Input
@@ -276,7 +284,9 @@ const SignUp = () => {
                             required
                           />
                           {citizenErrors.fullName && (
-                            <p className="text-red-600 text-sm">{citizenErrors.fullName}</p>
+                            <p className="text-red-600 text-sm">
+                              {citizenErrors.fullName}
+                            </p>
                           )}
                         </div>
                         <div className="space-y-2">
@@ -295,7 +305,9 @@ const SignUp = () => {
                             required
                           />
                           {citizenErrors.email && (
-                            <p className="text-red-600 text-sm">{citizenErrors.email}</p>
+                            <p className="text-red-600 text-sm">
+                              {citizenErrors.email}
+                            </p>
                           )}
                         </div>
                         <div className="space-y-2">
@@ -314,7 +326,9 @@ const SignUp = () => {
                             required
                           />
                           {citizenErrors.phonenumber && (
-                            <p className="text-red-600 text-sm">{citizenErrors.phonenumber}</p>
+                            <p className="text-red-600 text-sm">
+                              {citizenErrors.phonenumber}
+                            </p>
                           )}
                         </div>
                         <div className="space-y-2">
@@ -348,7 +362,9 @@ const SignUp = () => {
                             </Button>
                           </div>
                           {citizenErrors.password && (
-                            <p className="text-red-600 text-sm">{citizenErrors.password}</p>
+                            <p className="text-red-600 text-sm">
+                              {citizenErrors.password}
+                            </p>
                           )}
                         </div>
                         <div className="space-y-2">
@@ -407,7 +423,9 @@ const SignUp = () => {
                             </Link>
                           </Label>
                           {citizenErrors.agreeToTerms && (
-                            <p className="text-red-600 text-sm">{citizenErrors.agreeToTerms}</p>
+                            <p className="text-red-600 text-sm">
+                              {citizenErrors.agreeToTerms}
+                            </p>
                           )}
                         </div>
                         <Button
@@ -451,7 +469,9 @@ const SignUp = () => {
                             required
                           />
                           {adminErrors.fullName && (
-                            <p className="text-red-600 text-sm">{adminErrors.fullName}</p>
+                            <p className="text-red-600 text-sm">
+                              {adminErrors.fullName}
+                            </p>
                           )}
                         </div>
                         <div className="space-y-2">
@@ -470,7 +490,9 @@ const SignUp = () => {
                             required
                           />
                           {adminErrors.email && (
-                            <p className="text-red-600 text-sm">{adminErrors.email}</p>
+                            <p className="text-red-600 text-sm">
+                              {adminErrors.email}
+                            </p>
                           )}
                         </div>
                         <div className="space-y-2">
@@ -489,7 +511,9 @@ const SignUp = () => {
                             required
                           />
                           {adminErrors.phonenumber && (
-                            <p className="text-red-600 text-sm">{adminErrors.phonenumber}</p>
+                            <p className="text-red-600 text-sm">
+                              {adminErrors.phonenumber}
+                            </p>
                           )}
                         </div>
                         <div className="space-y-2">
@@ -507,7 +531,9 @@ const SignUp = () => {
                             required
                           />
                           {adminErrors.department && (
-                            <p className="text-red-600 text-sm">{adminErrors.department}</p>
+                            <p className="text-red-600 text-sm">
+                              {adminErrors.department}
+                            </p>
                           )}
                         </div>
                         <div className="space-y-2">
@@ -526,7 +552,9 @@ const SignUp = () => {
                             required
                           />
                           {adminErrors.adminAccessCode && (
-                            <p className="text-red-600 text-sm">{adminErrors.adminAccessCode}</p>
+                            <p className="text-red-600 text-sm">
+                              {adminErrors.adminAccessCode}
+                            </p>
                           )}
                         </div>
                         <div className="space-y-2">
@@ -560,7 +588,9 @@ const SignUp = () => {
                             </Button>
                           </div>
                           {adminErrors.password && (
-                            <p className="text-red-600 text-sm">{adminErrors.password}</p>
+                            <p className="text-red-600 text-sm">
+                              {adminErrors.password}
+                            </p>
                           )}
                         </div>
                         <div className="space-y-2">
@@ -598,7 +628,9 @@ const SignUp = () => {
                             </Button>
                           </div>
                           {adminErrors.confirmPassword && (
-                            <p className="text-red-600 text-sm">{adminErrors.confirmPassword}</p>
+                            <p className="text-red-600 text-sm">
+                              {adminErrors.confirmPassword}
+                            </p>
                           )}
                         </div>
                         <div className="flex items-center space-x-2">
@@ -622,7 +654,9 @@ const SignUp = () => {
                             </Link>
                           </Label>
                           {adminErrors.agreeToTerms && (
-                            <p className="text-red-600 text-sm">{adminErrors.agreeToTerms}</p>
+                            <p className="text-red-600 text-sm">
+                              {adminErrors.agreeToTerms}
+                            </p>
                           )}
                         </div>
                         <Button

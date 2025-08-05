@@ -87,12 +87,15 @@ const CitizenProfile = () => {
       try {
         setLoadingMyIssues(true);
 
-        const response = await fetch(`${VITE_BACKEND_URL}/api/v1/citizen/issues`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `${VITE_BACKEND_URL}/api/v1/citizen/issues`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         const data = await response.json();
 
@@ -163,7 +166,9 @@ const CitizenProfile = () => {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <CardTitle className="text-2xl text-slate-600">Citizen Profile</CardTitle>
+                  <CardTitle className="text-2xl text-slate-600">
+                    Citizen Profile
+                  </CardTitle>
                   <CardDescription>
                     Manage your profile and view your reported issues
                   </CardDescription>
@@ -177,7 +182,9 @@ const CitizenProfile = () => {
                 }
               >
                 <Edit className="h-4 w-4  text-purple-700" />
-                <div className="hidden sm:block">{isEditing ? "Save Changes" : "Edit Profile"}</div>
+                <div className="hidden sm:block">
+                  {isEditing ? "Save Changes" : "Edit Profile"}
+                </div>
               </Button>
             </div>
           </CardHeader>

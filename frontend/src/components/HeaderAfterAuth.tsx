@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button.tsx";
-import { LogIn, LogOut, Shield,LayoutDashboard } from "lucide-react";
+import { LogIn, LogOut, Shield, LayoutDashboard } from "lucide-react";
 import civicIssueLogo from "../assets/civic-issue.png";
 import { useAuth } from "../contexts/AuthContext.tsx";
 
@@ -47,7 +47,7 @@ const Header: React.FC<HeaderProps> = () => {
           <div className="flex items-center space-x-3">
             {user ? (
               <>
-              <span className="text-sm text-muted-foreground hidden sm:block">
+                <span className="text-sm text-muted-foreground hidden sm:block">
                   Welcome,{" "}
                   {user?.fullName ? user.fullName.split(" ")[0] : "Guest"}!
                 </span>

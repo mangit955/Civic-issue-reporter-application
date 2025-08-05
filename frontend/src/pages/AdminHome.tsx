@@ -2,17 +2,29 @@ import { useEffect, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import {
-  Table, TableBody, TableCaption, TableCell,
-  TableHead, TableHeader, TableRow,
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "../components/ui/table";
 import { Badge } from "../components/ui/badge";
 import {
-  ArrowDown, ArrowUp, ChevronsUpDown, Edit,
-  Search, Trash2, User,
+  ArrowDown,
+  ArrowUp,
+  ChevronsUpDown,
+  Edit,
+  Search,
+  Trash2,
+  User,
 } from "lucide-react";
 import {
-  DropdownMenu, DropdownMenuCheckboxItem,
-  DropdownMenuContent, DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
 import { VITE_BACKEND_URL } from "../config/config";
@@ -21,7 +33,6 @@ import { motion } from "framer-motion";
 import Player from "lottie-react";
 import starloader from "../assets/animations/starloder.json";
 import { useLoader } from "../contexts/LoaderContext";
-
 
 interface Issues {
   _id: string;
@@ -47,7 +58,6 @@ const AdminHome = () => {
   const [loading, setLoading] = useState(true);
   const [issues, setIssues] = useState<Issues[]>([]);
   const { hideLoader } = useLoader();
-  
 
   useEffect(() => {
     const fetchIssues = async () => {
@@ -190,263 +200,273 @@ const AdminHome = () => {
       transition={{ duration: 0.6 }}
       className="min-h-screen bg-[#f3f6f8]"
     >
-    <div className="min-h-screen bg-[#f3f6f8]">
-      <HeaderAfterAuth />
+      <div className="min-h-screen bg-[#f3f6f8]">
+        <HeaderAfterAuth />
 
-      <div className="pt-20 container mx-auto px-4 py-8 space-y-8">
-        {/* Welcome Section with Profile Link */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-[#0577b7] ">
-              Admin Dashboard
-            </h1>
-            <p className="text-muted-foreground mt-2">
-              Manage and resolve community issues
-            </p>
-          </div>
-          <Link to="/admin/profile">
-            <Button
-              variant="outline"
-              className="flex items-center space-x-2 shadow-sm text-slate-500 "
-            >
-              <User className="h-4 w-4 text-purple-700" />
-              <span>My Profile</span>
-            </Button>
-          </Link>
-        </div>
-
-        {/* Statistics Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
-          <div className="p-6 rounded-lg border shadow-lg bg-card  hover:scale-[1.02] transition-transform hover:shadow-xl transition-shadow duration-300  ">
-            <div className="text-2xl font-bold text-foreground  ">
-              {issues.length}
+        <div className="pt-20 container mx-auto px-4 py-8 space-y-8">
+          {/* Welcome Section with Profile Link */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-[#0577b7] ">
+                Admin Dashboard
+              </h1>
+              <p className="text-muted-foreground mt-2">
+                Manage and resolve community issues
+              </p>
             </div>
-            <p className="text-sm text-muted-foreground">Total Issues</p>
-          </div>
-          <div className="p-6 rounded-lg border shadow-lg bg-card hover:scale-[1.02] transition-transform hover:shadow-xl transition-shadow duration-300 ">
-            <div className="text-2xl font-bold text-green-600">
-              {issues.filter((issue) => issue.status === "Resolved").length}
-            </div>
-            <p className="text-sm text-muted-foreground">Resolved Issues</p>
-          </div>
-          <div className="p-6 rounded-lg border shadow-lg bg-card hover:scale-[1.02] transition-transform hover:shadow-xl transition-shadow duration-300 ">
-            <div className="text-2xl font-bold text-blue-600">
-              {issues.filter((issue) => issue.status === "In Progress").length}
-            </div>
-            <p className="text-sm text-muted-foreground">Issues In Progress</p>
-          </div>
-          <div className="p-6 rounded-lg border shadow-lg bg-card hover:scale-[1.02] transition-transform hover:shadow-xl transition-shadow duration-300 ">
-            <div className="text-2xl font-bold text-yellow-600">
-              {issues.filter((issue) => issue.status === "Pending").length}
-            </div>
-            <p className="text-sm text-muted-foreground">Pending</p>
-          </div>
-        </div>
-
-        {/* Search and Filters */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 ">
-          <div className="relative w-full md:w-80 shadow-sm rounded">
-            <Search className="absolute  left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search issues..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-white"
-            />
+            <Link to="/admin/profile">
+              <Button
+                variant="outline"
+                className="flex items-center space-x-2 shadow-sm text-slate-500 "
+              >
+                <User className="h-4 w-4 text-purple-700" />
+                <span>My Profile</span>
+              </Button>
+            </Link>
           </div>
 
-          <div className="flex items-center space-x-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="gap-2 shadow-sm text-slate-600">
-                  Status <ChevronsUpDown className="h-4 w-4 text-gray-500 " />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[200px]">
-                <DropdownMenuCheckboxItem
-                  checked={statusFilters.includes("Rejected")}
-                  onCheckedChange={(checked) =>
-                    setStatusFilters((prev) =>
-                      checked
-                        ? [...prev, "Rejected"]
-                        : prev.filter((s) => s !== "Rejected")
-                    )
-                  }
-                >
-                  Rejected
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={statusFilters.includes("In Progress")}
-                  onCheckedChange={(checked) =>
-                    setStatusFilters((prev) =>
-                      checked
-                        ? [...prev, "In Progress"]
-                        : prev.filter((s) => s !== "In Progress")
-                    )
-                  }
-                >
-                  In Progress
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={statusFilters.includes("Resolved")}
-                  onCheckedChange={(checked) =>
-                    setStatusFilters((prev) =>
-                      checked
-                        ? [...prev, "Resolved"]
-                        : prev.filter((s) => s !== "Resolved")
-                    )
-                  }
-                >
-                  Resolved
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={statusFilters.includes("Pending")}
-                  onCheckedChange={(checked) =>
-                    setStatusFilters((prev) =>
-                      checked
-                        ? [...prev, "Pending"]
-                        : prev.filter((s) => s !== "Pending")
-                    )
-                  }
-                >
-                  Pending
-                </DropdownMenuCheckboxItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          {/* Statistics Overview */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
+            <div className="p-6 rounded-lg border shadow-lg bg-card  hover:scale-[1.02] transition-transform hover:shadow-xl transition-shadow duration-300  ">
+              <div className="text-2xl font-bold text-foreground  ">
+                {issues.length}
+              </div>
+              <p className="text-sm text-muted-foreground">Total Issues</p>
+            </div>
+            <div className="p-6 rounded-lg border shadow-lg bg-card hover:scale-[1.02] transition-transform hover:shadow-xl transition-shadow duration-300 ">
+              <div className="text-2xl font-bold text-green-600">
+                {issues.filter((issue) => issue.status === "Resolved").length}
+              </div>
+              <p className="text-sm text-muted-foreground">Resolved Issues</p>
+            </div>
+            <div className="p-6 rounded-lg border shadow-lg bg-card hover:scale-[1.02] transition-transform hover:shadow-xl transition-shadow duration-300 ">
+              <div className="text-2xl font-bold text-blue-600">
+                {
+                  issues.filter((issue) => issue.status === "In Progress")
+                    .length
+                }
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Issues In Progress
+              </p>
+            </div>
+            <div className="p-6 rounded-lg border shadow-lg bg-card hover:scale-[1.02] transition-transform hover:shadow-xl transition-shadow duration-300 ">
+              <div className="text-2xl font-bold text-yellow-600">
+                {issues.filter((issue) => issue.status === "Pending").length}
+              </div>
+              <p className="text-sm text-muted-foreground">Pending</p>
+            </div>
           </div>
-        </div>
 
-        {/* Issues Table */}
-        <div className="rounded-md border bg-white shadow-lg text-slate-500 pl-6 pr-6 hover:shadow-xl transition-shadow duration-300 ">
-          <Table>
-            <TableCaption>A list of all reported issues.</TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead>
+          {/* Search and Filters */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 ">
+            <div className="relative w-full md:w-80 shadow-sm rounded">
+              <Search className="absolute  left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search issues..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 bg-white"
+              />
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
                   <Button
-                    variant="ghost"
-                    onClick={() => handleSort("title")}
-                    className="w-full text-gray-700"
+                    variant="outline"
+                    className="gap-2 shadow-sm text-slate-600"
                   >
-                    Title
-                    {sortColumn === "title" &&
-                      (sortDirection === "asc" ? (
-                        <ArrowUp className="ml-2 h-4 w-4 text-gray-500 " />
-                      ) : (
-                        <ArrowDown className="ml-2 h-4 w-4 text-gray-500 " />
-                      ))}
+                    Status <ChevronsUpDown className="h-4 w-4 text-gray-500 " />
                   </Button>
-                </TableHead>
-                <TableHead>
-                  <Button
-                    variant="ghost"
-                    onClick={() => handleSort("location")}
-                    className="w-full text-gray-700 "
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-[200px]">
+                  <DropdownMenuCheckboxItem
+                    checked={statusFilters.includes("Rejected")}
+                    onCheckedChange={(checked) =>
+                      setStatusFilters((prev) =>
+                        checked
+                          ? [...prev, "Rejected"]
+                          : prev.filter((s) => s !== "Rejected")
+                      )
+                    }
                   >
-                    Location
-                    {sortColumn === "location" &&
-                      (sortDirection === "asc" ? (
-                        <ArrowUp className="ml-2 h-4 w-4 text-gray-500 " />
-                      ) : (
-                        <ArrowDown className="ml-2 h-4 w-4 text-gray-500 " />
-                      ))}
-                  </Button>
-                </TableHead>
-                <TableHead>
-                  <Button
-                    variant="ghost"
-                    onClick={() => handleSort("status")}
-                    className="w-full text-gray-700"
+                    Rejected
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={statusFilters.includes("In Progress")}
+                    onCheckedChange={(checked) =>
+                      setStatusFilters((prev) =>
+                        checked
+                          ? [...prev, "In Progress"]
+                          : prev.filter((s) => s !== "In Progress")
+                      )
+                    }
                   >
-                    Status
-                    {sortColumn === "status" &&
-                      (sortDirection === "asc" ? (
-                        <ArrowUp className="ml-2 h-4 w-4 text-gray-500 " />
-                      ) : (
-                        <ArrowDown className="ml-2 h-4 w-4 text-gray-500 " />
-                      ))}
-                  </Button>
-                </TableHead>
-                <TableHead className="text-right text-gray-700">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredIssues.map((issue) => (
-                <TableRow key={issue._id}>
-                  <TableCell className="font-medium">{issue.title}</TableCell>
-                  <TableCell>{issue.location.address}</TableCell>
-                  <TableCell>
-                    <Badge className={getStatusColor(issue.status)}>
-                      {issue.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <Edit className="h-4 w-4 text-blue-600" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <button
-                            onClick={() =>
-                              handleStatusUpdate(issue._id, "Resolved")
-                            }
-                            className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                          >
-                            Resolved
-                          </button>
-                          <button
-                            onClick={() =>
-                              handleStatusUpdate(issue._id, "In Progress")
-                            }
-                            className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                          >
-                            In Progress
-                          </button>
-                          <button
-                            onClick={() =>
-                              handleStatusUpdate(issue._id, "Rejected")
-                            }
-                            className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                          >
-                            Rejected
-                          </button>
-                          <button
-                            onClick={() =>
-                              handleStatusUpdate(issue._id, "Pending")
-                            }
-                            className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                          >
-                            Pending
-                          </button>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDeleteIssue(issue._id)}
-                      >
-                        <Trash2 className="h-4 w-4 text-gray-500 " />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-              {filteredIssues.length === 0 && (
+                    In Progress
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={statusFilters.includes("Resolved")}
+                    onCheckedChange={(checked) =>
+                      setStatusFilters((prev) =>
+                        checked
+                          ? [...prev, "Resolved"]
+                          : prev.filter((s) => s !== "Resolved")
+                      )
+                    }
+                  >
+                    Resolved
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={statusFilters.includes("Pending")}
+                    onCheckedChange={(checked) =>
+                      setStatusFilters((prev) =>
+                        checked
+                          ? [...prev, "Pending"]
+                          : prev.filter((s) => s !== "Pending")
+                      )
+                    }
+                  >
+                    Pending
+                  </DropdownMenuCheckboxItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+
+          {/* Issues Table */}
+          <div className="rounded-md border bg-white shadow-lg text-slate-500 pl-6 pr-6 hover:shadow-xl transition-shadow duration-300 ">
+            <Table>
+              <TableCaption>A list of all reported issues.</TableCaption>
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center">
-                    No issues found.
-                  </TableCell>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      onClick={() => handleSort("title")}
+                      className="w-full text-gray-700"
+                    >
+                      Title
+                      {sortColumn === "title" &&
+                        (sortDirection === "asc" ? (
+                          <ArrowUp className="ml-2 h-4 w-4 text-gray-500 " />
+                        ) : (
+                          <ArrowDown className="ml-2 h-4 w-4 text-gray-500 " />
+                        ))}
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      onClick={() => handleSort("location")}
+                      className="w-full text-gray-700 "
+                    >
+                      Location
+                      {sortColumn === "location" &&
+                        (sortDirection === "asc" ? (
+                          <ArrowUp className="ml-2 h-4 w-4 text-gray-500 " />
+                        ) : (
+                          <ArrowDown className="ml-2 h-4 w-4 text-gray-500 " />
+                        ))}
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      onClick={() => handleSort("status")}
+                      className="w-full text-gray-700"
+                    >
+                      Status
+                      {sortColumn === "status" &&
+                        (sortDirection === "asc" ? (
+                          <ArrowUp className="ml-2 h-4 w-4 text-gray-500 " />
+                        ) : (
+                          <ArrowDown className="ml-2 h-4 w-4 text-gray-500 " />
+                        ))}
+                    </Button>
+                  </TableHead>
+                  <TableHead className="text-right text-gray-700">
+                    Actions
+                  </TableHead>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredIssues.map((issue) => (
+                  <TableRow key={issue._id}>
+                    <TableCell className="font-medium">{issue.title}</TableCell>
+                    <TableCell>{issue.location.address}</TableCell>
+                    <TableCell>
+                      <Badge className={getStatusColor(issue.status)}>
+                        {issue.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <Edit className="h-4 w-4 text-blue-600" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <button
+                              onClick={() =>
+                                handleStatusUpdate(issue._id, "Resolved")
+                              }
+                              className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                            >
+                              Resolved
+                            </button>
+                            <button
+                              onClick={() =>
+                                handleStatusUpdate(issue._id, "In Progress")
+                              }
+                              className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                            >
+                              In Progress
+                            </button>
+                            <button
+                              onClick={() =>
+                                handleStatusUpdate(issue._id, "Rejected")
+                              }
+                              className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                            >
+                              Rejected
+                            </button>
+                            <button
+                              onClick={() =>
+                                handleStatusUpdate(issue._id, "Pending")
+                              }
+                              className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                            >
+                              Pending
+                            </button>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDeleteIssue(issue._id)}
+                        >
+                          <Trash2 className="h-4 w-4 text-gray-500 " />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {filteredIssues.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center">
+                      No issues found.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       </div>
-    </div>
     </motion.div>
   );
 };
