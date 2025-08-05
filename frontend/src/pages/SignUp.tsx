@@ -430,7 +430,7 @@ const SignUp = () => {
                         </div>
                         <Button
                           type="submit"
-                          className="w-full bg-gradient-to-r from-[#016dd0] to-[#159e52] text-white font-bold shadow-md hover:opacity-90 transition"
+                          className="w-full bg-gradient-to-r from-[#016dd0] to-[#159e52] text-white font-bold shadow-md hover:opacity-70 transition"
                         >
                           Create Citizen Account
                         </Button>
@@ -661,7 +661,7 @@ const SignUp = () => {
                         </div>
                         <Button
                           type="submit"
-                          className="w-full bg-gradient-to-r from-[#016dd0] to-[#159e52] text-white font-bold shadow-md hover:opacity-90 transition"
+                          className="w-full bg-gradient-to-r from-[#016dd0] to-[#159e52] text-white font-bold shadow-md hover:opacity-70 transition"
                         >
                           Create Admin Account
                         </Button>

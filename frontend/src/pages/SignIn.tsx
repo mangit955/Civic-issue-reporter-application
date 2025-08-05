@@ -283,7 +283,7 @@ const SignIn = () => {
                         </div>
                         <Button
                           type="submit"
-                          className="w-full bg-gradient-to-r from-[#016dd0] to-[#159e52] text-white"
+                          className="w-full bg-gradient-to-r from-[#016dd0] to-[#159e52] text-white hover:opacity-70"
                         >
                           Sign In as Administrator
                         </Button>
