@@ -32,7 +32,7 @@ import { toast } from "sonner";
 import { VITE_BACKEND_URL } from "../config/config.tsx";
 import Player from "lottie-react";
 import emptyAnimation from "../assets/animations/box.json";
-import HeaderAfterAuth from "../components/HeaderAfterAuth.ts";
+import HeaderAfterAuth from "../components/HeaderAfterAuth.tsx";
 
 interface Issues {
   _id: string;
