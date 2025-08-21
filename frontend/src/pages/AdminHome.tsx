@@ -212,7 +212,7 @@ const AdminHome = () => {
               variant="outline"
               className="flex items-center space-x-2 shadow-sm text-slate-500 "
             >
-              <User className="h-4 w-4 text-purple-700" />
+              <User className="h-4 w-4 text-blue-500" />
               <span>My Profile</span>
             </Button>
           </Link>

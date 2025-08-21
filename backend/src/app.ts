@@ -6,10 +6,17 @@ import citizenRoutes from "./routes/citizen.routes";
 import issueRoutes from "./routes/issue.routes";
 
 const app = express();
+const allowedOrigins = process.env.CORS_ORIGIN?.split(",");
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: function (origin, callback){
+      if(!origin || allowedOrigins?.includes(origin)){
+        callback(null, true);
+      } else{
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );

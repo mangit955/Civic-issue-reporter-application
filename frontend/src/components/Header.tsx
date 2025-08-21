@@ -105,7 +105,7 @@ const Header: React.FC<HeaderProps> = ({
                     size="sm"
                     className="flex items-center space-x-2"
                   >
-                    <User className="h-4 w-4 text-purple-600" />
+                    <User className="h-4 w-4 text-blue-500" />
                     <span className="hidden sm:block">Dashboard</span>
                   </Button>
                 </Link>
