@@ -29,10 +29,10 @@ import {
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext.tsx";
 import { toast } from "sonner";
-import { BACKEND_URL } from "../config/config.tsx";
+import { VITE_BACKEND_URL } from "../config/config.tsx";
 import Player from "lottie-react";
 import emptyAnimation from "../assets/animations/box.json";
-import HeaderAfterAuth from "../components/HeaderAfterAuth";
+import HeaderAfterAuth from "../components/HeaderAfterAuth.ts";
 
 interface Issues {
   _id: string;
@@ -99,7 +99,7 @@ const AdminProfile = () => {
       setLoadingMyIssues(true);
       try {
         const response = await fetch(
-          `${BACKEND_URL}/api/v1/admin/handled-issues`,
+          `${VITE_BACKEND_URL}/api/v1/admin/handled-issues`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -140,14 +140,19 @@ const AdminProfile = () => {
         return "bg-blue-100 text-blue-800";
       case "Pending":
         return "bg-yellow-100 text-yellow-800";
-        case "Rejected":
+      case "Rejected":
         return "bg-red-100 text-red-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
-
-  if (loadingMyIssues) return <p>Loading handled issues...</p>;
+  if (loadingMyIssues) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-muted-foreground">Loading handled issues...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#f3f6f8]">
@@ -192,13 +197,15 @@ const AdminProfile = () => {
               </div>
               <Button
                 variant={isEditing ? "default" : "outline"}
-                className="text-slate-500 "
+                className="text-slate-500 active:bg-gray-200 focus:bg-gray-200 active:ring-0 focus:ring-0 "
                 onClick={
                   isEditing ? handleSaveProfile : () => setIsEditing(true)
                 }
               >
-                <Edit className="h-4 w-4 mr-2 text-indigo-600" />
-                {isEditing ? "Save Changes" : "Edit Profile"}
+                <Edit className="h-4 w-4  text-purple-700" />
+                <div className="hidden sm:block">
+                  {isEditing ? "Save Changes" : "Edit Profile"}
+                </div>
               </Button>
             </div>
           </CardHeader>
@@ -217,7 +224,9 @@ const AdminProfile = () => {
                       }
                     />
                   ) : (
-                    <span className="text-gray-400">{profile.fullName || "Not Provided"}</span>
+                    <span className="text-gray-400">
+                      {profile.fullName || "Not Provided"}
+                    </span>
                   )}
                 </div>
               </div>
@@ -236,7 +245,9 @@ const AdminProfile = () => {
                       }
                     />
                   ) : (
-                    <span className="text-gray-400">{profile.email || "Not Provided"}</span>
+                    <span className="text-gray-400">
+                      {profile.email || "Not Provided"}
+                    </span>
                   )}
                 </div>
               </div>
@@ -254,7 +265,9 @@ const AdminProfile = () => {
                       }
                     />
                   ) : (
-                    <span className="text-gray-400">{profile.phonenumber || "Not assigned"}</span>
+                    <span className="text-gray-400">
+                      {profile.phonenumber || "Not assigned"}
+                    </span>
                   )}
                 </div>
               </div>
@@ -272,7 +285,9 @@ const AdminProfile = () => {
                       }
                     />
                   ) : (
-                    <span className="text-gray-400">{profile.department || "Not assigned"}</span>
+                    <span className="text-gray-400">
+                      {profile.department || "Not assigned"}
+                    </span>
                   )}
                 </div>
               </div>
@@ -446,7 +461,6 @@ const AdminProfile = () => {
                         <Badge className={getStatusColor(issue.status)}>
                           {issue.status}
                         </Badge>
-                        
                       </div>
                     </div>
 
@@ -495,4 +509,3 @@ const AdminProfile = () => {
 };
 
 export default AdminProfile;
-

@@ -24,7 +24,7 @@ import {
 import HeaderAfterAuth from "../components/HeaderAfterAuth";
 import { useAuth } from "../contexts/AuthContext";
 import { toast } from "sonner";
-import { BACKEND_URL } from "../config/config";
+import { VITE_BACKEND_URL } from "../config/config";
 
 interface Issues {
   _id: string;
@@ -87,12 +87,15 @@ const CitizenProfile = () => {
       try {
         setLoadingMyIssues(true);
 
-        const response = await fetch(`${BACKEND_URL}/api/v1/citizen/issues`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `${VITE_BACKEND_URL}/api/v1/citizen/issues`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         const data = await response.json();
 
@@ -163,7 +166,9 @@ const CitizenProfile = () => {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <CardTitle className="text-2xl text-slate-600">Citizen Profile</CardTitle>
+                  <CardTitle className="text-2xl text-slate-600">
+                    Citizen Profile
+                  </CardTitle>
                   <CardDescription>
                     Manage your profile and view your reported issues
                   </CardDescription>
@@ -171,13 +176,15 @@ const CitizenProfile = () => {
               </div>
               <Button
                 variant={isEditing ? "default" : "outline"}
-                className="text-slate-600"
+                className="text-slate-500 active:bg-gray-200 focus:bg-gray-200 active:ring-0 focus:ring-0"
                 onClick={
                   isEditing ? handleSaveProfile : () => setIsEditing(true)
                 }
               >
-                <Edit className="h-4 w-4 mr-2 text-indigo-600" />
-                {isEditing ? "Save Changes" : "Edit Profile"}
+                <Edit className="h-4 w-4  text-purple-700" />
+                <div className="hidden sm:block">
+                  {isEditing ? "Save Changes" : "Edit Profile"}
+                </div>
               </Button>
             </div>
           </CardHeader>

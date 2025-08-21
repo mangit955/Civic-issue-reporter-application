@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button.tsx";
-import { LogIn, LogOut, Shield, User } from "lucide-react";
+import { LogIn, LogOut, Shield, LayoutDashboard } from "lucide-react";
 import civicIssueLogo from "../assets/civic-issue.png";
 import { useAuth } from "../contexts/AuthContext.tsx";
 
@@ -47,7 +47,7 @@ const Header: React.FC<HeaderProps> = () => {
           <div className="flex items-center space-x-3">
             {user ? (
               <>
-              <span className="text-sm text-muted-foreground hidden sm:block">
+                <span className="text-sm text-muted-foreground hidden sm:block">
                   Welcome,{" "}
                   {user?.fullName ? user.fullName.split(" ")[0] : "Guest"}!
                 </span>
@@ -57,7 +57,7 @@ const Header: React.FC<HeaderProps> = () => {
                     size="sm"
                     className="flex items-center space-x-2 text-slate-500"
                   >
-                    <User className="h-4 w-4 text-blue-500" />
+                    <LayoutDashboard className="h-4 w-4 text-blue-700" />
                     <span className="hidden sm:block">Dashboard</span>
                   </Button>
                 </Link>
@@ -67,8 +67,8 @@ const Header: React.FC<HeaderProps> = () => {
                   size="sm"
                   className="flex items-center space-x-2 text-slate-500"
                 >
-                  <LogOut className="h-4 w-4 text-pink-600" />
-                  <span>Logout</span>
+                  <LogOut className="h-4 w-4 text-blue-700" />
+                  <span className="hidden sm:block">Logout</span>
                 </Button>
               </>
             ) : (

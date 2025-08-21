@@ -14,7 +14,7 @@ import { ArrowLeft, MapPin, Upload, Send } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import MapComponent from "../components/MapBox";
 import { toast } from "sonner";
-import { BACKEND_URL } from "../config/config";
+import { VITE_BACKEND_URL } from "../config/config";
 
 const ReportIssue = () => {
   const navigate = useNavigate();
@@ -87,7 +87,7 @@ const ReportIssue = () => {
       }
 
       const response = await fetch(
-        `${BACKEND_URL}/api/v1/citizen/create-issue`,
+        `${VITE_BACKEND_URL}/api/v1/citizen/create-issue`,
         {
           method: "POST",
           headers: {
@@ -298,10 +298,10 @@ const ReportIssue = () => {
                 </div>
 
                 {/* Submit Button */}
-                
+
                 <Button
                   type="submit"
-                  className="w-full civic-gradient border-0 text-white hover:opacity-90"
+                  className="w-full civic-gradient border-0 text-white hover:opacity-70"
                   disabled={loading}
                   size="lg"
                 >

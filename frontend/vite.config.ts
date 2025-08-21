@@ -3,7 +3,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   server: {
     proxy: {
-      '/api': 'http://localhost:5000',
+      '/api': 'https://civic-issue-reporter-application.onrender.com',
     },
   },
   plugins: [

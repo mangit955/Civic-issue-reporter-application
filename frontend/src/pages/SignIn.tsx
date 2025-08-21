@@ -9,86 +9,83 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../components/ui/card.tsx";
+} from "../components/ui/card";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "../components/ui/tabs.tsx";
-import { Label } from "../components/ui/label.tsx";
-import { Input } from "../components/ui/input.tsx";
-import { Button } from "../components/ui/button.tsx";
-import { useAuth } from "../contexts/AuthContext.tsx";
-import { motion, AnimatePresence } from "framer-motion";
+} from "../components/ui/tabs";
+import { Label } from "../components/ui/label";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
+import { useAuth } from "../contexts/AuthContext";
+import { AnimatePresence, motion } from "framer-motion";
+import { useLoader } from "../contexts/LoaderContext";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [citizenForm, setCitizenForm] = useState({
-    email: "",
-    password: "",
-  });
+  const [citizenForm, setCitizenForm] = useState({ email: "", password: "" });
   const [adminForm, setAdminForm] = useState({
     email: "",
     password: "",
     adminAccessCode: "",
   });
-  const [activeTab, setActiveTab] = useState("citizen");
+  const [activeTab, setActiveTab] = useState<"citizen" | "admin">("citizen");
 
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { showLoader, hideLoader } = useLoader();
 
-  const handleCitizenSignIn = async (e: React.FormEvent) => {
+  const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    showLoader();
+
+    const minLoaderDuration = new Promise((resolve) =>
+      setTimeout(resolve, 2000)
+    );
+
     try {
-      const result = await login(
-        citizenForm.email,
-        citizenForm.password,
-        "citizen"
-      );
-      if (result === true) {
-        toast("Sign In Successful!", { description: "Welcome back !" });
-        navigate("/citizen");
+      let result: boolean;
+      if (activeTab === "citizen") {
+        result = await Promise.all([
+          login(citizenForm.email, citizenForm.password, "citizen"),
+          minLoaderDuration,
+        ]).then(([res]) => res);
       } else {
-        toast.error("Sign In Failed!", { description: "Invalid credentials" });
+        result = await Promise.all([
+          login(
+            adminForm.email,
+            adminForm.password,
+            "admin",
+            adminForm.adminAccessCode
+          ),
+          minLoaderDuration,
+        ]).then(([res]) => res);
       }
-    } catch (error) {
-      console.error(error);
-      toast.error("Sign In Failed!", { description: "Something went wrong" });
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const handleAdminSignIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const result = await login(
-        adminForm.email,
-        adminForm.password,
-        "admin",
-        adminForm.adminAccessCode
-      );
       if (result === true) {
-        toast("Admin Sign In Successful!", {
-          description: "Welcome back, administrator!",
+        toast.success("Sign In Successful!", {
+          description:
+            activeTab === "citizen"
+              ? "Welcome back!"
+              : "Welcome back, Administrator!",
         });
-        navigate("/admin");
+        navigate(activeTab === "citizen" ? "/citizen" : "/admin", {
+          replace: true,
+        });
       } else {
-        toast.error("Admin Sign In Failed!", {
+        toast.error("Sign In Failed!", {
           description: "Invalid credentials",
         });
+        hideLoader();
       }
     } catch (error) {
       console.error(error);
-      toast.error("Admin Sign In Failed!", {
+      toast.error("Sign In Failed!", {
         description: "Something went wrong",
       });
-    } finally {
-      setLoading(false);
+      hideLoader();
     }
   };
 
@@ -97,8 +94,6 @@ const SignIn = () => {
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[#f0f7f5]" />
 
       <div className="w-full max-w-md">
-        {/* Logo and Title */}
-
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2 mb-4">
             <div className="flex items-center justify-center w-16 h-16 rounded-full bg-white shadow">
@@ -119,9 +114,7 @@ const SignIn = () => {
           </Link>
         </div>
 
-        {/* Card with glass effect */}
-
-        <Card className="rounded-2xl shadow-2xl bg-white  border-0">
+        <Card className="rounded-2xl shadow-2xl bg-white border-0">
           <CardHeader>
             <CardTitle>
               <center>Sign In</center>
@@ -133,44 +126,40 @@ const SignIn = () => {
           <CardContent>
             <Tabs
               value={activeTab}
-              onValueChange={setActiveTab}
-              className="w-full "
+              onValueChange={(val) => setActiveTab(val as any)}
             >
               <TabsList className="grid w-full grid-cols-2 rounded-full bg-gray-100 p-1">
                 <TabsTrigger
                   value="citizen"
-                  className=" rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#016dd0] data-[state=active]:to-[#159e52] data-[state=active]:text-white opacity-80"
+                  className="rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#016dd0] data-[state=active]:to-[#159e52] data-[state=active]:text-white"
                 >
                   Citizen
                 </TabsTrigger>
                 <TabsTrigger
                   value="admin"
-                  className="rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#016dd0] data-[state=active]:to-[#159e52] data-[state=active]:text-white opacity-80"
+                  className="rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#016dd0] data-[state=active]:to-[#159e52] data-[state=active]:text-white"
                 >
                   Administrator
                 </TabsTrigger>
               </TabsList>
 
-              <AnimatePresence initial={false}>
+              <AnimatePresence mode="wait">
                 {activeTab === "citizen" && (
-                  <TabsContent value="citizen" key="citizen">
+                  <TabsContent value="citizen" forceMount>
                     <motion.div
+                      key="citizen"
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20 }}
                       transition={{ duration: 0.3 }}
                       className="mt-6"
                     >
-                      <form
-                        onSubmit={handleCitizenSignIn}
-                        className="space-y-4"
-                      >
-                        <div className="space-y-2 ">
+                      <form onSubmit={handleSignIn} className="space-y-4">
+                        <div>
                           <Label htmlFor="citizen-email">Email</Label>
                           <Input
                             id="citizen-email"
                             type="email"
-                            placeholder="citizen@example.com"
                             value={citizenForm.email}
                             onChange={(e) =>
                               setCitizenForm({
@@ -181,13 +170,12 @@ const SignIn = () => {
                             required
                           />
                         </div>
-                        <div className="space-y-2">
+                        <div>
                           <Label htmlFor="citizen-password">Password</Label>
                           <div className="relative">
                             <Input
                               id="citizen-password"
                               type={showPassword ? "text" : "password"}
-                              placeholder="Enter your password"
                               value={citizenForm.password}
                               onChange={(e) =>
                                 setCitizenForm({
@@ -201,7 +189,7 @@ const SignIn = () => {
                               type="button"
                               variant="ghost"
                               size="sm"
-                              className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                              className="absolute right-0 top-0 h-full px-3 py-2"
                               onClick={() => setShowPassword(!showPassword)}
                             >
                               {showPassword ? (
@@ -214,8 +202,7 @@ const SignIn = () => {
                         </div>
                         <Button
                           type="submit"
-                          className="w-full bg-gradient-to-r from-[#016dd0] to-[#159e52] text-white font-bold shadow-md hover:opacity-90 transition"
-                          disabled={loading}
+                          className="w-full bg-gradient-to-r from-[#016dd0] to-[#159e52] text-white hover:opacity-70"
                         >
                           Sign In as Citizen
                         </Button>
@@ -225,21 +212,21 @@ const SignIn = () => {
                 )}
 
                 {activeTab === "admin" && (
-                  <TabsContent value="admin" key="admin">
+                  <TabsContent value="admin" forceMount>
                     <motion.div
+                      key="admin"
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20 }}
                       transition={{ duration: 0.3 }}
                       className="mt-6"
                     >
-                      <form onSubmit={handleAdminSignIn} className="space-y-4">
-                        <div className="space-y-2">
+                      <form onSubmit={handleSignIn} className="space-y-4">
+                        <div>
                           <Label htmlFor="admin-email">Email</Label>
                           <Input
                             id="admin-email"
                             type="email"
-                            placeholder="admin@example.com"
                             value={adminForm.email}
                             onChange={(e) =>
                               setAdminForm({
@@ -250,13 +237,12 @@ const SignIn = () => {
                             required
                           />
                         </div>
-                        <div className="space-y-2">
+                        <div>
                           <Label htmlFor="admin-password">Password</Label>
                           <div className="relative">
                             <Input
                               id="admin-password"
                               type={showPassword ? "text" : "password"}
-                              placeholder="Enter your password"
                               value={adminForm.password}
                               onChange={(e) =>
                                 setAdminForm({
@@ -270,7 +256,7 @@ const SignIn = () => {
                               type="button"
                               variant="ghost"
                               size="sm"
-                              className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                              className="absolute right-0 top-0 h-full px-3 py-2"
                               onClick={() => setShowPassword(!showPassword)}
                             >
                               {showPassword ? (
@@ -281,12 +267,10 @@ const SignIn = () => {
                             </Button>
                           </div>
                         </div>
-                        <div className="space-y-2">
+                        <div>
                           <Label htmlFor="admin-code">Admin Code</Label>
                           <Input
                             id="admin-code"
-                            type="text"
-                            placeholder="Enter admin access code"
                             value={adminForm.adminAccessCode}
                             onChange={(e) =>
                               setAdminForm({
@@ -299,8 +283,7 @@ const SignIn = () => {
                         </div>
                         <Button
                           type="submit"
-                          className="w-full bg-gradient-to-r from-[#016dd0] to-[#159e52] text-white font-bold shadow-md hover:opacity-90 transition"
-                          disabled={loading}
+                          className="w-full bg-gradient-to-r from-[#016dd0] to-[#159e52] text-white hover:opacity-70"
                         >
                           Sign In as Administrator
                         </Button>
@@ -310,7 +293,6 @@ const SignIn = () => {
                 )}
               </AnimatePresence>
 
-              {/* Links below the forms */}
               <div className="mt-6 text-center">
                 <p className="text-sm text-muted-foreground">
                   Don{"'"}t have an account?{" "}

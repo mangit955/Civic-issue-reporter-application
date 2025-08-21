@@ -1,4 +1,4 @@
-import { BACKEND_URL } from "../config/config";
+import { VITE_BACKEND_URL } from "../config/config";
 import React, {
   createContext,
   useContext,
@@ -65,7 +65,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           ? `admin/profile/${storedUserId}`
           : `citizen/profile/${storedUserId}`;
 
-      const response = await fetch(`${BACKEND_URL}/api/v1/${endpoint}`, {
+      const response = await fetch(`${VITE_BACKEND_URL}/api/v1/${endpoint}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -133,7 +133,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         body.adminAccessCode = adminAccessCode;
       }
 
-      const response = await fetch(`${BACKEND_URL}/api/v1/${endpoint}`, {
+      const response = await fetch(`${VITE_BACKEND_URL}/api/v1/${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -180,7 +180,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const endpoint = role === "admin" ? "admin/signup" : "citizen/signup";
 
-      const response = await fetch(`${BACKEND_URL}/api/v1/${endpoint}`, {
+      const response = await fetch(`${VITE_BACKEND_URL}/api/v1/${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
@@ -216,7 +216,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const endpoint =
         user.role === "admin" ? `admin/${userId}` : `citizen/${userId}`;
 
-      const response = await fetch(`${BACKEND_URL}/api/v1/${endpoint}`, {
+      const response = await fetch(`${VITE_BACKEND_URL}/api/v1/${endpoint}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

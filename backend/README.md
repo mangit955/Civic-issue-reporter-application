@@ -22,3 +22,5 @@
 18. npm install nodemon
 19. npm install bcryptjs
 20. npm install --save-dev @types/bcryptjs
+21. npm install react-hook-form @hookform/resolvers zod
+

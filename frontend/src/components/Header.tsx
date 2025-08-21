@@ -105,7 +105,7 @@ const Header: React.FC<HeaderProps> = ({
                     size="sm"
                     className="flex items-center space-x-2"
                   >
-                    <User className="h-4 w-4 text-blue-500" />
+                    <User className="h-4 w-4 text-blue-700" />
                     <span className="hidden sm:block">Dashboard</span>
                   </Button>
                 </Link>
@@ -115,7 +115,7 @@ const Header: React.FC<HeaderProps> = ({
                   size="sm"
                   className="flex items-center space-x-2"
                 >
-                  <LogOut className="h-4 w-4 text-red-600" />
+                  <LogOut className="h-4 w-4 text-blue-700" />
                   <span>Logout</span>
                 </Button>
               </>
