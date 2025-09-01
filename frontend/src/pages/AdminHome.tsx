@@ -27,7 +27,7 @@ import {
   DropdownMenuTrigger,
 } from "../components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
-import { VITE_BACKEND_URL } from "../config/config";
+import { BACKEND_URL } from "../config/config";
 import HeaderAfterAuth from "../components/HeaderAfterAuth";
 import { motion } from "framer-motion";
 import Player from "lottie-react";
@@ -62,7 +62,7 @@ const AdminHome = () => {
   useEffect(() => {
     const fetchIssues = async () => {
       try {
-        const response = await fetch(`${VITE_BACKEND_URL}/api/v1/all-issues`, {
+        const response = await fetch(`${BACKEND_URL}/api/v1/all-issues`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
           },
@@ -88,7 +88,7 @@ const AdminHome = () => {
   const handleStatusUpdate = async (issueId: string, status: string) => {
     try {
       const response = await fetch(
-        `${VITE_BACKEND_URL}/api/v1/admin/issue/${issueId}/status`,
+        `${BACKEND_URL}/api/v1/admin/issue/${issueId}/status`,
         {
           method: "PUT",
           headers: {
@@ -116,7 +116,7 @@ const AdminHome = () => {
     if (!window.confirm("Are you sure you want to delete this issue?")) return;
     try {
       const response = await fetch(
-        `${VITE_BACKEND_URL}/api/v1/issue/admin/${issueId}`,
+        `${BACKEND_URL}/api/v1/issue/admin/${issueId}`,
         {
           method: "DELETE",
           headers: {

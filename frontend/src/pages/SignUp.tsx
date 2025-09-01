@@ -22,7 +22,7 @@ import { Input } from "../components/ui/input.tsx";
 import { Button } from "../components/ui/button.tsx";
 import { Checkbox } from "../components/ui/checkbox.tsx";
 import { motion, AnimatePresence } from "framer-motion";
-import { VITE_BACKEND_URL } from "../config/config.tsx";
+import { BACKEND_URL } from "../config/config.tsx";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -89,19 +89,16 @@ const SignUp = () => {
     }
 
     try {
-      const response = await fetch(
-        `${VITE_BACKEND_URL}/api/v1/citizen/signup`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            fullName: citizenForm.fullName,
-            email: citizenForm.email,
-            password: citizenForm.password,
-            phonenumber: citizenForm.phonenumber,
-          }),
-        }
-      );
+      const response = await fetch(`${BACKEND_URL}/api/v1/citizen/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: citizenForm.fullName,
+          email: citizenForm.email,
+          password: citizenForm.password,
+          phonenumber: citizenForm.phonenumber,
+        }),
+      });
 
       const data = await response.json();
 
@@ -110,7 +107,12 @@ const SignUp = () => {
         navigate("/signin");
       } else if (data.errors && Array.isArray(data.errors)) {
         const errs: Record<string, string> = {};
-        data.errors.forEach((err: any) => {
+        interface CitizenError {
+          path?: string[];
+          message: string;
+        }
+
+        data.errors.forEach((err: CitizenError) => {
           if (err.path && err.path.length > 0) {
             errs[err.path[0]] = err.message;
           }
@@ -167,7 +169,7 @@ const SignUp = () => {
     }
 
     try {
-      const response = await fetch(`${VITE_BACKEND_URL}/api/v1/admin/signup`, {
+      const response = await fetch(`${BACKEND_URL}/api/v1/admin/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -187,7 +189,12 @@ const SignUp = () => {
         navigate("/signin");
       } else if (data.errors && Array.isArray(data.errors)) {
         const errs: Record<string, string> = {};
-        data.errors.forEach((err: any) => {
+        interface AdminError {
+          path?: string[];
+          message: string;
+        }
+
+        data.errors.forEach((err: AdminError) => {
           if (err.path && err.path.length > 0) {
             errs[err.path[0]] = err.message;
           }

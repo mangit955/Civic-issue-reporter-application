@@ -9,7 +9,7 @@ import {
 } from "../components/ui/card";
 import { Search, Plus, MapPin, Clock, User } from "lucide-react";
 import { Link } from "react-router-dom";
-import { VITE_BACKEND_URL } from "../config/config";
+import { BACKEND_URL } from "../config/config";
 import Player from "lottie-react";
 import emptyAnimation from "../assets/animations/empty.json";
 import HeaderAfterAuth from "../components/HeaderAfterAuth";
@@ -46,7 +46,7 @@ const CitizenHome = () => {
       const startTime = Date.now();
 
       try {
-        const response = await fetch(`${VITE_BACKEND_URL}/api/v1/all-issues`, {
+        const response = await fetch(`${BACKEND_URL}/api/v1/all-issues`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
           },
