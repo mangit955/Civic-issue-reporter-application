@@ -67,31 +67,6 @@ const AdminProfile = () => {
     department: user?.department || "",
   });
 
-  if (isLoading) {
-    return <p className="text-center mt-10">Loading profile...</p>;
-  }
-
-  if (!user) {
-    return <p className="text-center mt-10">Loading profile...</p>;
-  }
-
-  const handleSaveProfile = async () => {
-    try {
-      await updateUserProfile({
-        fullName: profile.fullName,
-        email: profile.email,
-        phonenumber: profile.phonenumber,
-        department: profile.department,
-      });
-
-      toast.success("Profile updated successfully!");
-      setIsEditing(false);
-    } catch (error) {
-      console.error("Update error:", error);
-      toast.error("Failed to update profile");
-    }
-  };
-
   useEffect(() => {
     if (!token) return;
 
@@ -131,6 +106,31 @@ const AdminProfile = () => {
 
     fetchMyIssues();
   }, [token]);
+
+  if (isLoading) {
+    return <p className="text-center mt-10">Loading profile...</p>;
+  }
+
+  if (!user) {
+    return <p className="text-center mt-10">Loading profile...</p>;
+  }
+
+  const handleSaveProfile = async () => {
+    try {
+      await updateUserProfile({
+        fullName: profile.fullName,
+        email: profile.email,
+        phonenumber: profile.phonenumber,
+        department: profile.department,
+      });
+
+      toast.success("Profile updated successfully!");
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Update error:", error);
+      toast.error("Failed to update profile");
+    }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -304,7 +304,7 @@ const AdminProfile = () => {
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
-  hover:shadow-xl transition-shadow duration-300 
+  hover:shadow-xl duration-300 
   hover:scale-[1.02] transition-transform
  "
           >
@@ -322,7 +322,7 @@ const AdminProfile = () => {
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
-  hover:shadow-xl transition-shadow duration-300 
+  hover:shadow-xl duration-300 
   hover:scale-[1.02] transition-transform
   "
           >
@@ -345,7 +345,7 @@ const AdminProfile = () => {
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
-  hover:shadow-xl transition-shadow duration-300 
+  hover:shadow-xl  duration-300 
   hover:scale-[1.02] transition-transform
   "
           >
@@ -369,7 +369,7 @@ const AdminProfile = () => {
   rounded-xl 
   p-6 
   ring-1 ring-white/10 
-  hover:shadow-xl transition-shadow duration-300 
+  hover:shadow-xl  duration-300 
   hover:scale-[1.02] transition-transform
  "
           >
